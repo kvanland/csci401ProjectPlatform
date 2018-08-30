@@ -1,0 +1,37 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/react-beautiful-dnd": "^4.0.0",
+    "@types/react-bootstrap": "^0.32.6",
+    "@types/react-router-bootstrap": "^0.24.4",
+    "@types/react-sortable-hoc": "^0.6.2",
+    "immutability-helper": "^2.7.0",
+    "react": "^16.2.0",
+    "react-beautiful-dnd": "^5.0.0",
+    "react-bootstrap": "^0.32.1",
+    "react-dnd": "^2.5.4",
+    "react-dnd-html5-backend": "^2.5.4",
+    "react-dom": "^16.2.0",
+    "react-router-bootstrap": "^0.24.4",
+    "react-router-dom": "^4.2.2",
+    "react-scripts-ts": "2.13.0",
+    "react-sortable-hoc": "^0.6.8"
+  },
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom",
+    "eject": "react-scripts-ts eject"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "@types/jquery": "^3.3.1",
+    "@types/node": "^9.6.8",
+    "@types/react": "^16.3.13",
+    "@types/react-dom": "^16.0.5",
+    "@types/react-router-dom": "^4.2.6",
+    "typescript": "^2.8.3"
+  }
+}
