@@ -9,48 +9,48 @@ import {
 } from 'react-router-bootstrap';
 const logo = require('../../svg/logo.svg');
 
-interface NavigationProps {
+interface INavigationProps {
   showTabs?: boolean;
 }
 
-interface NavigationState {
+interface INavigationState {
 
 }
 
-class Navigation extends React.Component<NavigationProps, NavigationState> {
+class Navigation extends React.Component<INavigationProps, INavigationState> {
   render() {
     return (
       <div>
-          <Navbar>
-            <Navbar.Header>
-              <Navbar.Brand>
-                <img src={logo} className="App-logo" alt="logo" />
-              </Navbar.Brand>
-              <Navbar.Brand>
-                <a href="">CSCI 401</a>
-              </Navbar.Brand> 
-            </Navbar.Header>
-            { this.props.showTabs
-              ? <Nav>
-                  <LinkContainer to="admin">
-                    <NavItem eventKey={1}>
-                      Admin
+        <Navbar>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <img src={logo} className="App-logo" alt="logo" />
+            </Navbar.Brand>
+            <Navbar.Brand>
+              <a href="">CSCI 401</a>
+            </Navbar.Brand>
+          </Navbar.Header>
+          {this.props.showTabs
+            ? <Nav>
+              <LinkContainer to="admin">
+                <NavItem eventKey={1}>
+                  Admin
                     </NavItem>
-                  </LinkContainer>
-                  <LinkContainer to="stakeholder">
-                    <NavItem eventKey={2}>
-                      Stakeholder
+              </LinkContainer>
+              <LinkContainer to="stakeholder">
+                <NavItem eventKey={2}>
+                  Stakeholder
                     </NavItem>
-                  </LinkContainer>
-                  <LinkContainer to="student">
-                    <NavItem eventKey={2}>
-                      Student
+              </LinkContainer>
+              <LinkContainer to="student">
+                <NavItem eventKey={2}>
+                  Student
                     </NavItem>
-                  </LinkContainer>
-                </Nav>
-              : null
-            }
-          </Navbar>
+              </LinkContainer>
+            </Nav>
+            : null
+          }
+        </Navbar>
       </div>
     );
   }

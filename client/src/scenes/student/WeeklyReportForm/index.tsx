@@ -5,7 +5,7 @@ class StudentWeeklyReportForm extends React.Component {
     render() {
         return (
             <div>
-            <WeeklyReportForm />
+                <WeeklyReportForm />
             </div>
         );
     }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import ProjectCard from './ProjectCard';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import autobind from 'autobind-decorator';
 import {
     StudentInfo,
     Project,
@@ -16,21 +17,19 @@ const style = {
     margin: 'auto',
 };
 
-interface ProjectsListProps {
+interface IProjectsListProps {
     projects: Array<Project>;
 }
 
-interface ProjectsListState {
+interface IProjectsListState {
     projects: Array<Project>;
     students: Array<StudentInfo>;
 }
 
 @DragDropContext(HTML5Backend)
-class ProjectsList extends React.Component<ProjectsListProps, ProjectsListState> {
-    constructor(props: ProjectsListProps) {
+class ProjectsList extends React.Component<IProjectsListProps, IProjectsListState> {
+    constructor(props: IProjectsListProps) {
         super(props);
-        this.moveCard = this.moveCard.bind(this);
-        this.findOldProjectCard = this.findOldProjectCard.bind(this);
 
         let students: StudentInfo[] = [];
         props.projects.forEach(project => {
@@ -38,13 +37,14 @@ class ProjectsList extends React.Component<ProjectsListProps, ProjectsListState>
                 students.push(student);
             });
         });
-    
+
         this.state = {
             projects: props.projects,
             students: students
         };
     }
 
+    @autobind
     moveCard(studentId: number, newProjectId: number) {
         const { projects } = this.state;
 
@@ -66,7 +66,7 @@ class ProjectsList extends React.Component<ProjectsListProps, ProjectsListState>
             projectName: projectCard.projectName,
             minSize: projectCard.minSize,
             maxSize: projectCard.maxSize,
-            members: projectCard.members.filter((s: StudentInfo) => 
+            members: projectCard.members.filter((s: StudentInfo) =>
                 s.userId !== studentInfo.userId
             )
         };
@@ -79,9 +79,10 @@ class ProjectsList extends React.Component<ProjectsListProps, ProjectsListState>
         newProjectCard.members = newProjectCard.members.concat(studentInfo);
         newProjects.splice(newProjectResult.index, 1, newProjectCard);
 
-        this.setState({projects: newProjects});
+        this.setState({ projects: newProjects });
     }
 
+    @autobind
     findOldProjectCard(studentId: number) {
         const { projects, students } = this.state;
         const { projectCard, error } = this.findProjectByStudent(studentId);
@@ -94,6 +95,7 @@ class ProjectsList extends React.Component<ProjectsListProps, ProjectsListState>
         };
     }
 
+    @autobind
     findProjectByStudent(studentId: number) {
         const { projects } = this.state;
         let projectCard = projects[0];
@@ -113,6 +115,7 @@ class ProjectsList extends React.Component<ProjectsListProps, ProjectsListState>
         };
     }
 
+    @autobind
     findCard(projectId: number) {
         const { projects } = this.state;
         const projectCard = projects.filter(project => project.projectId === projectId)[0];
@@ -123,31 +126,32 @@ class ProjectsList extends React.Component<ProjectsListProps, ProjectsListState>
         };
     }
 
+    @autobind
     render() {
-        const {projects} = this.state;
+        const { projects } = this.state;
         return (
             <div style={style as any}>
-            <Table bordered={true}>
-            <thead>
-            <tr>
-              <th>Project Name</th>
-              <th>Min Size</th>
-              <th>Max Size</th>
-              <th>Members</th>
-            </tr>
-            </thead>
-            <tbody>
-            {projects.map((project: Project) =>
-                <ProjectCard 
-                    project={project}
-                    key={project.projectId}
-                    id={project.projectId}
-                    moveCard={this.moveCard}
-                />      
-            )}
-            </tbody>
-          </Table>
-          </div>
+                <Table bordered={true}>
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Min Size</th>
+                            <th>Max Size</th>
+                            <th>Members</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {projects.map((project: Project) =>
+                            <ProjectCard
+                                project={project}
+                                key={project.projectId}
+                                id={project.projectId}
+                                moveCard={this.moveCard}
+                            />
+                        )}
+                    </tbody>
+                </Table>
+            </div>
         );
     }
 }

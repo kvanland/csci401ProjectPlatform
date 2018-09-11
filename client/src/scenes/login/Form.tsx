@@ -5,35 +5,41 @@ import {
     Col,
     FormControl,
     Button,
-    ControlLabel
+    ControlLabel,
+    FormControlProps
 } from 'react-bootstrap';
+import autobind from 'autobind-decorator';
 
-interface LoginProps {
+interface ILoginProps {
 }
-interface LoginState {
+interface ILoginState {
     email: string;
     password: string;
     token: string;
 }
-class LoginForm extends React.Component<LoginProps, LoginState> {
-    constructor(props: LoginProps) {
-        super(props);
-        this.state = {
-            email: '',
-            password: '',
-            token: ''
-        };
-        this.submitClicked = this.submitClicked.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+class LoginForm extends React.Component<ILoginProps, ILoginState> {
+    public state: ILoginState = {
+        email: '',
+        password: '',
+        token: ''
+    };
+
+    public handleChange = (id: keyof ILoginState) => (e: React.FormEvent<FormControlProps>) => {
+        this.setState({ [id]: e.currentTarget.value } as any);
     }
+
+    @autobind
     submitClicked() {
-        { this.getToken( 
-                function(token: string) {
+        {
+            this.getToken(
+                function (token: string) {
                     sessionStorage.setItem('jwt', token);
                 }
             );
         }
     }
+
+    @autobind
     getToken(callback: any) {
         var request = new XMLHttpRequest();
         request.withCredentials = true;
@@ -46,7 +52,7 @@ class LoginForm extends React.Component<LoginProps, LoginState> {
         request.setRequestHeader('Cache-Control', 'no-cache');
         request.send(data);
         sessionStorage.setItem('email', this.state.email);
-        request.onreadystatechange = function() {
+        request.onreadystatechange = function () {
             if (request.readyState === 4) {
                 if (request.responseText.length > 4) {
                     var resp = request.responseText.split(',', 2);
@@ -71,53 +77,49 @@ class LoginForm extends React.Component<LoginProps, LoginState> {
             }
         };
     }
-    
-    handleChange(e: any) {
-        this.setState({ [e.target.id]: e.target.value });
-    }
 
     render() {
         return (
             <div>
-            <Form horizontal={true} >
-            <FormGroup controlId="formHorizontalEmail">
-                <Col componentClass={ControlLabel} sm={2}>
-                Email
+                <Form horizontal={true} >
+                    <FormGroup controlId="formHorizontalEmail">
+                        <Col componentClass={ControlLabel} sm={2}>
+                            Email
                 </Col>
-                <Col sm={10}>
-                <FormControl
-                    type="text"
-                    id="email"
-                    value={this.state.email}
-                    placeholder="Email"
-                    onChange={e => this.handleChange(e)}
-                />
-                </Col>
-            </FormGroup>
+                        <Col sm={10}>
+                            <FormControl
+                                type="text"
+                                id="email"
+                                value={this.state.email}
+                                placeholder="Email"
+                                onChange={this.handleChange('email')}
+                            />
+                        </Col>
+                    </FormGroup>
 
-            <FormGroup controlId="formHorizontalPassword">
-                <Col componentClass={ControlLabel} sm={2}>
-                Password
+                    <FormGroup controlId="formHorizontalPassword">
+                        <Col componentClass={ControlLabel} sm={2}>
+                            Password
                 </Col>
-                <Col sm={10}>
-                <FormControl
-                    type="password"
-                    placeholder="Password"
-                    id="password"
-                    value={this.state.password}
-                    onChange={e => this.handleChange(e)}
-                />
-                </Col>
-            </FormGroup>
+                        <Col sm={10}>
+                            <FormControl
+                                type="password"
+                                placeholder="Password"
+                                id="password"
+                                value={this.state.password}
+                                onChange={this.handleChange('password')}
+                            />
+                        </Col>
+                    </FormGroup>
 
-            <FormGroup>
-                <Col smOffset={2} sm={10}>
-                <Button type="reset" onClick={this.submitClicked}>Sign in</Button>
-                </Col>
-            </FormGroup>
+                    <FormGroup>
+                        <Col smOffset={2} sm={10}>
+                            <Button type="reset" onClick={this.submitClicked}>Sign in</Button>
+                        </Col>
+                    </FormGroup>
 
-        </Form>
-        </div>
+                </Form>
+            </div>
         );
     }
 }

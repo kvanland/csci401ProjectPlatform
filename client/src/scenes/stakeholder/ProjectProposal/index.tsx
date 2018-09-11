@@ -5,7 +5,7 @@ class StakeholderProjectProposal extends React.Component {
     render() {
         return (
             <div>
-            <ProposalForm />
+                <ProposalForm />
             </div>
         );
     }

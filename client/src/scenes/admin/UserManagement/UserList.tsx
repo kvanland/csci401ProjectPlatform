@@ -1,20 +1,16 @@
 import * as React from 'react';
+import { IUser } from '../../../common/interfaces';
 
-interface UserListProps {
+interface IUserListProps {
 }
 
-interface UserListState {
+interface IUserListState {
   users: Array<{}>;
   isLoading: boolean;
 }
 
-interface User {
-  id: number;
-  firstName: string;
-}
-
-class UserList extends React.Component<UserListProps, UserListState> {
-  constructor(props: UserListProps) {
+class UserList extends React.Component<IUserListProps, IUserListState> {
+  constructor(props: IUserListProps) {
     super(props);
 
     this.state = {
@@ -24,21 +20,21 @@ class UserList extends React.Component<UserListProps, UserListState> {
   }
 
   componentDidMount() {
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     fetch('http://localhost:8080/users')
       .then(response => response.json())
-      .then(data => this.setState({users: data, isLoading: false}));
+      .then(data => this.setState({ users: data, isLoading: false }));
   }
 
-    /*
-        submitClicked() {
-        }
+  /*
+      submitClicked() {
+      }
 
-    */
+  */
 
   render() {
-    const {users, isLoading} = this.state;
+    const { users, isLoading } = this.state;
 
     if (isLoading) {
       return <p>Loading...</p>;
@@ -47,7 +43,7 @@ class UserList extends React.Component<UserListProps, UserListState> {
     return (
       <div>
         <h2>User List</h2>
-        {users.map((user: User) =>
+        {users.map((user: IUser) =>
           <div key={user.id}>
             {user.firstName}
           </div>

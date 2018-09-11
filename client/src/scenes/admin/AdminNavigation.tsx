@@ -22,29 +22,29 @@ import ProjectMatching from './ProjectMatching/index';
 const logo = require('../../svg/logo.svg');
 
 class AdminNavigation extends React.Component {
-  
+
   logOutClicked() {
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('userType');
-    window.location.href = '/';  
+    window.location.href = '/';
   }
 
   render() {
     return (
       <BrowserRouter>
         <div>
-            <Navbar>
+          <Navbar>
             <Navbar.Header>
               <Navbar.Brand>
                 <img src={logo} className="App-logo" alt="logo" />
               </Navbar.Brand>
-              
+
               <Navbar.Brand>
-              <LinkContainer to="/admin">
-                <a>CSCI 401</a>
+                <LinkContainer to="/admin">
+                  <a>CSCI 401</a>
                 </LinkContainer>
-              </Navbar.Brand> 
-              
+              </Navbar.Brand>
+
             </Navbar.Header>
             <Nav>
               <LinkContainer to="/admin/users">
@@ -63,24 +63,24 @@ class AdminNavigation extends React.Component {
                 </NavItem>
               </LinkContainer> */}
               <LinkContainer to="/admin/matching">
-              <NavItem eventKey={5}>
-                Project Matching
+                <NavItem eventKey={5}>
+                  Project Matching
               </NavItem>
               </LinkContainer>
 
               <NavItem eventKey={6}>
                 <FormGroup>
                   <Button type="submit" onClick={this.logOutClicked}>Log Out</Button>
-              </FormGroup>
+                </FormGroup>
               </NavItem>
             </Nav>
           </Navbar>
           <div className="content">
-            <Route exact={true} path="/admin" component={AdminHome}/>
-            <Route path="/admin/users" component={UserManagement}/>
-            <Route path="/admin/proposals" component={ProjectProposals}/>
-            <Route path="/admin/class" component={ClassOverview}/>
-            <Route path="/admin/matching" component={ProjectMatching}/>
+            <Route exact={true} path="/admin" component={AdminHome} />
+            <Route path="/admin/users" component={UserManagement} />
+            <Route path="/admin/proposals" component={ProjectProposals} />
+            <Route path="/admin/class" component={ClassOverview} />
+            <Route path="/admin/matching" component={ProjectMatching} />
           </div>
         </div>
       </BrowserRouter>

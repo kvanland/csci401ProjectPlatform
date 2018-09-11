@@ -1,18 +1,18 @@
 import * as React from 'react';
 
 import {
-  Table,
-  Button,
-  ButtonGroup,
-  Modal,
-  Form,
-  FormGroup,
-  Col,
-  FormControl,
-  ControlLabel,
-  ButtonToolbar,
-  ToggleButtonGroup,
-  ToggleButton
+    Table,
+    Button,
+    ButtonGroup,
+    Modal,
+    Form,
+    FormGroup,
+    Col,
+    FormControl,
+    ControlLabel,
+    ButtonToolbar,
+    ToggleButtonGroup,
+    ToggleButton
 
 } from 'react-bootstrap';
 import StudentRegistrationForm from './StudentRegistrationForm';
@@ -23,15 +23,15 @@ const style = {
     margin: 'auto',
 };
 
-interface UserListProps {
+interface IUserListProps {
 }
 
-interface UserListState {
+interface IUserListState {
     allUsers: Array<{}>;
     usersToDisplay: Array<{}>;
     userIndexToEdit: number;
-    userToEdit?: User;
-    userToDelete?: User;
+    userToEdit?: IUser;
+    userToDelete?: IUser;
     editFirstName?: string;
     editLastName?: string;
     editUserType?: string;
@@ -41,7 +41,7 @@ interface UserListState {
     isLoading: boolean;
 }
 
-interface User {
+interface IUser {
     userId: number;
     firstName: string;
     lastName: string;
@@ -49,10 +49,10 @@ interface User {
     email: string;
 }
 
-class UserManagement extends React.Component<UserListProps, UserListState> {
-    constructor(props: UserListProps) {
+class UserManagement extends React.Component<IUserListProps, IUserListState> {
+    constructor(props: IUserListProps) {
         super(props);
-        
+
         this.state = {
             allUsers: [],
             usersToDisplay: [],
@@ -60,22 +60,22 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
             isLoading: false,
         };
     }
-    
+
     componentDidMount() {
-        this.setState({isLoading: true});
-        
+        this.setState({ isLoading: true });
+
         fetch('http://localhost:8080/users', {
-            method: 'get', 
+            method: 'get',
             headers: new Headers({
                 'Authorization': 'Bearer ' + sessionStorage.getItem('jwt')
             })
         })
             .then(response => response.json())
-            .then(data => this.setState({allUsers: data, usersToDisplay: data, isLoading: false}));
+            .then(data => this.setState({ allUsers: data, usersToDisplay: data, isLoading: false }));
     }
 
     cancelEdit = () => {
-        this.setState({userIndexToEdit: -1});
+        this.setState({ userIndexToEdit: -1 });
     }
 
     submitEdit = () => {
@@ -95,16 +95,18 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
         request.send(data);
         alert('User has been updated succesfully!');
         window.location.reload();
-        this.setState({userIndexToEdit: -1});
+        this.setState({ userIndexToEdit: -1 });
     }
 
-    handleChange(e: any) {
-        this.setState({ [e.target.id]: e.target.value });
+    handleChange = (id: keyof IUserListState) => (e: React.FormEvent<any>) => {
+        this.setState({
+            [id]: e.currentTarget.value,
+        } as any);
     }
 
     handleUserFilterChange = (e: any) => {
-        var _usersToDisplay: User[] = [];
-        const {allUsers} = this.state;
+        var _usersToDisplay: IUser[] = [];
+        const { allUsers } = this.state;
         var userFilterType = '';
 
         if (e === 1) {
@@ -117,7 +119,7 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
             userFilterType = 'Admin';
         }
 
-        allUsers.forEach((user: User) => {
+        allUsers.forEach((user: IUser) => {
             if (user.userType === userFilterType) {
                 _usersToDisplay.push(user);
             } else if (userFilterType === 'All') {
@@ -125,10 +127,10 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
             }
         });
 
-        this.setState({usersToDisplay: _usersToDisplay});
+        this.setState({ usersToDisplay: _usersToDisplay });
     }
 
-    editUser(index: number, user: User) {
+    editUser(index: number, user: IUser) {
         this.setState({
             userIndexToEdit: index,
             userToEdit: user,
@@ -140,11 +142,11 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
         });
     }
 
-    deleteUser(user: User) {
+    deleteUser(user: IUser) {
         const name = user.firstName;
         var submit = confirm('Are you sure you want to delete ' + name + '?');
         if (submit) {
-            this.setState({userToDelete: user});
+            this.setState({ userToDelete: user });
         }
     }
 
@@ -154,13 +156,13 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
         });
     }
     render() {
-        const {allUsers, usersToDisplay, isLoading, userIndexToEdit, userToEdit} = this.state;
-        
+        const { allUsers, usersToDisplay, isLoading, userIndexToEdit, userToEdit } = this.state;
+
         if (isLoading) {
             return <p>Loading...</p>;
         }
 
-        var modalEditUser = <div/>;
+        var modalEditUser = <div />;
         if (typeof userToEdit !== 'undefined') {
             modalEditUser = (
                 <Modal show={userIndexToEdit !== -1} onHide={this.cancelEdit}>
@@ -171,70 +173,76 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
                         <Form horizontal={true} >
                             <FormGroup controlId="formHorizontalFirstName">
                                 <Col componentClass={ControlLabel} sm={2}>
-                                First Name
+                                    First Name
                                 </Col>
                                 <Col sm={10}>
-                                <FormControl
-                                    type="text"
-                                    id="editFirstName"
-                                    value={this.state.editFirstName}
-                                    placeholder="First Name"
-                                    onChange={e => this.handleChange(e)}
-                                />
+                                    <FormControl
+                                        type="text"
+                                        id="editFirstName"
+                                        value={this.state.editFirstName}
+                                        placeholder="First Name"
+                                        onChange={this.handleChange('editFirstName')}
+                                    />
                                 </Col>
                             </FormGroup>
                             <FormGroup controlId="formHorizontalLastName">
                                 <Col componentClass={ControlLabel} sm={2}>
-                                Last Name
+                                    Last Name
                                 </Col>
                                 <Col sm={10}>
-                                <FormControl
-                                    type="text"
-                                    id="editLastName"
-                                    value={this.state.editLastName}
-                                    placeholder="Last Name"
-                                    onChange={e => this.handleChange(e)}
-                                />
+                                    <FormControl
+                                        type="text"
+                                        id="editLastName"
+                                        value={this.state.editLastName}
+                                        placeholder="Last Name"
+                                        onChange={this.handleChange('editLastName')}
+                                    />
                                 </Col>
                             </FormGroup>
                             <FormGroup controlId="formHorizontalEmail">
                                 <Col componentClass={ControlLabel} sm={2}>
-                                Email
+                                    Email
                                 </Col>
                                 <Col sm={10}>
-                                <FormControl
-                                    type="text"
-                                    placeholder="Email"
-                                    id="editEmail"
-                                    value={this.state.editEmail}
-                                    onChange={e => this.handleChange(e)}
-                                />
+                                    <FormControl
+                                        type="text"
+                                        placeholder="Email"
+                                        id="editEmail"
+                                        value={this.state.editEmail}
+                                        onChange={this.handleChange('editEmail')}
+                                    />
                                 </Col>
                             </FormGroup>
                             <FormGroup controlId="formHorizontalUserType">
                                 <Col componentClass={ControlLabel} sm={2}>
-                                User Type
+                                    User Type
                                 </Col>
                                 <Col sm={10}>
-                                <FormControl componentClass="select" placeholder="select" id="editUserType" value={this.state.editUserType} onChange={e => this.handleChange(e)}>
-                                    <option value="Student">Student</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Stakeholder">Stakeholder</option>
-                                </FormControl>
+                                    <FormControl
+                                        componentClass="select"
+                                        placeholder="select"
+                                        id="editUserType"
+                                        value={this.state.editUserType}
+                                        onChange={this.handleChange('editUserType')}
+                                    >
+                                        <option value="Student">Student</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Stakeholder">Stakeholder</option>
+                                    </FormControl>
                                 </Col>
                             </FormGroup>
                             <FormGroup controlId="formHorizontalYear">
                                 <Col componentClass={ControlLabel} sm={2}>
-                                Year
+                                    Year
                                 </Col>
                                 <Col sm={10}>
-                                <FormControl
-                                    type="text"
-                                    placeholder="Year"
-                                    id="editYear"
-                                    value={this.state.editYear}
-                                    onChange={e => this.handleChange(e)}
-                                />
+                                    <FormControl
+                                        type="text"
+                                        placeholder="Year"
+                                        id="editYear"
+                                        value={this.state.editYear}
+                                        onChange={this.handleChange('editYear')}
+                                    />
                                 </Col>
                             </FormGroup>
                         </Form>
@@ -246,26 +254,26 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
                 </Modal>
             );
         }
-        
-        return(
+
+        return (
             <div style={style as any}>
                 <h2>User Management</h2>
 
                 <div>
-                <StudentRegistrationForm/>
-                <ButtonToolbar>
-                    <ToggleButtonGroup
-                        onChange={this.handleUserFilterChange}
-                        type="radio"
-                        name="userFilter"
-                        defaultValue={1}
-                    >
-                    <ToggleButton value={1}>All</ToggleButton>
-                    <ToggleButton value={2}>Student</ToggleButton>
-                    <ToggleButton value={3}>Stakeholder</ToggleButton>
-                    <ToggleButton value={4}>Admin</ToggleButton>
-                    </ToggleButtonGroup>
-                </ButtonToolbar>
+                    <StudentRegistrationForm />
+                    <ButtonToolbar>
+                        <ToggleButtonGroup
+                            onChange={this.handleUserFilterChange}
+                            type="radio"
+                            name="userFilter"
+                            defaultValue={1}
+                        >
+                            <ToggleButton value={1}>All</ToggleButton>
+                            <ToggleButton value={2}>Student</ToggleButton>
+                            <ToggleButton value={3}>Stakeholder</ToggleButton>
+                            <ToggleButton value={4}>Admin</ToggleButton>
+                        </ToggleButtonGroup>
+                    </ButtonToolbar>
                 </div>
 
                 <Table bordered={true} condensed={true}>
@@ -279,14 +287,14 @@ class UserManagement extends React.Component<UserListProps, UserListState> {
                         </tr>
                     </thead>
                     <tbody>
-                        {usersToDisplay.map((user: User, index: number) =>
+                        {usersToDisplay.map((user: IUser, index: number) =>
                             <tr key={user.userId}>
                                 <td>{user.firstName}</td>
                                 <td>{user.lastName}</td>
                                 <td>{user.userType}</td>
                                 <td>{user.email}</td>
                                 <td>
-                                    <Button style={{margin: 3}} bsSize="small" onClick={() => this.editUser(index, user)}>
+                                    <Button style={{ margin: 3 }} bsSize="small" onClick={() => this.editUser(index, user)}>
                                         Edit User
                                     </Button>
                                     <Button bsStyle="warning" bsSize="small" onClick={() => this.deleteUser(user)}>Delete User</Button>

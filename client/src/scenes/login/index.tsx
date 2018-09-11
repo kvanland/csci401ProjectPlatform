@@ -20,7 +20,7 @@ class Login extends React.Component {
                 <Row>
                     <Col>
                         <Panel>
-                            <LoginForm/>
+                            <LoginForm />
                         </Panel>
                     </Col>
                 </Row>

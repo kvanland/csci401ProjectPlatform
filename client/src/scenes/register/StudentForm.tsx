@@ -5,7 +5,8 @@ import {
     Col,
     FormControl,
     Button,
-    ControlLabel
+    ControlLabel,
+    FormControlProps
 } from 'react-bootstrap';
 
 const style = {
@@ -14,29 +15,29 @@ const style = {
     margin: 'auto',
 };
 
-interface StudentRegistrationProps {
+interface IStudentRegistrationProps {
 }
-interface StudentRegistrationState {
-firstName: string;
-lastName: string;
-email: string;
-phone: string;
-password: string;
-confirm: string;
+interface IStudentRegistrationState {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    password: string;
+    confirm: string;
 }
-class StudentRegistrationForm extends React.Component<StudentRegistrationProps, StudentRegistrationState> {
-    constructor(props: StudentRegistrationProps) {
-    super(props);
-    this.state = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        password: '',
-        confirm: ''
-    };
-    this.submitClicked = this.submitClicked.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+class StudentRegistrationForm extends React.Component<IStudentRegistrationProps, IStudentRegistrationState> {
+    constructor(props: IStudentRegistrationProps) {
+        super(props);
+        this.state = {
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            password: '',
+            confirm: ''
+        };
+        this.submitClicked = this.submitClicked.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     submitClicked() {
@@ -53,33 +54,33 @@ class StudentRegistrationForm extends React.Component<StudentRegistrationProps, 
         });
         request.setRequestHeader('Cache-Control', 'no-cache');
         request.send(data);
-        request.onreadystatechange = function() {
+        request.onreadystatechange = function () {
             window.location.href = '/';
         };
     }
 
-    handleChange(e: any) {
-    this.setState({ [e.target.id]: e.target.value });
+    public handleChange = (id: keyof IStudentRegistrationState) => (e: React.FormEvent<FormControlProps>) => {
+        this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    formGroup(controlId: string, type: string, id: string, placeholder: string, value: any) {
+    formGroup(controlId: string, type: string, id: keyof IStudentRegistrationState, placeholder: string, value: any) {
         return (
             <FormGroup controlId={controlId}>
                 <Col componentClass={ControlLabel} sm={2}>
-                {placeholder}
+                    {placeholder}
                 </Col>
                 <Col sm={10}>
-                <FormControl
-                    type={type}
-                    id={id}
-                    value={value}
-                    placeholder={placeholder}
-                    onChange={e => this.handleChange(e)}
-                />
+                    <FormControl
+                        type={type}
+                        id={id}
+                        value={value}
+                        placeholder={placeholder}
+                        onChange={this.handleChange(id)}
+                    />
                 </Col>
             </FormGroup>
         );
-        
+
     }
 
     render() {
@@ -96,7 +97,7 @@ class StudentRegistrationForm extends React.Component<StudentRegistrationProps, 
 
                     <FormGroup>
                         <Col smOffset={2} sm={10}>
-                        <Button type="reset" onClick={this.submitClicked}>Register</Button>
+                            <Button type="reset" onClick={this.submitClicked}>Register</Button>
                         </Col>
                     </FormGroup>
                 </Form>

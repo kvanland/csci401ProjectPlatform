@@ -5,7 +5,7 @@ class StudentPeerReviewForm extends React.Component {
     render() {
         return (
             <div>
-            <PeerReviewForm />
+                <PeerReviewForm />
             </div>
         );
     }

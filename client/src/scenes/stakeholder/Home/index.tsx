@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
     Panel,
-    Table, 
+    Table,
     Alert,
     Button
 } from 'react-bootstrap';
-import { 
+import {
     LinkContainer
 } from 'react-router-bootstrap';
 const viewIcon = require('../../../svg/viewIcon.svg');
@@ -14,22 +14,22 @@ const style = {
     float: 'none',
     margin: 'auto'
 };
-interface Project {
+interface IProject {
     projectId: number;
     projectName: string;
     statusId: number;
 }
 
-interface HomeState {
+interface IHomeState {
     projects: Array<{}>;
     isLoading: Boolean;
 }
 
-interface HomeProps {
+interface IHomeProps {
 }
 
-class StakeholderHome extends React.Component<HomeProps, HomeState> {
-    constructor(props: HomeProps) {
+class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
+    constructor(props: IHomeProps) {
         super(props);
         this.state = {
             projects: [],
@@ -38,11 +38,11 @@ class StakeholderHome extends React.Component<HomeProps, HomeState> {
     }
 
     componentDidMount() {
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
 
         fetch('http://localhost:8080/projects/' + sessionStorage.getItem('email'))
-        .then(response => response.json())
-        .then(data => this.setState({projects: data, isLoading: false}));
+            .then(response => response.json())
+            .then(data => this.setState({ projects: data, isLoading: false }));
     }
 
     getStatus(statusId: number) {
@@ -58,7 +58,7 @@ class StakeholderHome extends React.Component<HomeProps, HomeState> {
     }
 
     render() {
-        const {projects, isLoading} = this.state;
+        const { projects, isLoading } = this.state;
 
         if (isLoading) {
             return <p>Loading...</p>;
@@ -67,35 +67,35 @@ class StakeholderHome extends React.Component<HomeProps, HomeState> {
         return (
             <div style={style as any}>
 
-            <h3>Welcome back!</h3>
+                <h3>Welcome back!</h3>
 
-            <Panel>
-                <Panel.Heading>
-                    <Panel.Title componentClass="h3">Your Projects</Panel.Title>
-                </Panel.Heading>
-                <Panel.Body>
-                    <Table>
-                        <thead>
-                            <th>Project</th>
-                            <th>Status</th>
-                            <th>View/Edit</th>
-                        </thead>
-                        <tbody>
-                            {projects.map((project: Project, index: number) =>
-                                <tr key={project.projectId}>
-                                    <td>{project.projectName}</td>
-                                    <td>{this.getStatus(project.statusId)}</td>
-                                    <td>
-                                        <LinkContainer to={{pathname: 'stakeholder/project/' + project.projectId}}>
-                                        <img src={viewIcon}/>
-                                        </LinkContainer>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </Table>
-                </Panel.Body>
-            </Panel>
+                <Panel>
+                    <Panel.Heading>
+                        <Panel.Title componentClass="h3">Your Projects</Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body>
+                        <Table>
+                            <thead>
+                                <th>Project</th>
+                                <th>Status</th>
+                                <th>View/Edit</th>
+                            </thead>
+                            <tbody>
+                                {projects.map((project: IProject, index: number) =>
+                                    <tr key={project.projectId}>
+                                        <td>{project.projectName}</td>
+                                        <td>{this.getStatus(project.statusId)}</td>
+                                        <td>
+                                            <LinkContainer to={{ pathname: 'stakeholder/project/' + project.projectId }}>
+                                                <img src={viewIcon} />
+                                            </LinkContainer>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </Table>
+                    </Panel.Body>
+                </Panel>
             </div>
         );
     }
