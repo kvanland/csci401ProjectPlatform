@@ -8,6 +8,7 @@ import {
     ControlLabel,
     FormControlProps
 } from 'react-bootstrap';
+import autobind from 'autobind-decorator';
 
 interface IProjectProps {
 }
@@ -21,19 +22,15 @@ interface IProjectState {
 }
 
 class ProposalForm extends React.Component<IProjectProps, IProjectState> {
-    constructor(props: IProjectProps) {
-        super(props);
-        this.state = {
-            projectName: '',
-            projectSize: 0,
-            technologies: '',
-            background: '',
-            description: ''
-        };
-        this.submitClicked = this.submitClicked.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+    public state: IProjectState = {
+        projectName: '',
+        projectSize: 0,
+        technologies: '',
+        background: '',
+        description: ''
+    };
 
-    }
+    @autobind
     submitClicked() {
         var request = new XMLHttpRequest();
         request.withCredentials = true;
@@ -72,9 +69,9 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    renderFormGroup = (id: keyof IProjectState, label: string, placeholder: string, controlId: string, componentClass?: string) => {
+    renderFormGroup = (id: keyof IProjectState, label: string, placeholder: string, componentClass?: string) => {
         return (
-            <FormGroup controlId={controlId}>
+            <FormGroup>
                 <Col componentClass={ControlLabel} sm={2}>
                     <b>{label}</b>
                 </Col>
@@ -95,11 +92,11 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
     render() {
         return (
             <Form horizontal={true} >
-                {this.renderFormGroup('projectName', 'Project Name', 'Project Name', 'formHorizontalProjectName')}
-                {this.renderFormGroup('projectSize', 'Number of Students', 'Number of Students', 'formHorizontalNumberStudents')}
-                {this.renderFormGroup('technologies', 'Technologies Expected', 'Technologies Expected', 'formHorizontalTechnologies')}
-                {this.renderFormGroup('background', 'Background Requested', 'Background Requested', 'formHorizontalBackground')}
-                {this.renderFormGroup('description', 'Description', 'Description', 'formHorizontalDescription', 'textarea')}
+                {this.renderFormGroup('projectName', 'Project Name', 'Project Name')}
+                {this.renderFormGroup('projectSize', 'Number of Students', 'Number of Students')}
+                {this.renderFormGroup('technologies', 'Technologies Expected', 'Technologies Expected')}
+                {this.renderFormGroup('background', 'Background Requested', 'Background Requested')}
+                {this.renderFormGroup('description', 'Description', 'Description', 'textarea')}
             </Form>
         );
 

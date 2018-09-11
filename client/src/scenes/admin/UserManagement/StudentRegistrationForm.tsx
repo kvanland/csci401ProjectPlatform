@@ -49,9 +49,9 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
     }
 
     @autobind
-    formGroup(controlId: string, id: string, placeholder: string, value: any) {
+    formGroup(id: string, placeholder: string, value: any) {
         return (
-            <FormGroup controlId={controlId}>
+            <FormGroup>
                 <Row>
                     <Col componentClass={ControlLabel} sm={2}>
                         {placeholder}
@@ -80,8 +80,8 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         return (
             <div>
                 <Form horizontal={true} >
-                    {this.formGroup('formHorizontalEmails', 'studentEmails', 'Student Emails', this.state.studentEmails)}
-                    {this.formGroup('formHorizontalAdminEmails', 'adminEmails', 'Admin Emails', this.state.adminEmails)}
+                    {this.formGroup('studentEmails', 'Student Emails', this.state.studentEmails)}
+                    {this.formGroup('adminEmails', 'Admin Emails', this.state.adminEmails)}
                 </Form>
             </div>
         );

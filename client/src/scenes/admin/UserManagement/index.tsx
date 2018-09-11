@@ -171,7 +171,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                     </Modal.Header>
                     <Modal.Body>
                         <Form horizontal={true} >
-                            <FormGroup controlId="formHorizontalFirstName">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     First Name
                                 </Col>
@@ -185,7 +185,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                     />
                                 </Col>
                             </FormGroup>
-                            <FormGroup controlId="formHorizontalLastName">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     Last Name
                                 </Col>
@@ -199,7 +199,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                     />
                                 </Col>
                             </FormGroup>
-                            <FormGroup controlId="formHorizontalEmail">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     Email
                                 </Col>
@@ -213,7 +213,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                     />
                                 </Col>
                             </FormGroup>
-                            <FormGroup controlId="formHorizontalUserType">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     User Type
                                 </Col>
@@ -231,7 +231,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                     </FormControl>
                                 </Col>
                             </FormGroup>
-                            <FormGroup controlId="formHorizontalYear">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     Year
                                 </Col>

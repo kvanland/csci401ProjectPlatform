@@ -9,6 +9,7 @@ import {
     Row,
     FormControlProps
 } from 'react-bootstrap';
+import autobind from 'autobind-decorator';
 
 const style = {
     width: 600,
@@ -28,21 +29,17 @@ interface IStakeholderRegistrationState {
     confirm: string;
 }
 class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrationProps, IStakeholderRegistrationState> {
-    constructor(props: IStakeholderRegistrationProps) {
-        super(props);
-        this.state = {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            company: '',
-            password: '',
-            confirm: ''
-        };
-        this.submitClicked = this.submitClicked.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
+    public state: IStakeholderRegistrationState = {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        company: '',
+        password: '',
+        confirm: ''
+    };
 
+    @autobind
     submitClicked() {
         var request = new XMLHttpRequest();
         request.withCredentials = true;
@@ -67,9 +64,10 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    formGroup(controlId: string, type: string, id: keyof IStakeholderRegistrationState, placeholder: string, value: any) {
+    @autobind
+    formGroup(type: string, id: keyof IStakeholderRegistrationState, placeholder: string, value: any) {
         return (
-            <FormGroup controlId={controlId}>
+            <FormGroup>
                 <Col componentClass={ControlLabel} sm={3}>
                     {placeholder}
                 </Col>
@@ -94,13 +92,13 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
                     <Col>
                         <div>
                             <Form horizontal={true} >
-                                {this.formGroup('formHorizontalFirstName', 'text', 'firstName', 'First Name', this.state.firstName)}
-                                {this.formGroup('formHorizontalLastName', 'text', 'lastName', 'Last Name', this.state.lastName)}
-                                {this.formGroup('formHorizontalEmail', 'text', 'email', 'Email', this.state.email)}
-                                {this.formGroup('formHorizontalPhone', 'text', 'phone', 'Phone', this.state.phone)}
-                                {this.formGroup('formHorizontalCompany', 'text', 'company', 'Company/Organization', this.state.company)}
-                                {this.formGroup('formHorizontalPassword', 'password', 'password', 'Password', this.state.password)}
-                                {this.formGroup('formHorizontalConfirm', 'password', 'confirm', 'Confirm Password', this.state.confirm)}
+                                {this.formGroup('text', 'firstName', 'First Name', this.state.firstName)}
+                                {this.formGroup('text', 'lastName', 'Last Name', this.state.lastName)}
+                                {this.formGroup('text', 'email', 'Email', this.state.email)}
+                                {this.formGroup('text', 'phone', 'Phone', this.state.phone)}
+                                {this.formGroup('text', 'company', 'Company/Organization', this.state.company)}
+                                {this.formGroup('password', 'password', 'Password', this.state.password)}
+                                {this.formGroup('password', 'confirm', 'Confirm Password', this.state.confirm)}
 
                                 <FormGroup>
                                     <Col smOffset={3} sm={10}>

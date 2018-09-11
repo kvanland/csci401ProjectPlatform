@@ -8,6 +8,7 @@ import {
     ControlLabel,
     FormControlProps
 } from 'react-bootstrap';
+import autobind from 'autobind-decorator';
 
 interface IWeeklyReportProps {
 }
@@ -51,48 +52,45 @@ interface IWeeklyReportState {
 
 }
 class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReportState> {
-    constructor(props: IWeeklyReportProps) {
-        super(props);
-        this.state = {
-            name: '',
-            uscusername: '',
-            project: '',
-            reportdate: '',
-            lastWeekTasksH1: '',
-            lastWeekTasksH2: '',
-            lastWeekTasksH3: '',
-            lastWeekTasksH4: '',
-            lastWeekTasksH5: '',
-            lastWeekTasksH6: '',
-            lastWeekTasksH7: '',
+    public state: IWeeklyReportState = {
+        name: '',
+        uscusername: '',
+        project: '',
+        reportdate: '',
+        lastWeekTasksH1: '',
+        lastWeekTasksH2: '',
+        lastWeekTasksH3: '',
+        lastWeekTasksH4: '',
+        lastWeekTasksH5: '',
+        lastWeekTasksH6: '',
+        lastWeekTasksH7: '',
 
-            lastWeekTasksD1: '',
-            lastWeekTasksD2: '',
-            lastWeekTasksD3: '',
-            lastWeekTasksD4: '',
-            lastWeekTasksD5: '',
-            lastWeekTasksD6: '',
-            lastWeekTasksD7: '',
+        lastWeekTasksD1: '',
+        lastWeekTasksD2: '',
+        lastWeekTasksD3: '',
+        lastWeekTasksD4: '',
+        lastWeekTasksD5: '',
+        lastWeekTasksD6: '',
+        lastWeekTasksD7: '',
 
-            nextWeekTasksH1: '',
-            nextWeekTasksH2: '',
-            nextWeekTasksH3: '',
-            nextWeekTasksH4: '',
-            nextWeekTasksH5: '',
-            nextWeekTasksH6: '',
-            nextWeekTasksH7: '',
+        nextWeekTasksH1: '',
+        nextWeekTasksH2: '',
+        nextWeekTasksH3: '',
+        nextWeekTasksH4: '',
+        nextWeekTasksH5: '',
+        nextWeekTasksH6: '',
+        nextWeekTasksH7: '',
 
-            nextWeekTasksD1: '',
-            nextWeekTasksD2: '',
-            nextWeekTasksD3: '',
-            nextWeekTasksD4: '',
-            nextWeekTasksD5: '',
-            nextWeekTasksD6: '',
-            nextWeekTasksD7: ''
-        };
-        this.submitClicked = this.submitClicked.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
+        nextWeekTasksD1: '',
+        nextWeekTasksD2: '',
+        nextWeekTasksD3: '',
+        nextWeekTasksD4: '',
+        nextWeekTasksD5: '',
+        nextWeekTasksD6: '',
+        nextWeekTasksD7: ''
+    };
+
+    @autobind
     submitClicked() {
 
         var request = new XMLHttpRequest();
@@ -148,9 +146,9 @@ class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReport
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    renderFormGroup = (id: keyof IWeeklyReportState, label: string, placeholder: string, controlId: string, formType: string = 'text', componentClass?: string) => {
+    renderFormGroup = (id: keyof IWeeklyReportState, label: string, placeholder: string, formType: string = 'text', componentClass?: string) => {
         return (
-            <FormGroup controlId={controlId}>
+            <FormGroup>
                 <Col componentClass={ControlLabel} sm={2}>
                     <b>{label}</b>
                 </Col>
@@ -171,8 +169,8 @@ class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReport
     renderLastWeekFragment = (id: 1 | 2 | 3 | 4 | 5 | 6 | 7) => {
         return (
             <React.Fragment>
-                {this.renderFormGroup(`lastWeekTasksH${id}` as any, `Last Week Task ${id} Hours`, '# hours', `formHorizontalLWH${id}`)}
-                {this.renderFormGroup(`lastWeekTasksD${id}` as any, `Task ${id} Description`, 'Describe the task.', `formHorizontalLWD${id}`)}
+                {this.renderFormGroup(`lastWeekTasksH${id}` as any, `Last Week Task ${id} Hours`, '# hours')}
+                {this.renderFormGroup(`lastWeekTasksD${id}` as any, `Task ${id} Description`, 'Describe the task.')}
             </React.Fragment>
         );
     }
@@ -180,8 +178,8 @@ class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReport
     renderNextWeekFragment = (id: 1 | 2 | 3 | 4 | 5 | 6 | 7) => {
         return (
             <React.Fragment>
-                {this.renderFormGroup(`nextWeekTasksH${id}` as any, `Next Week Task ${id} Hours`, '# hours', `formHorizontalNWH${id}`)}
-                {this.renderFormGroup(`nextWeekTasksD${id}` as any, `Task ${id} Description`, 'Describe the task.', `formHorizontalNWD${id}`)}
+                {this.renderFormGroup(`nextWeekTasksH${id}` as any, `Next Week Task ${id} Hours`, '# hours')}
+                {this.renderFormGroup(`nextWeekTasksD${id}` as any, `Task ${id} Description`, 'Describe the task.')}
             </React.Fragment>
         );
     }
@@ -189,10 +187,10 @@ class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReport
     render() {
         return (
             <Form horizontal={true} >
-                {this.renderFormGroup('name', 'Student Name', 'Tommy Trojan', 'formHorizontalStudentName')}
-                {this.renderFormGroup('uscusername', 'USC Username', 'ttrojan', 'formHorizontalUsername')}
-                {this.renderFormGroup('project', 'Project Name', 'Project Name', 'formHorizontalProject')}
-                {this.renderFormGroup('reportdate', 'Report Date', 'MM/DD/YYYY', 'formHorizontalDate')}
+                {this.renderFormGroup('name', 'Student Name', 'Tommy Trojan')}
+                {this.renderFormGroup('uscusername', 'USC Username', 'ttrojan')}
+                {this.renderFormGroup('project', 'Project Name', 'Project Name')}
+                {this.renderFormGroup('reportdate', 'Report Date', 'MM/DD/YYYY')}
 
                 {this.renderLastWeekFragment(1)}
                 {this.renderLastWeekFragment(2)}

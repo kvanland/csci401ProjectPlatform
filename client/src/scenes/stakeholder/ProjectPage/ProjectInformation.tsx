@@ -63,7 +63,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                 <Panel.Heading>Project Information</Panel.Heading>
                 <Panel.Body>
                     <Form horizontal={true} >
-                        <FormGroup controlId="formHorizontalProjectName">
+                        <FormGroup>
                             <Col componentClass={ControlLabel} sm={2}>
                                 <b>Project Name</b>
                             </Col>
@@ -78,7 +78,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                             </Col>
                         </FormGroup>
 
-                        <FormGroup controlId="formHorizontalNumberStudents">
+                        <FormGroup>
                             <Col componentClass={ControlLabel} sm={2}>
                                 <b>Number of Students</b>
                             </Col>
@@ -93,7 +93,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                             </Col>
                         </FormGroup>
 
-                        <FormGroup controlId="formHorizontalTechnologies">
+                        <FormGroup>
                             <Col componentClass={ControlLabel} sm={2}>
                                 <b>Technologies Expected</b>
                             </Col>
@@ -108,7 +108,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                             </Col>
                         </FormGroup>
 
-                        <FormGroup controlId="formHorizontalBackground">
+                        <FormGroup>
                             <Col componentClass={ControlLabel} sm={2}>
                                 <b>Background Requested</b>
                             </Col>
@@ -123,7 +123,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                             </Col>
                         </FormGroup>
 
-                        <FormGroup controlId="formHorizontalDescription">
+                        <FormGroup>
                             <Col componentClass={ControlLabel} sm={2}>
                                 <b>Description</b>
                             </Col>

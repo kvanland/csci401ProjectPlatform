@@ -15,7 +15,7 @@ class ClassOverview extends React.Component {
             <div>
                 <Panel>
                     <Form horizontal={true}>
-                        <FormGroup controlId="formInlineSearch">
+                        <FormGroup>
                             <FormControl type="text" placeholder="Search..." />
                         </FormGroup>
                         <Button type="submit" bsStyle="primary">Search Assignments</Button>

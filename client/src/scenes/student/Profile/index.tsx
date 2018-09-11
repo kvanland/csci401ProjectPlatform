@@ -11,6 +11,7 @@ import {
     FormControlProps
 } from 'react-bootstrap';
 import { IUser } from '../../../common/interfaces';
+import autobind from 'autobind-decorator';
 const style = {
     width: 1000,
     float: 'none',
@@ -24,17 +25,13 @@ interface IProfileState extends IUser {
 var studentName = '';
 
 class StudentProfile extends React.Component<IProfileProps, IProfileState> {
-    constructor(props: IProfileProps) {
-        super(props);
-        this.state = {
-            firstName: '',
-            email: '',
-            phone: '',
-            isLoading: false,
-        };
-        this.submitClicked = this.submitClicked.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
+    public state: IProfileState = {
+        firstName: '',
+        email: '',
+        phone: '',
+        isLoading: false,
+    };
+
     componentDidMount() {
         this.setState({ isLoading: true });
         this.setState({ isLoading: true });
@@ -43,6 +40,8 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
             .then(data => this.setState({ ...data, isLoading: false }));
 
     }
+
+    @autobind
     submitClicked() {
         /*     var request = new XMLHttpRequest();
              request.withCredentials = true;
@@ -66,9 +65,9 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    renderFormGroup = (id: keyof IUser, label: string, placeholder: string, controlId: string, formType: string = 'text', componentClass?: string) => {
+    renderFormGroup = (id: keyof IUser, label: string, placeholder: string, formType: string = 'text', componentClass?: string) => {
         return (
-            <FormGroup controlId={controlId}>
+            <FormGroup>
                 <Col componentClass={ControlLabel} sm={2}>
                     <b>{label}</b>
                 </Col>
@@ -97,9 +96,9 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
                     <Panel.Heading>Profile</Panel.Heading>
                     <Panel.Body>
                         <Form horizontal={true}>
-                            {this.renderFormGroup('firstName', 'First Name', 'Tommy', 'formHorizontalStudentName')}
-                            {this.renderFormGroup('email', 'Email', 'ttrojan@usc.edu', 'formHorizontalStudentEmail')}
-                            {this.renderFormGroup('phone', 'Phone', '(123) 456-7890', 'formHorizontalStudentPhone', 'tel')}
+                            {this.renderFormGroup('firstName', 'First Name', 'Tommy')}
+                            {this.renderFormGroup('email', 'Email', 'ttrojan@usc.edu')}
+                            {this.renderFormGroup('phone', 'Phone', '(123) 456-7890', 'tel')}
 
                             <FormGroup>
                                 <Col smOffset={2} sm={10}>

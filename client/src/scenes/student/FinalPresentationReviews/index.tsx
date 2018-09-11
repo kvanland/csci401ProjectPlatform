@@ -19,7 +19,7 @@ class FinalPresentationReviews extends React.Component {
             </Panel.Heading>
                     <Panel.Body>
                         <Form horizontal={true}>
-                            <FormGroup controlId="formHorizontalProjectName">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     Project Name:
                     </Col>
@@ -28,7 +28,7 @@ class FinalPresentationReviews extends React.Component {
                                 </Col>
                             </FormGroup>
 
-                            <FormGroup controlId="formHorizontalReview">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     Review:
                                 </Col>

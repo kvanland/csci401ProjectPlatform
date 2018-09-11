@@ -9,8 +9,10 @@ import {
     FormControlProps
 } from 'react-bootstrap';
 import autobind from 'autobind-decorator';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { getApiURI } from '../../common/server';
 
-interface ILoginProps {
+interface ILoginProps extends RouteComponentProps<any> {
 }
 interface ILoginState {
     email: string;
@@ -29,63 +31,57 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
     }
 
     @autobind
-    submitClicked() {
-        {
-            this.getToken(
-                function (token: string) {
-                    sessionStorage.setItem('jwt', token);
-                }
-            );
-        }
-    }
+    async submitClicked() {
+        try {
+            const response = await fetch(getApiURI('/users/login'), {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: this.state.email,
+                    password: this.state.password
+                }),
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                credentials: 'include'
+            });
 
-    @autobind
-    getToken(callback: any) {
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080/users/login');
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
-            email: this.state.email,
-            password: this.state.password
-        });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
-        sessionStorage.setItem('email', this.state.email);
-        request.onreadystatechange = function () {
-            if (request.readyState === 4) {
-                if (request.responseText.length > 4) {
-                    var resp = request.responseText.split(',', 2);
-                    if (resp.length === 2) {
-                        var type = resp[1];
-                        sessionStorage.setItem('userType', type);
-                        if (type === 'Student') {
-                            window.location.href = '/student';
-                        }
-                        if (type === 'Admin') {
-                            window.location.href = '/admin';
-                        }
-                        if (type === 'Stakeholder') {
-                            window.location.href = '/stakeholder';
-                        }
-                        var token = resp[0];
-                        callback.apply(this, [token]);
-
-                        alert('Logging you in...');
-                    }
-                }
+            if (response.body === null) {
+                throw Error('invalid server response: null');
             }
-        };
+
+            const responseData = (await response.text()).split(',', 2);
+            if (responseData.length !== 2) {
+                throw Error(`invalid server response: ${responseData}`);
+            }
+
+            const userToken = responseData[0];
+            const userType = responseData[1];
+
+            // set session
+            sessionStorage.setItem('email', this.state.email);
+            sessionStorage.setItem('jwt', userToken);
+            sessionStorage.setItem('userType', userType);
+
+            // redirect to the correct landing page
+            if (userType === 'Student') {
+                this.props.history.push('/student');
+            } else if (userType === 'Admin') {
+                this.props.history.push('/admin');
+            } else if (userType === 'Stakeholder') {
+                this.props.history.push('/stakeholder');
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     render() {
         return (
             <div>
                 <Form horizontal={true} >
-                    <FormGroup controlId="formHorizontalEmail">
-                        <Col componentClass={ControlLabel} sm={2}>
-                            Email
-                </Col>
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} sm={2}>Email</Col>
                         <Col sm={10}>
                             <FormControl
                                 type="text"
@@ -97,10 +93,8 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
                         </Col>
                     </FormGroup>
 
-                    <FormGroup controlId="formHorizontalPassword">
-                        <Col componentClass={ControlLabel} sm={2}>
-                            Password
-                </Col>
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} sm={2}>Password</Col>
                         <Col sm={10}>
                             <FormControl
                                 type="password"
@@ -124,4 +118,4 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
     }
 }
 
-export default LoginForm;
+export default withRouter(LoginForm);

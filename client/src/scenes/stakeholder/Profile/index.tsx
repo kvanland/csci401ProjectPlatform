@@ -101,7 +101,7 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
             </Panel.Heading>
                     <Panel.Body>
                         <Form horizontal={true}>
-                            <FormGroup controlId="formHorizontalStakeholderName">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     First Name:
                     </Col>
@@ -115,7 +115,7 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                                 </Col>
                             </FormGroup>
 
-                            <FormGroup controlId="formHorizontalStakeholderEmail">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     Email:
                     </Col>
@@ -129,7 +129,7 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                                 </Col>
                             </FormGroup>
 
-                            <FormGroup controlId="formHorizontalStakeholderCompany">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     Company/Organization:
                     </Col>
@@ -143,7 +143,7 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                                 </Col>
                             </FormGroup>
 
-                            <FormGroup controlId="formHorizontalStakeholderPhone">
+                            <FormGroup>
                                 <Col componentClass={ControlLabel} sm={2}>
                                     Phone:
                     </Col>

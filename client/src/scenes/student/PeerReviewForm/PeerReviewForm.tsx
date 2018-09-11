@@ -1,4 +1,5 @@
 import * as React from 'react';
+import autobind from 'autobind-decorator';
 import {
     Form,
     FormGroup,
@@ -21,19 +22,16 @@ interface IPeerReviewState {
     negativefeedback: string;
 }
 class PeerReviewForm extends React.Component<IPeerReviewProps, IPeerReviewState> {
-    constructor(props: IPeerReviewProps) {
-        super(props);
-        this.state = {
-            uscusername: '',
-            teammateaddress: '',
-            negativefeedback: '',
-            uscidnumber: '',
-            teamcount: '',
-            positivefeedback: '',
-        };
-        this.submitClicked = this.submitClicked.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
+    public state: IPeerReviewState = {
+        uscusername: '',
+        teammateaddress: '',
+        negativefeedback: '',
+        uscidnumber: '',
+        teamcount: '',
+        positivefeedback: '',
+    };
+
+    @autobind
     submitClicked() {
 
         var request = new XMLHttpRequest();
@@ -63,9 +61,9 @@ class PeerReviewForm extends React.Component<IPeerReviewProps, IPeerReviewState>
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    renderFormGroup = (id: keyof IPeerReviewState, label: string, placeholder: string, controlId: string, componentClass?: string) => {
+    renderFormGroup = (id: keyof IPeerReviewState, label: string, placeholder: string, componentClass?: string) => {
         return (
-            <FormGroup controlId={controlId}>
+            <FormGroup>
                 <Col componentClass={ControlLabel} sm={2}>
                     <b>{label}</b>
                 </Col>
@@ -86,12 +84,12 @@ class PeerReviewForm extends React.Component<IPeerReviewProps, IPeerReviewState>
     render() {
         return (
             <Form horizontal={true} >
-                {this.renderFormGroup('uscusername', 'USC Username', 'ttrojan', 'formHorizontalUsername')}
-                {this.renderFormGroup('uscidnumber', 'USC ID Number', '1234567890', 'formHorizontalUscidnumber')}
-                {this.renderFormGroup('teammateaddress', 'Team Member Email', 'teammate@usc.edu', 'formHorizontalteammateaddress')}
-                {this.renderFormGroup('teamcount', 'Number of Members', 'Number of members including yourself', 'formHorizontalteamcount')}
-                {this.renderFormGroup('positivefeedback', 'Positive Feedback', 'What positive feedback do you have for this student?', 'formHorizontalPositiveFeedback')}
-                {this.renderFormGroup('negativefeedback', 'Constructive Feedback', 'How can this student improve his/her work on the project?', 'formHorizontalNegativeFeedback')}
+                {this.renderFormGroup('uscusername', 'USC Username', 'ttrojan')}
+                {this.renderFormGroup('uscidnumber', 'USC ID Number', '1234567890')}
+                {this.renderFormGroup('teammateaddress', 'Team Member Email', 'teammate@usc.edu')}
+                {this.renderFormGroup('teamcount', 'Number of Members', 'Number of members including yourself')}
+                {this.renderFormGroup('positivefeedback', 'Positive Feedback', 'What positive feedback do you have for this student?')}
+                {this.renderFormGroup('negativefeedback', 'Constructive Feedback', 'How can this student improve his/her work on the project?')}
 
                 <FormGroup>
                     <Col smOffset={2} sm={10}>
