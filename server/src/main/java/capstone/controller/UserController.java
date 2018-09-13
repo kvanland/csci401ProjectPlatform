@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -139,17 +141,25 @@ public class UserController
 	// Student registration
 	@PostMapping("/student-registration")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public @ResponseBody String studentRegistrationAttempt(@RequestBody Map<String, String> info) {
+	public @ResponseBody BodyBuilder studentRegistrationAttempt(@RequestBody Map<String, String> info) {
 		String email = info.get(Constants.EMAIL);
-		String name = info.get(Constants.FIRST_NAME);
+		String firstName = info.get(Constants.FIRST_NAME);
 		String lastName = info.get(Constants.LAST_NAME);
 		String phone = info.get(Constants.PHONE);
 		String encryptedPassword = EncryptPassword.encryptPassword(info.get(Constants.PASSWORD));
+
+		System.out.println("this endpoint has been reached");
+		System.out.println(email);
+		System.out.println(firstName);
+		System.out.println(lastName);
+		System.out.println(phone);
+		System.out.println(encryptedPassword);
 		
 		// Check if email is a registered student email and not already registered
+		
 		if (regRepo.findByEmail(email) != null && userService.findStudentByEmail(email) == null) {
 			Student s = new Student();
-			s.setFirstName(name);
+			s.setFirstName(firstName);
 			s.setLastName(lastName);
 			s.setEmail(email);
 			s.setPhone(phone);
@@ -157,9 +167,9 @@ public class UserController
 			s.setUserType(Constants.STUDENT);
 			userService.saveUser(s);
 			System.out.println("New student created");
-			return Constants.SUCCESS;
+			return ResponseEntity.ok();
 		}
-		return Constants.EMPTY;
+		return ResponseEntity.badRequest();
 	}
 	
 	// Stakeholder registration

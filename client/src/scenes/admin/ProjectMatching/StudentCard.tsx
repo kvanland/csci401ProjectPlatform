@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { DragSource } from 'react-dnd';
 import ItemTypes from './ItemTypes';
 import {
@@ -17,14 +16,14 @@ const style = {
     padding: 5
 };
 
-interface StudentCardProps {
+interface IStudentCardProps {
     student: StudentInfo;
     key: number;
-    connectDragSource?: PropTypes.func.isRequired;
-    isDragging?: PropTypes.bool.isRequired;
+    connectDragSource?: any;
+    isDragging?: any;
 }
 
-interface StudentCardState {
+interface IStudentCardState {
 
 }
 
@@ -42,16 +41,16 @@ function collect(connect: any, monitor: any) {
 }
 
 @DragSource(ItemTypes.STUDENT, studentSource, collect)
-class StudentCard extends React.Component<StudentCardProps, StudentCardState> {
-    constructor(props: StudentCardProps) {
+class StudentCard extends React.Component<IStudentCardProps, IStudentCardState> {
+    constructor(props: IStudentCardProps) {
         super(props);
-    
+
         this.state = {
         };
     }
 
     render() {
-        const {student, key, connectDragSource, isDragging} = this.props;
+        const { student, key, connectDragSource, isDragging } = this.props;
 
         const rankingDetails = (
             <Popover id="popover-positioned-left" title="Rankings">
@@ -66,8 +65,8 @@ class StudentCard extends React.Component<StudentCardProps, StudentCardState> {
         return connectDragSource(
             <div>
                 <OverlayTrigger trigger={['hover', 'focus']} placement="left" overlay={rankingDetails}>
-                    <div 
-                        key={key} 
+                    <div
+                        key={key}
                         style={{
                             ...style,
                             opacity: isDragging ? 0.5 : 1,

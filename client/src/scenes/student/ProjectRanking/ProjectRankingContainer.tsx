@@ -23,19 +23,19 @@ const cardTarget = {
     },
 };
 
-interface Props {
+interface IProjectRankingContainerProps {
     connectDropTarget?: any;
 }
 
-interface State {
+interface IProjectRankingContainerState {
     isLoading: boolean;
-    projectCards: Array<Project>;
+    projectCards: Array<IProject>;
     rankingData: Array<number>;
     submitted: boolean;
     email: string;
 }
 
-interface Project {
+interface IProject {
     projectId: number;
     projectName: string;
     statusId: number;
@@ -51,9 +51,9 @@ interface Project {
     connectDropTarget: connect.dropTarget(),
 }))
 
-class ProjectRankingContainer extends React.Component<Props, State> {
+class ProjectRankingContainer extends React.Component<IProjectRankingContainerProps, IProjectRankingContainerState> {
 
-    constructor(props: any) {
+    constructor(props: IProjectRankingContainerProps) {
         super(props);
         this.moveCard = this.moveCard.bind(this);
         this.findCard = this.findCard.bind(this);
@@ -81,26 +81,26 @@ class ProjectRankingContainer extends React.Component<Props, State> {
             project4: this.state.projectCards[3].projectName,
             project5: this.state.projectCards[4].projectName
             });*/
-            
-            this.state.projectCards.map((project: Project) => (
+
+            this.state.projectCards.map((project: IProject) => (
                 this.state.rankingData.push(project.projectId)
             ));
             var data = JSON.stringify(
-               this.state.rankingData
+                this.state.rankingData
             );
             request.setRequestHeader('Cache-Control', 'no-cache');
             request.send(data);
             alert('Project rankings have been submitted!');
-            this.setState({submitted: true});
+            this.setState({ submitted: true });
         }
     }
 
     componentDidMount() {
-        this.setState({isLoading: true});
-   
+        this.setState({ isLoading: true });
+
         fetch('http://localhost:8080/projects')
             .then(response => response.json())
-            .then(data => this.setState({projectCards: data, isLoading: false}));
+            .then(data => this.setState({ projectCards: data, isLoading: false }));
     }
 
     moveCard(id: number, atIndex: number) {
@@ -126,12 +126,12 @@ class ProjectRankingContainer extends React.Component<Props, State> {
 
     render() {
         const { connectDropTarget } = this.props;
-        const {projectCards, isLoading, submitted} = this.state;
+        const { projectCards, isLoading, submitted } = this.state;
 
         if (submitted) {
             return (
                 <div style={style as any}>
-                    <div style={{width: 600}}>
+                    <div style={{ width: 600 }}>
                         You have already submitted your rankings.
                     </div>
                 </div>
@@ -144,14 +144,14 @@ class ProjectRankingContainer extends React.Component<Props, State> {
 
         return connectDropTarget(
             <div style={style as any}>
-                <div style={{width: 600}}>
+                <div style={{ width: 600 }}>
                     <h3>Rank Projects</h3>
                     <Grid>
                         <Row>
                             <Col lg={4}>
-                                Drag to reorder projects by priority. 
+                                Drag to reorder projects by priority.
                                 Your first 5 preferences will be considered.
-                                Click "Submit Rankings" when finished. 
+                                Click "Submit Rankings" when finished.
                                 Rankings can only be submitted once.
                             </Col>
                             <Col lg={2}>
@@ -163,7 +163,7 @@ class ProjectRankingContainer extends React.Component<Props, State> {
                     </Grid>
                 </div>
                 <br />
-                {projectCards.map((projectCard: Project, index: number) => (
+                {projectCards.map((projectCard: IProject, index: number) => (
                     <ProjectCard
                         key={projectCard.projectId}
                         rank={index + 1}

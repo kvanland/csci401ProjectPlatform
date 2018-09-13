@@ -5,33 +5,32 @@ import {
     Col,
     FormControl,
     Button,
-    ControlLabel
+    ControlLabel,
+    FormControlProps
 } from 'react-bootstrap';
+import autobind from 'autobind-decorator';
 
-interface ProjectProps {
-}
-interface ProjectState {
-projectName: string;
-projectSize: number;
-technologies: string;
-background: string;
-description: string;
+interface IProjectProps {
 }
 
-class ProposalForm extends React.Component<ProjectProps, ProjectState> {
-constructor(props: ProjectProps) {
-    super(props);
-    this.state = {
-    projectName: '',
-    projectSize: 0,
-    technologies: '',
-    background: '',
-    description: ''
+interface IProjectState {
+    projectName: string;
+    projectSize: number;
+    technologies: string;
+    background: string;
+    description: string;
+}
+
+class ProposalForm extends React.Component<IProjectProps, IProjectState> {
+    public state: IProjectState = {
+        projectName: '',
+        projectSize: 0,
+        technologies: '',
+        background: '',
+        description: ''
     };
-    this.submitClicked = this.submitClicked.bind(this);
-    this.handleChange = this.handleChange.bind(this);
 
-}
+    @autobind
     submitClicked() {
         var request = new XMLHttpRequest();
         request.withCredentials = true;
@@ -65,96 +64,40 @@ constructor(props: ProjectProps) {
         });
         */
     }
-    handleChange(e: any) {
-    this.setState({ [e.target.id]: e.target.value });
 
+    public handleChange = (id: keyof IProjectState) => (e: React.FormEvent<FormControlProps>) => {
+        this.setState({ [id]: e.currentTarget.value } as any);
+    }
+
+    renderFormGroup = (id: keyof IProjectState, label: string, placeholder: string, componentClass?: string) => {
+        return (
+            <FormGroup>
+                <Col componentClass={ControlLabel} sm={2}>
+                    <b>{label}</b>
+                </Col>
+                <Col sm={10}>
+                    <FormControl
+                        componentClass={componentClass}
+                        type="text"
+                        id={id}
+                        value={this.state[id]}
+                        onChange={this.handleChange(id)}
+                        placeholder={placeholder}
+                    />
+                </Col>
+            </FormGroup>
+        );
     }
 
     render() {
         return (
-        <Form horizontal={true} >
-            <FormGroup controlId="formHorizontalProjectName">
-                <Col componentClass={ControlLabel} sm={2}>
-                    <b>Project Name</b>
-                </Col>
-                <Col sm={10}>
-                <FormControl
-                    type="text"
-                    id="projectName"
-                    value={this.state.projectName}
-                    onChange={e => this.handleChange(e)}
-                    placeholder="Project Name"
-                />
-                </Col>
-            </FormGroup>
-
-            <FormGroup controlId="formHorizontalNumberStudents">
-                <Col componentClass={ControlLabel} sm={2}>
-                    <b>Number of Students</b>
-                </Col>
-                <Col sm={10}>
-                <FormControl
-                    type="text"
-                    id="projectSize"
-                    placeholder="Number of Students"
-                    onChange={e => this.handleChange(e)}
-                    value={this.state.projectSize}
-                />
-                </Col>
-            </FormGroup>
-            
-            <FormGroup controlId="formHorizontalTechnologies">
-                <Col componentClass={ControlLabel} sm={2}>
-                    <b>Technologies Expected</b>
-                </Col>
-                <Col sm={10}>
-                <FormControl
-                    type="text"
-                    id="technologies"
-                    value={this.state.technologies}
-                    placeholder="Technologies expected"
-                    onChange={e => this.handleChange(e)}
-                />
-                </Col>
-            </FormGroup>
-            
-            <FormGroup controlId="formHorizontalBackground">
-                <Col componentClass={ControlLabel} sm={2}>
-                    <b>Background Requested</b>
-                </Col>
-                <Col sm={10}>
-                <FormControl
-                    type="text"
-                    id="background"
-                    value={this.state.background}
-                    placeholder="Background requested"
-                    onChange={e => this.handleChange(e)}
-                />
-                </Col>
-            </FormGroup>
-            
-            <FormGroup controlId="formHorizontalDescription">
-                <Col componentClass={ControlLabel} sm={2}>
-                    <b>Description</b>
-                </Col>
-                <Col sm={10}>
-                <FormControl
-                    componentClass="textarea"
-                    type="text"
-                    id="description"
-                    value={this.state.description}
-                    placeholder="Description"
-                    onChange={e => this.handleChange(e)}
-                />
-                </Col>
-            </FormGroup>
-
-            <FormGroup>
-                <Col smOffset={2} sm={10}>
-                <Button type="submit" onClick={this.submitClicked}>Submit</Button>
-                </Col>
-            </FormGroup>
-        </Form>
+            <Form horizontal={true} >
+                {this.renderFormGroup('projectName', 'Project Name', 'Project Name')}
+                {this.renderFormGroup('projectSize', 'Number of Students', 'Number of Students')}
+                {this.renderFormGroup('technologies', 'Technologies Expected', 'Technologies Expected')}
+                {this.renderFormGroup('background', 'Background Requested', 'Background Requested')}
+                {this.renderFormGroup('description', 'Description', 'Description', 'textarea')}
+            </Form>
         );
 
     }

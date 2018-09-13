@@ -5,27 +5,27 @@ import {
     Button
 } from 'react-bootstrap';
 
-interface Deliverable {
+interface IDeliverable {
     id: number;
     name: string;
     description: string;
     status: string;
     submitDateTime: Date;
 }
-interface DeliverableProps {
+interface IDeliverableProps {
     projectId: string;
 }
 
-interface DeliverableState {
+interface IDeliverableState {
     deliverables: Array<{}>;
     isLoading: boolean;
 }
 
-class DeliverableList extends React.Component<DeliverableProps, DeliverableState> {
+class DeliverableList extends React.Component<IDeliverableProps, IDeliverableState> {
 
-    constructor(props: DeliverableProps) {
+    constructor(props: IDeliverableProps) {
         super(props);
-        
+
         this.state = {
             deliverables: [],
             isLoading: false
@@ -57,20 +57,20 @@ class DeliverableList extends React.Component<DeliverableProps, DeliverableState
     }
 
     componentDidMount() {
-        this.setState({isLoading: true});
-        
+        this.setState({ isLoading: true });
+
         fetch('http://localhost:8080/deliverables/' + this.props.projectId)
             .then(response => response.json())
-            .then(data => this.setState({deliverables: data, isLoading: false}));
+            .then(data => this.setState({ deliverables: data, isLoading: false }));
     }
 
     render() {
-        const {deliverables, isLoading} = this.state;
-        
+        const { deliverables, isLoading } = this.state;
+
         if (isLoading) {
             return <p>Loading...</p>;
         }
-        return(
+        return (
             <Panel>
                 <Panel.Heading>
                     <Panel.Title componentClass="h3">Projects</Panel.Title>
@@ -84,7 +84,7 @@ class DeliverableList extends React.Component<DeliverableProps, DeliverableState
                             <th>Approve</th>
                         </thead>
                         <tbody>
-                            {deliverables.map((deliverable: Deliverable) =>
+                            {deliverables.map((deliverable: IDeliverable) =>
                                 <tr key={deliverable.id}>
                                     <td>Deliverable {deliverable.id}</td>
                                     <td>{deliverable.submitDateTime}</td>

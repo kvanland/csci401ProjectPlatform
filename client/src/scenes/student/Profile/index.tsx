@@ -7,68 +7,84 @@ import {
     FormGroup,
     Col,
     FormControl,
-    ControlLabel    
+    ControlLabel,
+    FormControlProps
 } from 'react-bootstrap';
+import { IUser } from '../../../common/interfaces';
+import autobind from 'autobind-decorator';
 const style = {
     width: 1000,
     float: 'none',
     margin: 'auto'
 };
-interface ProfileProps {
+interface IProfileProps {
 }
-interface User {
-    firstName: string;
-    email: string;
-    phone: string;
-}
-interface ProfileState {
-    user: User;
+interface IProfileState extends IUser {
     isLoading: boolean;
 }
 var studentName = '';
 
-class StudentProfile extends React.Component<ProfileProps, ProfileState> {
-    constructor(props: ProfileProps) {
-        super(props);
-        this.state = {
-            user: {
-            firstName: '',
-            email: '',
-            phone: ''},
-            isLoading: false,
-        };
-        this.submitClicked = this.submitClicked.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
+class StudentProfile extends React.Component<IProfileProps, IProfileState> {
+    public state: IProfileState = {
+        firstName: '',
+        email: '',
+        phone: '',
+        isLoading: false,
+    };
+
     componentDidMount() {
-        this.setState({isLoading: true});
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
+        this.setState({ isLoading: true });
         fetch('http://localhost:8080/users/' + sessionStorage.getItem('email'))
-        .then(response => response.json())
-        .then(data => this.setState({user: data, isLoading: false}));
-        
+            .then(response => response.json())
+            .then(data => this.setState({ ...data, isLoading: false }));
+
     }
+
+    @autobind
     submitClicked() {
-   /*     var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080//');
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
-            fullName: this.state.name,
-            email: this.state.email,
-            phone: this.state.phone
-        });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
-        alert(request.responseText + 'Logging you in...');
-        request.onreadystatechange = function() {
-            if (request.readyState === 4) {
-            }
-        }; */
+        /*     var request = new XMLHttpRequest();
+             request.withCredentials = true;
+             request.open('POST', 'http://localhost:8080//');
+             request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+             var data = JSON.stringify({
+                 fullName: this.state.name,
+                 email: this.state.email,
+                 phone: this.state.phone
+             });
+             request.setRequestHeader('Cache-Control', 'no-cache');
+             request.send(data);
+             alert(request.responseText + 'Logging you in...');
+             request.onreadystatechange = function() {
+                 if (request.readyState === 4) {
+                 }
+             }; */
     }
-    handleChange(e: any) {
-        this.setState({ [e.target.id]: e.target.value });
+
+    public handleChange = (id: keyof IProfileState) => (e: React.FormEvent<FormControlProps>) => {
+        this.setState({ [id]: e.currentTarget.value } as any);
     }
+
+    renderFormGroup = (id: keyof IUser, label: string, placeholder: string, formType: string = 'text', componentClass?: string) => {
+        return (
+            <FormGroup>
+                <Col componentClass={ControlLabel} sm={2}>
+                    <b>{label}</b>
+                </Col>
+                <Col sm={10}>
+                    <FormControl
+                        componentClass={componentClass}
+                        type={formType}
+                        id={id}
+                        value={this.state[id]}
+                        onChange={this.handleChange(id)}
+                        placeholder={placeholder}
+                    />
+                </Col>
+            </FormGroup>
+        );
+    }
+
     render() {
         if (this.state.isLoading) {
             return <p>Loading...</p>;
@@ -76,63 +92,23 @@ class StudentProfile extends React.Component<ProfileProps, ProfileState> {
 
         return (
             <div style={style as any}>
-            <Panel>
-            <Panel.Heading>
-                Profile
-            </Panel.Heading>
-            <Panel.Body>
-            <Form horizontal={true}>
-                <FormGroup controlId="formHorizontalStudentName">
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Name:
-                    </Col>
-                    <Col sm={10}>
-                        <FormControl 
-                            type="text" 
-                            id="name"
-                            value={this.state.user.firstName}
-                            onChange={e => this.handleChange(e)} 
-                        />
-                    </Col>             
-                </FormGroup>
-                
-                <FormGroup controlId="formHorizontalStudentEmail">
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Email:
-                    </Col>
-                    <Col sm={10}>
-                        <FormControl 
-                            type="email" 
-                            id="email"
-                            value={this.state.user.email} 
-                            onChange={e => this.handleChange(e)} 
-                        />
-                    </Col>             
-                </FormGroup>
-                
-                <FormGroup controlId="formHorizontalStudentPhone">
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Phone:
-                    </Col>
-                    <Col sm={10}>
-                        <FormControl 
-                            type="tel" 
-                            id="phone"
-                            value={this.state.user.phone}
-                            onChange={e => this.handleChange(e)} 
-                        />
-                    </Col>             
-                </FormGroup> 
-                
-                <FormGroup>
-                    <Col smOffset={2} sm={10}>
-                        <Button type="submit" bsStyle="primary" onClick={this.submitClicked}>Edit/Save Profile</Button>
-                    </Col>
-                </FormGroup>               
-            </Form>    
-            </Panel.Body>
-            </Panel>
-        </div>
+                <Panel>
+                    <Panel.Heading>Profile</Panel.Heading>
+                    <Panel.Body>
+                        <Form horizontal={true}>
+                            {this.renderFormGroup('firstName', 'First Name', 'Tommy')}
+                            {this.renderFormGroup('email', 'Email', 'ttrojan@usc.edu')}
+                            {this.renderFormGroup('phone', 'Phone', '(123) 456-7890', 'tel')}
+
+                            <FormGroup>
+                                <Col smOffset={2} sm={10}>
+                                    <Button type="submit" bsStyle="primary" onClick={this.submitClicked}>Edit/Save Profile</Button>
+                                </Col>
+                            </FormGroup>
+                        </Form>
+                    </Panel.Body>
+                </Panel>
+            </div>
         );
     }
 }

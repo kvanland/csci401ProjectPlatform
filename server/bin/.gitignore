@@ -1,3 +1,4 @@
+/src/main/java/capstone/algorithm/real_data/iterations/
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
@@ -22,3 +23,4 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+/src/main/java/capstone/algorithm/real_data/iterations/

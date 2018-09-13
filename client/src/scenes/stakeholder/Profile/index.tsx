@@ -6,42 +6,40 @@ import {
     FormGroup,
     Col,
     FormControl,
-    ControlLabel    
+    ControlLabel,
+    FormControlProps
 } from 'react-bootstrap';
+import { IUser } from '../../../common/interfaces';
 const style = {
     width: 1000,
     float: 'none',
     margin: 'auto'
 };
 
-interface ProfileProps {
+interface IProfileProps {
 }
-interface User {
-    firstName: string;
-    email: string;
-    phone: string;
-    organization: string;
-}
-interface ProfileState {
-    user: User;
+interface IProfileState extends IUser {
     isLoading: boolean;
 }
 
-class StakeholderProfile extends React.Component<ProfileProps, ProfileState> {
-    constructor(props: ProfileProps) {
+class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
+    constructor(props: IProfileProps) {
         super(props);
         this.state = {
-            user: {firstName: '', email: '', phone: '', organization: ''},
+            firstName: '',
+            email: '',
+            phone: '',
+            organization: '',
             isLoading: false,
         };
         this.submitClicked = this.submitClicked.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
     componentDidMount() {
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
         fetch('http://localhost:8080/users/' + sessionStorage.getItem('email'))
-        .then(response => response.json())
-        .then(data => this.setState({user: data, isLoading: false}));
+            .then(response => response.json())
+            .then(data => this.setState({ ...data, isLoading: false }));
         /*var request = new XMLHttpRequest();
         request.withCredentials = true;
         request.open('GET', 'http://localhost:8080/users/' + sessionStorage.getItem('email'));
@@ -68,26 +66,28 @@ class StakeholderProfile extends React.Component<ProfileProps, ProfileState> {
         };*/
     }
     submitClicked() {
-   /*     var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080//');
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
-            fullName: this.state.name,
-            email: this.state.email,
-            phone: this.state.phone
-        });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
-        alert(request.responseText + 'Logging you in...');
-        request.onreadystatechange = function() {
-            if (request.readyState === 4) {
-            }
-        }; */
+        /*     var request = new XMLHttpRequest();
+             request.withCredentials = true;
+             request.open('POST', 'http://localhost:8080//');
+             request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+             var data = JSON.stringify({
+                 fullName: this.state.name,
+                 email: this.state.email,
+                 phone: this.state.phone
+             });
+             request.setRequestHeader('Cache-Control', 'no-cache');
+             request.send(data);
+             alert(request.responseText + 'Logging you in...');
+             request.onreadystatechange = function() {
+                 if (request.readyState === 4) {
+                 }
+             }; */
     }
-    handleChange(e: any) {
-        this.setState({ [e.target.id]: e.target.value });
-    }        
+
+    public handleChange = (id: keyof IProfileState) => (e: React.FormEvent<FormControlProps>) => {
+        this.setState({ [id]: e.currentTarget.value } as any);
+    }
+
     render() {
         if (this.state.isLoading) {
             return <p>Loading...</p>;
@@ -95,76 +95,76 @@ class StakeholderProfile extends React.Component<ProfileProps, ProfileState> {
 
         return (
             <div style={style as any}>
-            <Panel>
-            <Panel.Heading>
-                Profile
+                <Panel>
+                    <Panel.Heading>
+                        Profile
             </Panel.Heading>
-            <Panel.Body>
-            <Form horizontal={true}>
-                <FormGroup controlId="formHorizontalStakeholderName">
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Name:
+                    <Panel.Body>
+                        <Form horizontal={true}>
+                            <FormGroup>
+                                <Col componentClass={ControlLabel} sm={2}>
+                                    First Name:
                     </Col>
-                    <Col sm={10}>
-                        <FormControl 
-                            type="text" 
-                            id="name"
-                            value={this.state.user.firstName}
-                            onChange={e => this.handleChange(e)} 
-                        />
-                    </Col>             
-                </FormGroup>
-                
-                <FormGroup controlId="formHorizontalStakeholderEmail">
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Email:
-                    </Col>
-                    <Col sm={10}>
-                        <FormControl 
-                            type="email" 
-                            id="email"
-                            value={this.state.user.email} 
-                            onChange={e => this.handleChange(e)}  
-                        />
-                    </Col>             
-                </FormGroup>
+                                <Col sm={10}>
+                                    <FormControl
+                                        type="text"
+                                        id="firstName"
+                                        value={this.state.firstName}
+                                        onChange={this.handleChange('firstName')}
+                                    />
+                                </Col>
+                            </FormGroup>
 
-                <FormGroup controlId="formHorizontalStakeholderCompany">
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Company/Organization:
+                            <FormGroup>
+                                <Col componentClass={ControlLabel} sm={2}>
+                                    Email:
                     </Col>
-                    <Col sm={10}>
-                        <FormControl 
-                            type="text"
-                            id="company" 
-                            value={this.state.user.organization}
-                            onChange={e => this.handleChange(e)} 
-                        />
-                    </Col>             
-                </FormGroup>                
-                
-                <FormGroup controlId="formHorizontalStakeholderPhone">
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Phone:
+                                <Col sm={10}>
+                                    <FormControl
+                                        type="email"
+                                        id="email"
+                                        value={this.state.email}
+                                        onChange={this.handleChange('email')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Col componentClass={ControlLabel} sm={2}>
+                                    Company/Organization:
                     </Col>
-                    <Col sm={10}>
-                        <FormControl 
-                                type="tel" 
-                                id="phone"
-                                value={this.state.user.phone}
-                                onChange={e => this.handleChange(e)} 
-                        />                    
-                    </Col>             
-                </FormGroup> 
-                
-                <FormGroup>
-                    <Col smOffset={2} sm={10}>
-                        <Button type="submit" bsStyle="primary">Edit/Save Profile</Button>
+                                <Col sm={10}>
+                                    <FormControl
+                                        type="text"
+                                        id="organization"
+                                        value={this.state.organization}
+                                        onChange={this.handleChange('organization')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Col componentClass={ControlLabel} sm={2}>
+                                    Phone:
                     </Col>
-                </FormGroup>               
-            </Form>    
-            </Panel.Body>
-            </Panel>
+                                <Col sm={10}>
+                                    <FormControl
+                                        type="tel"
+                                        id="phone"
+                                        value={this.state.phone}
+                                        onChange={this.handleChange('phone')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Col smOffset={2} sm={10}>
+                                    <Button type="submit" bsStyle="primary">Edit/Save Profile</Button>
+                                </Col>
+                            </FormGroup>
+                        </Form>
+                    </Panel.Body>
+                </Panel>
             </div>
         );
     }

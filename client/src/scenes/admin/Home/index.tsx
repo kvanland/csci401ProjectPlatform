@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {
-  Panel,
-  Alert
-} from 'react-bootstrap';
+// import {
+//   Panel,
+//   Alert
+// } from 'react-bootstrap';
 
 const style = {
   width: 1000,
@@ -11,12 +11,12 @@ const style = {
 };
 
 class AdminHome extends React.Component {
-  
+
   render() {
     return (
-          <div style={style as any}>
-            <h3>Welcome back!</h3>
-          </div>
+      <div style={style as any}>
+        <h3>Welcome back!</h3>
+      </div>
     );
   }
 }
