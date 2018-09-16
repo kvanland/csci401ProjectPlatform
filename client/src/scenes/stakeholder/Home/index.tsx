@@ -8,6 +8,7 @@ import {
 import {
     LinkContainer
 } from 'react-router-bootstrap';
+import { getApiURI } from '../../../common/server';
 const viewIcon = require('../../../svg/viewIcon.svg');
 const style = {
     width: 1000,
@@ -37,12 +38,20 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch('http://localhost:8080/projects/' + sessionStorage.getItem('email'))
-            .then(response => response.json())
-            .then(data => this.setState({ projects: data, isLoading: false }));
+        try {
+            const response = await fetch(getApiURI('/projects/' + sessionStorage.getItem('email')));
+            const data = await response.json();
+
+            this.setState({
+                projects: data,
+                isLoading: false
+            });
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     getStatus(statusId: number) {

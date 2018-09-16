@@ -9,6 +9,7 @@ import {
   Row,
   Col,
 } from 'react-bootstrap';
+import { getApiURI } from '../../../common/server';
 
 interface IProjectMatchingProps {
 }
@@ -54,11 +55,19 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     this.setState({ isLoading: false });
   }
 
-  launch = () => {
+  async launch() {
     this.setState({ isLaunched: true });
-    fetch('http://localhost:8080/projects/assignment')
-      .then(response => response.json())
-      .then(data => this.setState({ projects: data }));
+    try {
+      const response = await fetch(getApiURI('/projects/assignment'));
+      const data = await response.json();
+
+      this.setState({
+        projects: data
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
   }
 
   buttonTitle() {

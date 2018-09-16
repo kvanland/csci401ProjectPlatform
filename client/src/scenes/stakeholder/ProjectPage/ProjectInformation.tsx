@@ -11,6 +11,7 @@ import {
     Table,
     FormControlProps
 } from 'react-bootstrap';
+import { getApiURI } from '../../../common/server';
 
 interface IProjectProps {
     projectId: string;
@@ -43,20 +44,36 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    componentDidMount() {
-        fetch('http://localhost:8080/projects/' + sessionStorage.getItem('email') + '/' + this.props.projectId)
-            .then(response => response.json())
-            .then(data => this.setState({ ...data, isLoading: false }));
+    async componentDidMount() {
+        try {
+            const response = await fetch(getApiURI('/projects/') + sessionStorage.getItem('email') + '/' + this.props.projectId);
+            const data = await response.json();
+
+            this.setState({
+                ...data,
+                isLoading: false
+            });
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     public handleChange = (id: keyof IProjectState) => (e: React.FormEvent<FormControlProps>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    render() {
-        fetch('http://localhost:8080/projects/' + this.state.projectId + '/students')
-            .then(response => response.json())
-            .then(data => this.setState({ students: data }));
+    async render() {
+
+        try {
+            const response = await fetch(getApiURI('/projects/') + this.state.projectId + '/students');
+            const data = await response.json();
+
+            this.setState({
+                students: data
+            });
+        } catch (e) {
+            console.error(e);
+        }
 
         return (
             <Panel>

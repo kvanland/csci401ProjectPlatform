@@ -59,14 +59,12 @@ public class UserController
 	}
 	
 	@GetMapping("")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public Collection<User> getUsers()
 	{
 		return userService.getUsers();
 	}
 	
 	@GetMapping("/{email:.+}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public User getUser(@PathVariable("email") String email)
 	{
 		System.out.println(email);
@@ -74,19 +72,16 @@ public class UserController
 	}
 	
 	@GetMapping("/stakeholders")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public Collection<Stakeholder> getStakeholders() {
 		return userService.getStakeholders();
 	}
 	
 	@GetMapping("/students")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public Collection<Student> getStudents() {
 		return userService.getStudents(); 
 	}
 	
 	@PostMapping("/update-info")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public void updateUserInfo(@RequestBody Map<String, String> info) {
 		String originalEmail = info.get(Constants.ORIGINAL_EMAIL);
 		String newEmail = info.get(Constants.EMAIL);
@@ -113,7 +108,6 @@ public class UserController
 	
 	// Admin registration
 	@PostMapping("/admin-registration")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody String adminRegistrationAttempt(@RequestBody Map<String, String> info) {
 		String email = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);
@@ -140,7 +134,6 @@ public class UserController
 	
 	// Student registration
 	@PostMapping("/student-registration")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody BodyBuilder studentRegistrationAttempt(@RequestBody Map<String, String> info) {
 		String email = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);
@@ -174,7 +167,6 @@ public class UserController
 	
 	// Stakeholder registration
 	@PostMapping("/stakeholder-registration")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody String stakeholderRegistrationAttempt(@RequestBody Map<String, String> info) {
 		System.out.println("Start reg");
 		String email = info.get(Constants.EMAIL);
@@ -203,7 +195,6 @@ public class UserController
 	
 	// Admin can register student emails and send an invitation to the platform
 	@RequestMapping(value = "/student-emails-registration",consumes= "application/json",produces= "application/json", method = RequestMethod.POST)
-	@CrossOrigin(origins = "http://localhost:3000")
 	public void studentEmailRegistrationAttempt(@RequestBody Map<String, String> emailsData)
 	{
 		System.out.println(emailsData);
@@ -224,7 +215,6 @@ public class UserController
 	/* Login */
 	
 	@PostMapping("/login")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public String login(@RequestBody User login) throws ServletException {
 
 	    String jwtToken = "";

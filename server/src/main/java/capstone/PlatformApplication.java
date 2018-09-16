@@ -13,7 +13,7 @@ public class PlatformApplication {
 	public FilterRegistrationBean jwtFilter() {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 		registrationBean.setFilter(new JwtFilter());
-		registrationBean.addUrlPatterns("/users");
+		registrationBean.addUrlPatterns("/");
 		
 		return registrationBean;
 	}

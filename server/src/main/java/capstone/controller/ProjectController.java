@@ -32,13 +32,10 @@ public class ProjectController
 	@Autowired
 	private UserService userService;
 	
-	public ProjectController()
-	{
-	}
 	
 	// Initialize database tables with sample students and projects taken from the Spring 2018 class.
+	// Used for initializing the database for testing purposes
 	@GetMapping("/init")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public String initTables() {
 		projectService.initTables();
 		return Constants.SUCCESS;
@@ -47,7 +44,6 @@ public class ProjectController
 	/* Getting projects from user information */
 	
 	@GetMapping("")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public List<Project> getProjects()
 	{
 		return projectService.findAll();
@@ -55,7 +51,6 @@ public class ProjectController
 	
 	// Get all projects that a stakeholder owns
 	@GetMapping("/{email:.+}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public List<Project> getProjectsByEmail(@PathVariable("email") String email) {
 		Stakeholder user = userService.findStakeholderByEmail(email);
 		List<Project> projects = userService.getStakeholderProjects(user);
@@ -64,7 +59,6 @@ public class ProjectController
 	
 	// Get one project that a stakeholder owns
 	@GetMapping("/{email:.+}/{projectId}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public Project getProjectByEmailAndId(@PathVariable("email") String email,
 			@PathVariable("projectId") Long projectId) {
 		Stakeholder user = userService.findStakeholderByEmail(email);
@@ -79,7 +73,6 @@ public class ProjectController
 	
 	// Get a student's project
 	@GetMapping("/student/{email:.+}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody Project getUserProject(@PathVariable("email") String email) {
 		Student user = (Student) userService.findUserByEmail(email);
 		System.out.println(user.getProject().getProjectName());
@@ -89,13 +82,11 @@ public class ProjectController
 	/* Getting users from project information */
 	
 	@GetMapping("/{projectId}/students")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody List<User> getAllStudentsOnProject(@PathVariable("projectId") int projectId) {
 		return userService.findAllByProject(projectService.findByProjectId(projectId));
 	}
 	
 	@GetMapping("/{projectId}/stakeholder")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody User getStakeholderOnProject(@PathVariable("projectId") int projectId) {
 		List<Stakeholder> stakeholders = (List<Stakeholder>) userService.getStakeholders();
 		for (Stakeholder s : stakeholders) {
@@ -111,7 +102,6 @@ public class ProjectController
 	/* Project Matching */
 
 	@GetMapping("/assignment")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public List<Project> projectAssignment()
 	{
 		System.out.println("running assignment");
@@ -134,7 +124,6 @@ public class ProjectController
 	
 	// Assign projects to students
 	@PostMapping("/assign-to-students")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody String assignProjectsToStudents(@RequestBody ArrayList<Project> projects) {
 		for (Project project : projects) {
 			if (project.getProjectId() > 0) {
@@ -153,7 +142,6 @@ public class ProjectController
 	// Submit project ranking for a student
 	//@PostMapping("/rankingsSubmitAttempt/{email:.+}")
 	@PostMapping("/{email:.+}/submit-ranking")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody String projectRankingsSubmission(@PathVariable("email") String email, @RequestBody List<Integer> projects) {
 		User user = userService.findUserByEmail(email);
 		for (int rank = 1; rank <= 5; rank++) {
@@ -167,7 +155,6 @@ public class ProjectController
 	// When a stakeholder submits a proposal
 	// Save a new project and attach a stakeholder to that project
 	@PostMapping("/save/{email:.+}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody Project saveData(@PathVariable("email") String email, 
 			@RequestBody Project project)
 	{
@@ -182,7 +169,6 @@ public class ProjectController
 	}
 	
 	@PostMapping("/pending/{projectId}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody String pendingProjects(@PathVariable("projectId") int projectId) {
 		Project project = projectService.findByProjectId(projectId);
 		project.setStatusId(1);
@@ -191,7 +177,6 @@ public class ProjectController
 	}
 	
 	@PostMapping("/approve/{projectId}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody String approveProjects(@PathVariable("projectId") int projectId) {
 		Project project = projectService.findByProjectId(projectId);
 		project.setStatusId(2);
@@ -200,7 +185,6 @@ public class ProjectController
 	}
 	
 	@PostMapping("/reject/{projectId}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody String rejectProjects(@PathVariable("projectId") int projectId) {
 		Project project = projectService.findByProjectId(projectId);
 		project.setStatusId(3);
@@ -209,7 +193,6 @@ public class ProjectController
 	}
 	
 	@PostMapping("/change/{projectId}")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody String requestChangeProjects(@PathVariable("projectId") int projectId) {
 		Project project = projectService.findByProjectId(projectId);
 		project.setStatusId(4);

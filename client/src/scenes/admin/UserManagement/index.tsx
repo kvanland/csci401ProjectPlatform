@@ -16,6 +16,7 @@ import {
 
 } from 'react-bootstrap';
 import StudentRegistrationForm from './StudentRegistrationForm';
+import { getApiURI } from '../../../common/server';
 
 const style = {
     width: 1000,
@@ -61,17 +62,27 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ isLoading: true });
+        
+        try {
+            const response = await fetch(getApiURI('/users'), {
+                method: 'get',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('jwt')
+                })
+            }); 
+            const data = await response.json();
 
-        fetch('http://localhost:8080/users', {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': 'Bearer ' + sessionStorage.getItem('jwt')
-            })
-        })
-            .then(response => response.json())
-            .then(data => this.setState({ allUsers: data, usersToDisplay: data, isLoading: false }));
+            this.setState({
+                allUsers: data,
+                usersToDisplay: data,
+                isLoading: false,
+            });
+        } catch (e) {
+            console.error(e);
+        }
+
     }
 
     cancelEdit = () => {

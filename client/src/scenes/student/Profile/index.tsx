@@ -12,6 +12,8 @@ import {
 } from 'react-bootstrap';
 import { IUser } from '../../../common/interfaces';
 import autobind from 'autobind-decorator';
+
+import { getApiURI } from '../../../common/server';
 const style = {
     width: 1000,
     float: 'none',
@@ -34,10 +36,18 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
 
     componentDidMount() {
         this.setState({ isLoading: true });
-        this.setState({ isLoading: true });
-        fetch('http://localhost:8080/users/' + sessionStorage.getItem('email'))
-            .then(response => response.json())
-            .then(data => this.setState({ ...data, isLoading: false }));
+        
+        try {
+            const response = await fetch(getApiURI('/users/') + sessionStorage.getItem('email'));
+            const data = await response.json();
+
+            this.setState({
+                ...data,
+                isLoading: false
+            });
+        } catch (e) {
+            console.error(e);
+        }
 
     }
 

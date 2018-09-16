@@ -10,6 +10,7 @@ import {
     Row,
     Col,
 } from 'react-bootstrap';
+import { getApiURI } from '../../../common/server';
 
 const style = {
     width: 600,
@@ -98,9 +99,18 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
     componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch('http://localhost:8080/projects')
-            .then(response => response.json())
-            .then(data => this.setState({ projectCards: data, isLoading: false }));
+        try {
+            const response = await fetch(getApiURI('projects'));
+            const data = await response.json();
+
+            this.setState({
+                projectCards: data,
+                isLoading: false
+            });
+        } catch (e) {
+            console.error(e);
+        }
+
     }
 
     moveCard(id: number, atIndex: number) {

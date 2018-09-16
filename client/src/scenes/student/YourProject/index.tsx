@@ -4,6 +4,7 @@ import {
     Button,
     Table
 } from 'react-bootstrap';
+import { getApiURI } from '../../../common/server';
 
 interface IProjectProps {
 }
@@ -51,17 +52,40 @@ class StudentProject extends React.Component<IProjectProps, IProjectState> {
     async componentDidMount() {
         this.setState({ isLoading: true });
 
-        await fetch('http://localhost:8080/projects/student/' + sessionStorage.getItem('email'))
-            .then(response => response.json())
-            .then(data => this.setState({ project: data, isLoading: false }));
+        try {
+            const response = await fetch(getApiURI('/projects/student/') + sessionStorage.getItem('email'));
+            const data = await response.json();
 
-        await fetch('http://localhost:8080/projects/' + this.state.project.projectId + '/students')
-            .then(response => response.json())
-            .then(data => this.setState({ students: data }));
+            this.setState({
+                project: data,
+                isLoading: false
+            });
+        } catch (e) {
+            console.error(e);
+        }
 
-        fetch('http://localhost:8080/projects/' + this.state.project.projectId + '/stakeholder')
-            .then(response => response.json())
-            .then(data => this.setState({ stakeholder: data }));
+        try {
+            const response = await fetch(getApiURI('/projects/') + this.state.project.projectId + '/students');
+            const data = await response.json();
+
+            this.setState({
+                students: data
+            });
+        } catch (e) {
+            console.error(e);
+        }
+
+        try {
+            const response = await fetch(getApiURI('/projects/') + this.state.project.projectId + '/stakeholder');
+            const data = await response.json();
+
+            this.setState({
+                stakeholder: data
+            });
+        } catch (e) {
+            console.error(e);
+        }
+
 
         /*
                 var request = new XMLHttpRequest();

@@ -31,7 +31,7 @@ import capstone.service.EmailService;
  * This controller is a WIP. Deliverables is likely the closest to fully functional.
  */
 @RestController
-@RequestMapping("")
+@RequestMapping("/deliverables")
 public class AssignmentController {
 	@Autowired
 	private DeliverableRepository deliverableRepo;
@@ -47,15 +47,13 @@ public class AssignmentController {
 	
 	/* Deliverables */
 
-	@PostMapping("/deliverables/info")
-	@CrossOrigin(origins = "http://localhost:3000")
+	@PostMapping("/info")
 	public void createDeliverableInfo(@RequestBody Deliverable deliverable) {
 		System.out.println(deliverable.name + " " + deliverable.description);
 		deliverableRepo.save(deliverable);
 	}
 
-	@PostMapping("/deliverables/upload")
-	@CrossOrigin(origins = "http://localhost:3000")
+	@PostMapping("/upload")
 	public void createDeliverable(@RequestParam("file") MultipartFile uploadfile) {
 		if (!uploadfile.isEmpty()) {
 			try {
@@ -66,28 +64,24 @@ public class AssignmentController {
 		}
 	}
 
-	@GetMapping("/deliverables/all")
-	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/all")
 	public Iterable<Deliverable> getAllDeliverables() {
 		return deliverableRepo.findAll();
 	}
 
-	@GetMapping("/deliverables/{project_number}")
-	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/{project_number}")
 	public Iterable<Deliverable> getDeliverable(@PathVariable("project_number") Long projectNumber) {
 		return deliverableRepo.findAllByProjectId(projectNumber);
 	}
 
-	@PostMapping("/deliverables/{project_number}/{deliverable_number}/approve")
-	@CrossOrigin(origins = "http://localhost:3000")
+	@PostMapping("/{project_number}/{deliverable_number}/approve")
 	public void approveDeliverable(@PathVariable("project_number") Long projectNumber,
 			@PathVariable("deliverable_number") Long deliverableNumber) {
 		deliverableRepo.setStatusForId("Approved", deliverableNumber);
 		System.out.println("Approved!");
 	}
 
-	@PostMapping("/deliverables/{project_number}/{deliverable_number}/reject")
-	@CrossOrigin(origins = "http://localhost:3000")
+	@PostMapping("/{project_number}/{deliverable_number}/reject")
 	public void rejectDeliverable(@PathVariable("project_number") Long projectNumber,
 			@PathVariable("deliverable_number") Long deliverableNumber) {
 		deliverableRepo.setStatusForId("Rejected", deliverableNumber);
@@ -106,7 +100,6 @@ public class AssignmentController {
 	/* Weekly Status Reports */
 	
 	@PostMapping("/weeklyReportForm")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody WeeklyReport weeklyReportSubmissionAttempt(@RequestBody WeeklyReport weeklyreportdata) {
 		System.out.println("Received HTTP POST");
 		String timeStamp = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss").format(new Date());
@@ -140,7 +133,6 @@ public class AssignmentController {
 	/* Peer Reviews */
 	
 	@PostMapping("/peerReviewForm")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public @ResponseBody PeerReview peerReviewSubmissionAttempt(@RequestBody PeerReview peerreviewdata) {
 		System.out.println("Received HTTP POST");
 		String timeStamp = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss").format(new Date());

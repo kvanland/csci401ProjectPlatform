@@ -10,6 +10,7 @@ import {
     FormControlProps
 } from 'react-bootstrap';
 import { IUser } from '../../../common/interfaces';
+import { getApiURI } from '../../../common/server';
 const style = {
     width: 1000,
     float: 'none',
@@ -35,11 +36,20 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
         this.submitClicked = this.submitClicked.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ isLoading: true });
-        fetch('http://localhost:8080/users/' + sessionStorage.getItem('email'))
-            .then(response => response.json())
-            .then(data => this.setState({ ...data, isLoading: false }));
+
+        try {
+            const response = await fetch(getApiURI('users/' + sessionStorage.getItem('email')));
+            const data = await response.json();
+
+            this.setState({
+                ...data,
+                isLoading: false
+            });
+        } catch (e) {
+            console.error(e);
+        }
         /*var request = new XMLHttpRequest();
         request.withCredentials = true;
         request.open('GET', 'http://localhost:8080/users/' + sessionStorage.getItem('email'));

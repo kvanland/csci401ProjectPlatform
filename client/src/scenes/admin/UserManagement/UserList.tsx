@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IUser } from '../../../common/interfaces';
+import { getApiURI } from '../../../common/server';
 
 interface IUserListProps {
 }
@@ -22,9 +23,18 @@ class UserList extends React.Component<IUserListProps, IUserListState> {
   componentDidMount() {
     this.setState({ isLoading: true });
 
-    fetch('http://localhost:8080/users')
-      .then(response => response.json())
-      .then(data => this.setState({ users: data, isLoading: false }));
+    try {
+      const response = await fetch(getApiURI('/users'));
+      const data = await response.json();
+
+      this.setState({
+        users: data,
+        isLoading: false;
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
   }
 
   /*

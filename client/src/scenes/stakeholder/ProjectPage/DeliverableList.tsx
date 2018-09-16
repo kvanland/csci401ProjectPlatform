@@ -4,6 +4,7 @@ import {
     Table,
     Button
 } from 'react-bootstrap';
+import { getApiURI } from '../../../common/server';
 
 interface IDeliverable {
     id: number;
@@ -59,9 +60,18 @@ class DeliverableList extends React.Component<IDeliverableProps, IDeliverableSta
     componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch('http://localhost:8080/deliverables/' + this.props.projectId)
-            .then(response => response.json())
-            .then(data => this.setState({ deliverables: data, isLoading: false }));
+        try {
+            const response = await fetch(getApiURI('/deliverables/' + this.props.projectId)));
+            const data = await response.json();
+
+            this.setState({
+                deliverables: data,
+                isLoading: false
+            });
+        } catch (e) {
+            console.error(e);
+        }
+        
     }
 
     render() {

@@ -7,6 +7,7 @@ import {
     FormGroup,
     FormControl
 } from 'react-bootstrap';
+import { getApiURI } from '../../../common/server';
 
 interface IProjectListProps {
 }
@@ -52,6 +53,9 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
         });
         request.setRequestHeader('Cache-Control', 'no-cache');
         request.send(data); */
+
+        // var request = new Request(getApiURI('/projects'));
+
         var request = new XMLHttpRequest();
         request.withCredentials = true;
         if (type === 1) {
@@ -97,12 +101,20 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
             });
         }
     }
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch('http://localhost:8080/projects')
-            .then(response => response.json())
-            .then(data => this.setState({ projects: data, isLoading: false }));
+        try {
+            const response = await fetch(getApiURI('/projects'));
+            const data = await response.json();
+
+            this.setState({
+                projects: data,
+                isLoading: false
+            });
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     getStatus(id: number) {
