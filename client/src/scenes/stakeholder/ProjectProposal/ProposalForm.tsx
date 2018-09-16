@@ -97,6 +97,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                 {this.renderFormGroup('technologies', 'Technologies Expected', 'Technologies Expected')}
                 {this.renderFormGroup('background', 'Background Requested', 'Background Requested')}
                 {this.renderFormGroup('description', 'Description', 'Description', 'textarea')}
+                <Button bsStyle="success" onClick={this.submitClicked}>Submit</Button>
             </Form>
         );
 
