@@ -7,7 +7,6 @@ import {
     ModalBody,
     ModalFooter,
     Col,
-    ButtonToolbar
 } from 'reactstrap';
 import StudentRegistrationForm from './StudentRegistrationForm';
 import { getApiURI } from '../../../common/server';
@@ -20,6 +19,7 @@ interface IUserListProps {
 
 interface IUserListState {
     allUsers: Array<{}>;
+    userFilterType: string;
     usersToDisplay: Array<{}>;
     userIndexToEdit: number;
     userToEdit?: IUser;
@@ -44,6 +44,7 @@ interface IUser {
 class UserManagement extends React.Component<IUserListProps, IUserListState> {
     state: IUserListState = {
         allUsers: [],
+        userFilterType: 'All',
         usersToDisplay: [],
         userIndexToEdit: -1,
         userToEdit: undefined,
@@ -117,20 +118,9 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         } as any);
     }
 
-    handleUserFilterChange = (e: any) => {
+    handleUserFilterChange = (userFilterType: string) => () => {
         var _usersToDisplay: IUser[] = [];
         const { allUsers } = this.state;
-        var userFilterType = '';
-
-        if (e === 1) {
-            userFilterType = 'All';
-        } else if (e === 2) {
-            userFilterType = 'Student';
-        } else if (e === 3) {
-            userFilterType = 'Stakeholder';
-        } else if (e === 4) {
-            userFilterType = 'Admin';
-        }
 
         allUsers.forEach((user: IUser) => {
             if (user.userType === userFilterType) {
@@ -140,7 +130,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
             }
         });
 
-        this.setState({ usersToDisplay: _usersToDisplay });
+        this.setState({ userFilterType, usersToDisplay: _usersToDisplay });
     }
 
     editUser(index: number, user: IUser) {
@@ -229,17 +219,15 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
 
                 <div>
                     <StudentRegistrationForm />
-                    <ButtonToolbar>
-                        <ButtonGroup>
-                            <Button>All</Button>
-                            <Button>Student</Button>
-                            <Button>Stakeholder</Button>
-                            <Button>Admin</Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
+                    <ButtonGroup>
+                        <Button onClick={this.handleUserFilterChange('All')} icon="filter" active={this.state.userFilterType === 'All'}>All</Button>
+                        <Button onClick={this.handleUserFilterChange('Student')} active={this.state.userFilterType === 'Student'}>Student</Button>
+                        <Button onClick={this.handleUserFilterChange('Stakeholder')} active={this.state.userFilterType === 'Stakeholder'}>Stakeholder</Button>
+                        <Button onClick={this.handleUserFilterChange('Admin')} active={this.state.userFilterType === 'Admin'}>Admin</Button>
+                    </ButtonGroup>
                 </div>
 
-                <HTMLTable bordered={true} striped={true}>
+                <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
                     <thead>
                         <tr>
                             <th>First Name</th>

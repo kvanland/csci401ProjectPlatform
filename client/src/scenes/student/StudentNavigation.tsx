@@ -36,59 +36,57 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
 
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <Navbar>
-            <NavbarBrand>
-              <img src={logo} className="App-logo" alt="logo" />
-            </NavbarBrand>
+      <div>
+        <Navbar>
+          <NavbarBrand>
+            <img src={logo} className="App-logo" alt="logo" />
+          </NavbarBrand>
 
-            <NavbarBrand>
-              <LinkContainer to="/student">
-                <a>CSCI 401</a>
-              </LinkContainer>
-            </NavbarBrand>
-            <Nav>
-              <LinkContainer to="/student/profile">
-                <NavItem eventKey={1}>
-                  Profile
+          <NavbarBrand>
+            <LinkContainer to="/student">
+              <a>CSCI 401</a>
+            </LinkContainer>
+          </NavbarBrand>
+          <Nav>
+            <LinkContainer to="/student/profile">
+              <NavItem eventKey={1}>
+                Profile
                   </NavItem>
-              </LinkContainer>
+            </LinkContainer>
 
-              <LinkContainer to="/student/ranking">
-                <NavItem eventKey={2}>
-                  Project Ranking
+            <LinkContainer to="/student/ranking">
+              <NavItem eventKey={2}>
+                Project Ranking
                   </NavItem>
-              </LinkContainer>
-              <LinkContainer to="/student/project">
-                <NavItem eventKey={3}>
-                  Your Project
+            </LinkContainer>
+            <LinkContainer to="/student/project">
+              <NavItem eventKey={3}>
+                Your Project
                   </NavItem>
-              </LinkContainer>
-              <LinkContainer to="/student/reviews">
-                <NavItem eventKey={4}>
-                  Final Presentation Reviews
+            </LinkContainer>
+            <LinkContainer to="/student/reviews">
+              <NavItem eventKey={4}>
+                Final Presentation Reviews
                   </NavItem>
-              </LinkContainer>
+            </LinkContainer>
 
-              <NavItem eventKey={6}>
-                <FormGroup>
-                  <Button type="submit" onClick={this.logOutClicked}>Log Out</Button>
-                </FormGroup>
-              </NavItem>
-            </Nav>
-          </Navbar>
-          <div className="content">
-            <Route exact={true} path="/student" component={Home} />
-            <Route path="/student/profile" component={Profile} />
-            <Route path="/student/ranking" component={ProjectRanking} />
-            <Route path="/student/project" component={YourProject} />
-            <Route path="/student/reviews" component={FinalPresentationReviews} />
-            <Route path="/student/weeklyreport/" component={WeeklyReportForm} />
-            <Route path="/student/peerreview/" component={PeerReviewForm} />
-          </div>
+            <NavItem eventKey={6}>
+              <FormGroup>
+                <Button type="submit" onClick={this.logOutClicked}>Log Out</Button>
+              </FormGroup>
+            </NavItem>
+          </Nav>
+        </Navbar>
+        <div className="content">
+          <Route exact={true} path="/student" component={Home} />
+          <Route path="/student/profile" component={Profile} />
+          <Route path="/student/ranking" component={ProjectRanking} />
+          <Route path="/student/project" component={YourProject} />
+          <Route path="/student/reviews" component={FinalPresentationReviews} />
+          <Route path="/student/weeklyreport/" component={WeeklyReportForm} />
+          <Route path="/student/peerreview/" component={PeerReviewForm} />
         </div>
-      </BrowserRouter>
+      </div>
     );
   }
 }

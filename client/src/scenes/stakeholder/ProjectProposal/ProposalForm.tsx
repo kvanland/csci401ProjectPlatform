@@ -1,14 +1,11 @@
 import * as React from 'react';
 import {
-    Form,
-    FormGroup,
     Col,
     Input,
-    Button,
     Label,
-    InputProps
 } from 'reactstrap';
 import autobind from 'autobind-decorator';
+import { InputGroup, FormGroup, Card, TextArea } from '@blueprintjs/core';
 
 interface IProjectProps {
 }
@@ -65,39 +62,41 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
         */
     }
 
-    public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<any>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    renderFormGroup = (id: keyof IProjectState, label: string, placeholder: string, componentClass?: string) => {
+    @autobind
+    renderFormGroup(id: keyof IProjectState, type: string, label: string, placeholder: string) {
         return (
-            <FormGroup>
-                <Col componentClass={Label} sm={2}>
-                    <b>{label}</b>
-                </Col>
-                <Col sm={10}>
-                    <Input
-                        componentClass={componentClass}
-                        type="text"
-                        id={id}
-                        value={this.state[id]}
-                        onChange={this.handleChange(id)}
-                        placeholder={placeholder}
-                    />
-                </Col>
+            <FormGroup label={label} labelFor={id}>
+                <InputGroup
+                    type={type}
+                    placeholder={placeholder}
+                    id={id}
+                    value={this.state[id] as any}
+                    onChange={this.handleChange(id)}
+                />
             </FormGroup>
         );
     }
 
     render() {
         return (
-            <Form horizontal={true} >
-                {this.renderFormGroup('projectName', 'Project Name', 'Project Name')}
-                {this.renderFormGroup('projectSize', 'Number of Students', 'Number of Students')}
-                {this.renderFormGroup('technologies', 'Technologies Expected', 'Technologies Expected')}
-                {this.renderFormGroup('background', 'Background Requested', 'Background Requested')}
-                {this.renderFormGroup('description', 'Description', 'Description', 'textarea')}
-            </Form>
+            <Card>
+                {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
+                {this.renderFormGroup('projectSize', 'text', 'Number of Students', 'Number of Students')}
+                {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
+                {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}
+                <FormGroup label="Description" labelFor="description">
+                    <TextArea
+                        placeholder="Description"
+                        id="description"
+                        value={this.state.description}
+                        onChange={this.handleChange('description')}
+                    />
+                </FormGroup>
+            </Card>
         );
 
     }

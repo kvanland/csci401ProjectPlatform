@@ -1,16 +1,7 @@
 import * as React from 'react';
 import ProjectsList from './ProjectsList';
-import {
-  Table,
-  Button,
-  FormGroup,
-  Input,
-  Container,
-  Row,
-  Col,
-  InputGroupAddon
-} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
+import { FormGroup, InputGroup, Button, Intent, Card } from '@blueprintjs/core';
 
 interface IProjectMatchingProps {
 }
@@ -101,33 +92,17 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     }
 
     const header = (
-      <div style={{ margin: 'auto', float: 'none', width: 1000 }}>
+      <Card>
         <h2>Project Matching</h2>
-        <form>
-          <Container>
-            <Row>
-              <Col lg={8}>
-                <FormGroup>
-                  <Input
-                    type="text"
-                    placeholder="Enter number of ranked projects to consider"
-                  />
-                  <InputGroupAddon addonType="append">
-                    <Button type="submit" onClick={this.launch} style={{ margin: 5 }}>
-                      {this.buttonTitle()}
-                    </Button>
-                  </InputGroupAddon>
-                </FormGroup>
-              </Col>
-              <Col lg={4}>
-                <Button onClick={this.assignProjects} bsStyle="primary" disabled={projects.length === 0}>
-                  Assign Projects
-                  </Button>
-              </Col>
-            </Row>
-          </Container>
-        </form>
-      </div>
+        <FormGroup>
+          <InputGroup
+            type="text"
+            placeholder="Enter number of ranked projects to consider"
+            rightElement={<Button minimal={true} icon="arrow-right" intent={Intent.PRIMARY} onClick={this.launch} />}
+          />
+        </FormGroup>
+        <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" />
+      </Card>
     );
 
     if (!isLaunched) {

@@ -122,7 +122,7 @@ class AdminNavigation extends React.Component<IAdminNavigationProps, IAdminNavig
           </Navbar.Group>
 
           <Navbar.Group align={Alignment.RIGHT}>
-            <Button onClick={this.logOutClicked} text="Log out" minimal={true} large={true} />
+            <Button onClick={this.logOutClicked} icon="log-out" text="Log Out" minimal={true} />
           </Navbar.Group>
 
           <Navbar.Group align={Alignment.CENTER}>

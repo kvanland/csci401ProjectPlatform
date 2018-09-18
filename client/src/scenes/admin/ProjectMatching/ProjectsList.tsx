@@ -7,9 +7,7 @@ import {
     StudentInfo,
     Project,
 } from './index';
-import {
-    Table,
-} from 'reactstrap';
+import { HTMLTable } from '@blueprintjs/core';
 
 const style = {
     width: 1000,
@@ -126,32 +124,29 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
         };
     }
 
-    @autobind
     render() {
         const { projects } = this.state;
         return (
-            <div style={style as any}>
-                <Table bordered={true}>
-                    <thead>
-                        <tr>
-                            <th>Project Name</th>
-                            <th>Min Size</th>
-                            <th>Max Size</th>
-                            <th>Members</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {projects.map((project: Project) =>
-                            <ProjectCard
-                                project={project}
-                                key={project.projectId}
-                                id={project.projectId}
-                                moveCard={this.moveCard}
-                            />
-                        )}
-                    </tbody>
-                </Table>
-            </div>
+            <HTMLTable bordered={true} striped={true}>
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Min Size</th>
+                        <th>Max Size</th>
+                        <th>Members</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {projects.map((project: Project) =>
+                        <ProjectCard
+                            project={project}
+                            key={project.projectId}
+                            id={project.projectId}
+                            moveCard={this.moveCard}
+                        />
+                    )}
+                </tbody>
+            </HTMLTable>
         );
     }
 }

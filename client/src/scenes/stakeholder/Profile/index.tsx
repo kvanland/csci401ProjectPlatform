@@ -1,19 +1,8 @@
 import * as React from 'react';
-import {
-    Card,
-    Button,
-    Form,
-    FormGroup,
-    Col,
-    Input,
-    Label,
-    InputProps
-} from 'reactstrap';
 import { IUser } from '../../../common/interfaces';
 import { getApiURI } from '../../../common/server';
-import CardHeader from 'reactstrap/lib/CardHeader';
-import CardTitle from 'reactstrap/lib/CardTitle';
-import CardBody from 'reactstrap/lib/CardBody';
+import { FormGroup, InputGroup, Card, Button, Intent } from '@blueprintjs/core';
+import autobind from 'autobind-decorator';
 const style = {
     width: 1000,
     float: 'none',
@@ -101,82 +90,38 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
+    @autobind
+    renderFormGroup(id: keyof IProfileState, type: string, label: string, placeholder: string) {
+        return (
+            <FormGroup label={label} labelFor={id}>
+                <InputGroup
+                    type={type}
+                    placeholder={placeholder}
+                    id={id}
+                    value={this.state[id] as any}
+                    onChange={this.handleChange(id)}
+                />
+            </FormGroup>
+        );
+    }
+
     render() {
         if (this.state.isLoading) {
             return <p>Loading...</p>;
         }
 
         return (
-            <div style={style as any}>
-                <Card>
-                    <CardHeader><CardTitle>Profile</CardTitle></CardHeader>
-                    <CardBody>
-                        <Form horizontal={true}>
-                            <FormGroup>
-                                <Col componentClass={Label} sm={2}>
-                                    First Name:
-                    </Col>
-                                <Col sm={10}>
-                                    <Input
-                                        type="text"
-                                        id="firstName"
-                                        value={this.state.firstName}
-                                        onChange={this.handleChange('firstName')}
-                                    />
-                                </Col>
-                            </FormGroup>
+            <Card>
+                <h1>Profile</h1>
+                {this.renderFormGroup('firstName', 'text', 'First Name', 'Tommy')}
+                {this.renderFormGroup('email', 'email', 'Email', 'ttrojan@usc.edu')}
+                {this.renderFormGroup('organization', 'text', 'Company/Organization', 'USC Viterbi')}
+                {this.renderFormGroup('phone', 'tel', 'Phone', '(123) 456-7890')}
 
-                            <FormGroup>
-                                <Col componentClass={Label} sm={2}>
-                                    Email:
-                    </Col>
-                                <Col sm={10}>
-                                    <Input
-                                        type="email"
-                                        id="email"
-                                        value={this.state.email}
-                                        onChange={this.handleChange('email')}
-                                    />
-                                </Col>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Col componentClass={Label} sm={2}>
-                                    Company/Organization:
-                    </Col>
-                                <Col sm={10}>
-                                    <Input
-                                        type="text"
-                                        id="organization"
-                                        value={this.state.organization}
-                                        onChange={this.handleChange('organization')}
-                                    />
-                                </Col>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Col componentClass={Label} sm={2}>
-                                    Phone:
-                    </Col>
-                                <Col sm={10}>
-                                    <Input
-                                        type="tel"
-                                        id="phone"
-                                        value={this.state.phone}
-                                        onChange={this.handleChange('phone')}
-                                    />
-                                </Col>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Col smOffset={2} sm={10}>
-                                    <Button type="submit" bsStyle="primary">Edit/Save Profile</Button>
-                                </Col>
-                            </FormGroup>
-                        </Form>
-                    </CardBody>
-                </Card>
-            </div>
+                <FormGroup>
+                    <Button text="Edit/Save Profile" intent={Intent.PRIMARY} />
+                </FormGroup>
+            </Card>
         );
     }
 }

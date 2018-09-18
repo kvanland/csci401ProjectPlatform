@@ -1,11 +1,7 @@
 import * as React from 'react';
 
-import {
-    Button,
-    Form,
-} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
-import { HTMLTable } from '@blueprintjs/core';
+import { HTMLTable, Button, Intent } from '@blueprintjs/core';
 
 interface IProjectListProps {
 }
@@ -134,39 +130,37 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
         }
 
         return (
-            <div style={{ margin: 'auto', float: 'none', width: 1500 }}>
+            <div>
                 <h2>Project Proposals</h2>
-                <Form>
-                    <HTMLTable bordered={true} striped={true}>
-                        <thead>
-                            <tr>
-                                <th>Select</th>
-                                <th>Project Name</th>
-                                <th>Project Status</th>
-                                <th>Min Size</th>
-                                <th>Max Size</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {projects.map((project: IProject) =>
-                                <tr key={project.projectId}>
-                                    <td>
-                                        <Button type="submit" bsStyle="success" onClick={() => this.submitClicked(project.projectId, 2)}>Approve</Button>
-                                        <Button type="submit" bsStyle="danger" onClick={() => this.submitClicked(project.projectId, 3)}>Reject</Button>
-                                        <Button type="submit" bsStyle="warning" onClick={() => this.submitClicked(project.projectId, 4)}>Changes</Button>
+                <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Project Name</th>
+                            <th>Project Status</th>
+                            <th>Min Size</th>
+                            <th>Max Size</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {projects.map((project: IProject) =>
+                            <tr key={project.projectId}>
+                                <td>
+                                    <Button intent={Intent.SUCCESS} onClick={() => this.submitClicked(project.projectId, 2)}>Approve</Button>
+                                    <Button intent={Intent.DANGER} onClick={() => this.submitClicked(project.projectId, 3)}>Reject</Button>
+                                    <Button intent={Intent.WARNING} onClick={() => this.submitClicked(project.projectId, 4)}>Change</Button>
 
-                                    </td>
-                                    <td>{project.projectName}</td>
-                                    <td>{this.getStatus(project.statusId)}</td>
-                                    <td>{project.minSize}</td>
-                                    <td>{project.maxSize}</td>
-                                    <td>{project.description}</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </HTMLTable>
-                </Form>
+                                </td>
+                                <td>{project.projectName}</td>
+                                <td>{this.getStatus(project.statusId)}</td>
+                                <td>{project.minSize}</td>
+                                <td>{project.maxSize}</td>
+                                <td>{project.description}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </HTMLTable>
             </div>);
     }
 }

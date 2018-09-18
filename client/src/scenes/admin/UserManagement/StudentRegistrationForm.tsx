@@ -1,14 +1,6 @@
 import * as React from 'react';
-import {
-    Form,
-    FormGroup,
-    Col,
-    Input,
-    Button,
-    Label,
-    Row
-} from 'reactstrap';
 import autobind from 'autobind-decorator';
+import { HTMLTable, Button, TextArea } from '@blueprintjs/core';
 
 interface IStudentRegistrationProps {
 }
@@ -49,41 +41,35 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
     }
 
     @autobind
-    formGroup(id: string, placeholder: string, value: any) {
+    renderFormGroup(id: string, label: string, placeholder: string) {
         return (
-            <FormGroup>
-                <Row>
-                    <Col componentClass={Label} sm={2}>
-                        {placeholder}
-                    </Col>
-                    <Col sm={7}>
-                        <Input
-                            type="text"
-                            componentClass="textarea"
-                            id={id}
-                            placeholder={placeholder}
-                            value={value}
-                            onChange={this.handleChange(id)}
-                            style={{ height: 100 }}
-                        />
-                    </Col>
-                    <Col sm={1}>
-                        <Button type="submit" onClick={this.submitClicked}>Send Invites</Button>
-                    </Col>
-                </Row>
-            </FormGroup>
+            <tr>
+                <td>{label}</td>
+                <td>
+                    <TextArea
+                        id={id}
+                        placeholder={placeholder}
+                        value={this.state[id]}
+                        onChange={this.handleChange(id)}
+                        style={{ height: 100 }}
+                    />
+                </td>
+                <td>
+                    <Button type="submit" onClick={this.submitClicked}>Send Invites</Button>
+                </td>
+            </tr>
         );
 
     }
 
     render() {
         return (
-            <div>
-                <Form horizontal={true} >
-                    {this.formGroup('studentEmails', 'Student Emails', this.state.studentEmails)}
-                    {this.formGroup('adminEmails', 'Admin Emails', this.state.adminEmails)}
-                </Form>
-            </div>
+            <HTMLTable>
+                <tbody>
+                    {this.renderFormGroup('studentEmails', 'Student Emails', 'ttrojan@usc.edu')}
+                    {this.renderFormGroup('adminEmails', 'Admin Emails', 'admin@usc.edu')}
+                </tbody>
+            </HTMLTable>
         );
     }
 }
