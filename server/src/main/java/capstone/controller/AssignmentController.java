@@ -44,7 +44,7 @@ public class AssignmentController {
 
 	public AssignmentController() {
 	}
-	
+
 	/* Deliverables */
 
 	@PostMapping("/info")
@@ -98,7 +98,7 @@ public class AssignmentController {
 	}
 
 	/* Weekly Status Reports */
-	
+
 	@PostMapping("/weeklyReportForm")
 	public @ResponseBody WeeklyReport weeklyReportSubmissionAttempt(@RequestBody WeeklyReport weeklyreportdata) {
 		System.out.println("Received HTTP POST");
@@ -131,7 +131,7 @@ public class AssignmentController {
 	}
 
 	/* Peer Reviews */
-	
+
 	@PostMapping("/peerReviewForm")
 	public @ResponseBody PeerReview peerReviewSubmissionAttempt(@RequestBody PeerReview peerreviewdata) {
 		System.out.println("Received HTTP POST");

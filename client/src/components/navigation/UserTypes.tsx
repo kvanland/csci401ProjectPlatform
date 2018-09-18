@@ -2,8 +2,9 @@ import * as React from 'react';
 import {
   Navbar,
   Nav,
-  NavItem
-} from 'react-bootstrap';
+  NavItem,
+  NavbarBrand
+} from 'reactstrap';
 import {
   LinkContainer
 } from 'react-router-bootstrap';
@@ -22,14 +23,12 @@ class Navigation extends React.Component<INavigationProps, INavigationState> {
     return (
       <div>
         <Navbar>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <img src={logo} className="App-logo" alt="logo" />
-            </Navbar.Brand>
-            <Navbar.Brand>
-              <a href="">CSCI 401</a>
-            </Navbar.Brand>
-          </Navbar.Header>
+          <NavbarBrand>
+            <img src={logo} className="App-logo" alt="logo" />
+          </NavbarBrand>
+          <NavbarBrand>
+            <a href="/">CSCI 401</a>
+          </NavbarBrand>
           {this.props.showTabs
             ? <Nav>
               <LinkContainer to="admin">

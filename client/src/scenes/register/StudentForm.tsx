@@ -3,14 +3,15 @@ import {
     Form,
     FormGroup,
     Col,
-    FormControl,
+    Input,
     Button,
-    ControlLabel,
-    FormControlProps
-} from 'react-bootstrap';
+    Label,
+    InputProps
+} from 'reactstrap';
 import autobind from 'autobind-decorator';
 import { getApiURI } from '../../common/server';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { InputType } from 'reactstrap/lib/Input';
 
 const style = {
     width: 600,
@@ -64,19 +65,19 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         }
     }
 
-    public handleChange = (id: keyof IStudentRegistrationState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof IStudentRegistrationState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
     @autobind
-    formGroup(type: string, id: keyof IStudentRegistrationState, placeholder: string, value: any) {
+    formGroup(type: InputType, id: keyof IStudentRegistrationState, placeholder: string, value: any) {
         return (
             <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
+                <Col componentClass={Label} sm={2}>
                     {placeholder}
                 </Col>
                 <Col sm={10}>
-                    <FormControl
+                    <Input
                         type={type}
                         id={id}
                         value={value}

@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-    Panel,
-    Col,
-    Row
-} from 'react-bootstrap';
+import { Card, Callout } from '@blueprintjs/core';
 import LoginForm from './Form';
 
 const style = {
@@ -15,22 +11,18 @@ const style = {
 class Login extends React.Component {
     render() {
         return (
-            <div style={style as any}>
-                <h3> Welcome to CSCI 401</h3>
-                <Row>
-                    <Col>
-                        <Panel>
-                            <LoginForm />
-                        </Panel>
-                    </Col>
-                </Row>
+            <div id="csci-login-form-container">
+                <Card id="csci-login-form">
+                    <h1> Welcome to CSCI 401</h1>
+                    <LoginForm />
 
-                <Row>
-                    <Col>
-                        Interested in being a stakeholder for a project?
+                    <Callout>
+                        <p>
+                            Interested in being a stakeholder for a project?
                         <a href="/register/stakeholder"> Register here. </a>
-                    </Col>
-                </Row>
+                        </p>
+                    </Callout>
+                </Card>
             </div>
         );
     }

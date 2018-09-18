@@ -1,10 +1,13 @@
 import * as React from 'react';
 import {
-    Panel,
+    Card,
     Table,
     Button
-} from 'react-bootstrap';
+} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
+import CardHeader from 'reactstrap/lib/CardHeader';
+import CardTitle from 'reactstrap/lib/CardTitle';
+import CardBody from 'reactstrap/lib/CardBody';
 
 interface IDeliverable {
     id: number;
@@ -57,11 +60,11 @@ class DeliverableList extends React.Component<IDeliverableProps, IDeliverableSta
         request.send(data);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ isLoading: true });
 
         try {
-            const response = await fetch(getApiURI('/deliverables/' + this.props.projectId)));
+            const response = await fetch(getApiURI('/deliverables/' + this.props.projectId));
             const data = await response.json();
 
             this.setState({
@@ -71,7 +74,7 @@ class DeliverableList extends React.Component<IDeliverableProps, IDeliverableSta
         } catch (e) {
             console.error(e);
         }
-        
+
     }
 
     render() {
@@ -81,11 +84,11 @@ class DeliverableList extends React.Component<IDeliverableProps, IDeliverableSta
             return <p>Loading...</p>;
         }
         return (
-            <Panel>
-                <Panel.Heading>
-                    <Panel.Title componentClass="h3">Projects</Panel.Title>
-                </Panel.Heading>
-                <Panel.Body>
+            <Card>
+                <CardHeader>
+                    <CardTitle componentClass="h3">Projects</CardTitle>
+                </CardHeader>
+                <CardBody>
                     <Table>
                         <thead>
                             <th>Deliverable Number</th>
@@ -107,8 +110,8 @@ class DeliverableList extends React.Component<IDeliverableProps, IDeliverableSta
                             )}
                         </tbody>
                     </Table>
-                </Panel.Body>
-            </Panel>
+                </CardBody>
+            </Card>
         );
     }
 }

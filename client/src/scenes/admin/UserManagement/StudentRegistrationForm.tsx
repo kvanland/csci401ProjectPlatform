@@ -3,11 +3,11 @@ import {
     Form,
     FormGroup,
     Col,
-    FormControl,
+    Input,
     Button,
-    ControlLabel,
+    Label,
     Row
-} from 'react-bootstrap';
+} from 'reactstrap';
 import autobind from 'autobind-decorator';
 
 interface IStudentRegistrationProps {
@@ -53,11 +53,11 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         return (
             <FormGroup>
                 <Row>
-                    <Col componentClass={ControlLabel} sm={2}>
+                    <Col componentClass={Label} sm={2}>
                         {placeholder}
                     </Col>
                     <Col sm={7}>
-                        <FormControl
+                        <Input
                             type="text"
                             componentClass="textarea"
                             id={id}

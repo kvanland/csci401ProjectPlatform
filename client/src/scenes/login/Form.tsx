@@ -1,13 +1,10 @@
 import * as React from 'react';
 import {
-    Form,
     FormGroup,
-    Col,
-    FormControl,
+    InputGroup,
     Button,
-    ControlLabel,
-    FormControlProps
-} from 'react-bootstrap';
+    Intent,
+} from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { getApiURI } from '../../common/server';
@@ -17,21 +14,22 @@ interface ILoginProps extends RouteComponentProps<any> {
 interface ILoginState {
     email: string;
     password: string;
-    token: string;
+    isLoading: boolean;
 }
 class LoginForm extends React.Component<ILoginProps, ILoginState> {
     public state: ILoginState = {
         email: '',
         password: '',
-        token: ''
+        isLoading: false,
     };
 
-    public handleChange = (id: keyof ILoginState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof ILoginState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
     @autobind
-    async submitClicked() {
+    async submit() {
+        await this.setState({ isLoading: true });
         try {
             const response = await fetch(getApiURI('/users/login'), {
                 method: 'POST',
@@ -73,46 +71,49 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
             }
         } catch (e) {
             console.error(e);
+        } finally {
+            this.setState({ isLoading: false });
         }
     }
 
     render() {
         return (
             <div>
-                <Form horizontal={true} >
-                    <FormGroup>
-                        <Col componentClass={ControlLabel} sm={2}>Email</Col>
-                        <Col sm={10}>
-                            <FormControl
-                                type="text"
-                                id="email"
-                                value={this.state.email}
-                                placeholder="Email"
-                                onChange={this.handleChange('email')}
-                            />
-                        </Col>
-                    </FormGroup>
+                <FormGroup
+                    label="Email"
+                    labelFor="email-input"
+                >
+                    <InputGroup
+                        large={true}
+                        disabled={this.state.isLoading}
+                        id="email-input"
+                        placeholder="ttrojan@usc.edu"
+                        onChange={this.handleChange('email')}
+                    />
+                </FormGroup>
+                <FormGroup
+                    label="Password"
+                    labelFor="password-input"
+                >
+                    <InputGroup
+                        disabled={this.state.isLoading}
+                        id="password-input"
+                        type="password"
+                        placeholder="********"
+                        onChange={this.handleChange('password')}
+                        large={true}
+                    />
+                </FormGroup>
 
-                    <FormGroup>
-                        <Col componentClass={ControlLabel} sm={2}>Password</Col>
-                        <Col sm={10}>
-                            <FormControl
-                                type="password"
-                                placeholder="Password"
-                                id="password"
-                                value={this.state.password}
-                                onChange={this.handleChange('password')}
-                            />
-                        </Col>
-                    </FormGroup>
-
-                    <FormGroup>
-                        <Col smOffset={2} sm={10}>
-                            <Button type="reset" onClick={this.submitClicked}>Sign in</Button>
-                        </Col>
-                    </FormGroup>
-
-                </Form>
+                <FormGroup>
+                    <Button
+                        large={true}
+                        intent={Intent.PRIMARY}
+                        onClick={this.submit}
+                        loading={this.state.isLoading}
+                        text="Sign In"
+                    />
+                </FormGroup>
             </div>
         );
     }

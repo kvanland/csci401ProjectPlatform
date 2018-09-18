@@ -4,11 +4,12 @@ import {
   Table,
   Button,
   FormGroup,
-  FormControl,
-  Grid,
+  Input,
+  Container,
   Row,
   Col,
-} from 'react-bootstrap';
+  InputGroupAddon
+} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
 
 interface IProjectMatchingProps {
@@ -103,18 +104,19 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
       <div style={{ margin: 'auto', float: 'none', width: 1000 }}>
         <h2>Project Matching</h2>
         <form>
-          <Grid>
+          <Container>
             <Row>
               <Col lg={8}>
                 <FormGroup>
-                  <FormControl
+                  <Input
                     type="text"
                     placeholder="Enter number of ranked projects to consider"
                   />
-                  <FormControl.Feedback />
-                  <Button type="submit" onClick={this.launch} style={{ margin: 5 }}>
-                    {this.buttonTitle()}
-                  </Button>
+                  <InputGroupAddon addonType="append">
+                    <Button type="submit" onClick={this.launch} style={{ margin: 5 }}>
+                      {this.buttonTitle()}
+                    </Button>
+                  </InputGroupAddon>
                 </FormGroup>
               </Col>
               <Col lg={4}>
@@ -123,7 +125,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
                   </Button>
               </Col>
             </Row>
-          </Grid>
+          </Container>
         </form>
       </div>
     );

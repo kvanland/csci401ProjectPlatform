@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { DragSource } from 'react-dnd';
 import ItemTypes from './ItemTypes';
+import autobind from 'autobind-decorator';
 import {
     StudentInfo,
 } from './index';
 import {
     Popover,
-    OverlayTrigger
-} from 'react-bootstrap';
+    PopoverHeader,
+    PopoverBody
+} from 'reactstrap';
 
 const style = {
     cursor: 'move',
@@ -24,7 +26,7 @@ interface IStudentCardProps {
 }
 
 interface IStudentCardState {
-
+    popoverOpen: boolean;
 }
 
 const studentSource = {
@@ -42,39 +44,51 @@ function collect(connect: any, monitor: any) {
 
 @DragSource(ItemTypes.STUDENT, studentSource, collect)
 class StudentCard extends React.Component<IStudentCardProps, IStudentCardState> {
-    constructor(props: IStudentCardProps) {
-        super(props);
+    public state: IStudentCardState = {
+        popoverOpen: false,
+    };
 
-        this.state = {
-        };
+    @autobind
+    showPopover() {
+        this.setState({
+            popoverOpen: true,
+        });
+    }
+
+    @autobind
+    hidePopover() {
+        this.setState({
+            popoverOpen: false,
+        });
     }
 
     render() {
         const { student, key, connectDragSource, isDragging } = this.props;
 
-        const rankingDetails = (
-            <Popover id="popover-positioned-left" title="Rankings">
-                <p>{'1. ' + student.orderedRankings[0]}</p>
-                <p>{'2. ' + student.orderedRankings[1]}</p>
-                <p>{'3. ' + student.orderedRankings[2]}</p>
-                <p>{'4. ' + student.orderedRankings[3]}</p>
-                <p>{'5. ' + student.orderedRankings[4]}</p>
-            </Popover>
-        );
-
         return connectDragSource(
             <div>
-                <OverlayTrigger trigger={['hover', 'focus']} placement="left" overlay={rankingDetails}>
-                    <div
-                        key={key}
-                        style={{
-                            ...style,
-                            opacity: isDragging ? 0.5 : 1,
-                        }}
-                    >
-                        {student.firstName + ' ' + student.lastName}
-                    </div>
-                </OverlayTrigger>
+                <div
+                    key={key}
+                    style={{
+                        ...style,
+                        opacity: isDragging ? 0.5 : 1,
+                    }}
+                    id={'target-' + key}
+                    onMouseOver={this.showPopover}
+                    onMouseOut={this.hidePopover}
+                >
+                    {student.firstName + ' ' + student.lastName}
+                </div>
+                <Popover id="popover-positioned-left" placement="left" target={'target-' + key} isOpen={this.state.popoverOpen}>
+                    <PopoverHeader>Rankings</PopoverHeader>
+                    <PopoverBody>
+                        <p>{'1. ' + student.orderedRankings[0]}</p>
+                        <p>{'2. ' + student.orderedRankings[1]}</p>
+                        <p>{'3. ' + student.orderedRankings[2]}</p>
+                        <p>{'4. ' + student.orderedRankings[3]}</p>
+                        <p>{'5. ' + student.orderedRankings[4]}</p>
+                    </PopoverBody>
+                </Popover>
             </div>
         );
     }

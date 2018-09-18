@@ -9,7 +9,7 @@ import {
 } from './index';
 import {
     Table,
-} from 'react-bootstrap';
+} from 'reactstrap';
 
 const style = {
     width: 1000,

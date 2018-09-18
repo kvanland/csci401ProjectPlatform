@@ -1,16 +1,21 @@
+
 import * as React from 'react';
 import {
   Route,
+  Switch,
   BrowserRouter,
-  Redirect
 } from 'react-router-dom';
 import {
+  FormGroup
+} from 'reactstrap';
+import {
   Navbar,
-  Nav,
-  NavItem,
-  FormGroup,
-  Button
-} from 'react-bootstrap';
+  Button,
+  Alignment,
+  Tabs,
+  Tab,
+  TabId,
+} from '@blueprintjs/core';
 import {
   LinkContainer
 } from 'react-router-bootstrap';
@@ -19,73 +24,135 @@ import UserManagement from './UserManagement/index';
 import ProjectProposals from './ProjectProposals/index';
 import ClassOverview from './ClassOverview/index';
 import ProjectMatching from './ProjectMatching/index';
+import {
+  RouteComponentProps,
+  withRouter
+} from 'react-router';
+import autobind from 'autobind-decorator';
 const logo = require('../../svg/logo.svg');
 
-class AdminNavigation extends React.Component {
+interface IAdminNavigationProps extends RouteComponentProps<any> {
+}
 
+interface IAdminNavigationState {
+  navbarTabId: TabId;
+}
+
+class AdminNavigation extends React.Component<IAdminNavigationProps, IAdminNavigationState> {
+
+  state: IAdminNavigationState = {
+    navbarTabId: 'home',
+  };
+
+  componentDidMount() {
+    const navbarTabId = this.inferNavbarTabId();
+    this.setState({ navbarTabId });
+  }
+
+  @autobind
+  inferNavbarTabId() {
+    const mappings = [
+      {
+        pathname: '/admin/users',
+        navbarTabId: 'users',
+      },
+      {
+        pathname: '/admin/proposals',
+        navbarTabId: 'proposals',
+      },
+      {
+        pathname: '/admin/class',
+        navbarTabId: 'class',
+      },
+      {
+        pathname: '/admin/matching',
+        navbarTabId: 'matching',
+      }
+    ];
+
+    for (const mapping of mappings) {
+      if (this.props.location.pathname.startsWith(mapping.pathname)) {
+        return mapping.navbarTabId;
+      }
+    }
+
+    return 'home';
+  }
+
+  @autobind
   logOutClicked() {
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('userType');
-    window.location.href = '/';
+
+    this.props.history.push('/');
+  }
+
+  @autobind
+  async handleNavbarTabChange(navbarTabId: TabId) {
+    this.setState({ navbarTabId });
+    switch (navbarTabId) {
+      case 'home':
+        this.props.history.push('/admin');
+        break;
+      case 'users':
+        this.props.history.push('/admin/users');
+        break;
+      case 'proposals':
+        this.props.history.push('/admin/proposals');
+        break;
+      case 'class':
+        this.props.history.push('/admin/class');
+        break;
+      case 'matching':
+        this.props.history.push('/admin/matching');
+        break;
+      default:
+        this.props.history.push('/admin');
+    }
   }
 
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <Navbar>
-            <Navbar.Header>
-              <Navbar.Brand>
-                <img src={logo} className="App-logo" alt="logo" />
-              </Navbar.Brand>
+      <div>
+        <Navbar>
+          <Navbar.Group>
+            <Navbar.Heading>
+              <img src={logo} id="csci-logo" alt="logo" />
+            </Navbar.Heading>
+          </Navbar.Group>
 
-              <Navbar.Brand>
-                <LinkContainer to="/admin">
-                  <a>CSCI 401</a>
-                </LinkContainer>
-              </Navbar.Brand>
+          <Navbar.Group align={Alignment.RIGHT}>
+            <Button onClick={this.logOutClicked} text="Log out" minimal={true} large={true} />
+          </Navbar.Group>
 
-            </Navbar.Header>
-            <Nav>
-              <LinkContainer to="/admin/users">
-                <NavItem eventKey={1}>
-                  User Management
-                </NavItem>
-              </LinkContainer>
-              <LinkContainer to="/admin/proposals">
-                <NavItem eventKey={2}>
-                  Project Proposals
-                </NavItem>
-              </LinkContainer>
-              {/* <LinkContainer to="/admin/class">
-                <NavItem eventKey={3}>
-                  Class Overview
-                </NavItem>
-              </LinkContainer> */}
-              <LinkContainer to="/admin/matching">
-                <NavItem eventKey={5}>
-                  Project Matching
-              </NavItem>
-              </LinkContainer>
-
-              <NavItem eventKey={6}>
-                <FormGroup>
-                  <Button type="submit" onClick={this.logOutClicked}>Log Out</Button>
-                </FormGroup>
-              </NavItem>
-            </Nav>
-          </Navbar>
-          <div className="content">
-            <Route exact={true} path="/admin" component={AdminHome} />
-            <Route path="/admin/users" component={UserManagement} />
-            <Route path="/admin/proposals" component={ProjectProposals} />
-            <Route path="/admin/class" component={ClassOverview} />
-            <Route path="/admin/matching" component={ProjectMatching} />
-          </div>
+          <Navbar.Group align={Alignment.CENTER}>
+            <div id="csci-navbar-tabs">
+              <Tabs
+                id="navtabs-admin"
+                animate={true}
+                large={true}
+                onChange={this.handleNavbarTabChange}
+                selectedTabId={this.state.navbarTabId}
+              >
+                <Tab id="home" title="Home" />
+                <Tab id="users" title="Manage Users" />
+                <Tab id="proposals" title="Proposals" />
+                {/* <Tab id="class" title="Class Overview" /> */}
+                <Tab id="matching" title="Project Matching" />
+              </Tabs>
+            </div>
+          </Navbar.Group>
+        </Navbar>
+        <div className="content">
+          <Route exact={true} path={this.props.match.url} component={AdminHome} />
+          <Route path={`${this.props.match.url}/users`} component={UserManagement} />
+          <Route path={`${this.props.match.url}/proposals`} component={ProjectProposals} />
+          <Route path={`${this.props.match.url}/class`} component={ClassOverview} />
+          <Route path={`${this.props.match.url}/matching`} component={ProjectMatching} />
         </div>
-      </BrowserRouter>
+      </div>
     );
   }
 }
 
-export default AdminNavigation;
+export default withRouter(AdminNavigation);

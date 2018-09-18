@@ -20,7 +20,7 @@ class UserList extends React.Component<IUserListProps, IUserListState> {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({ isLoading: true });
 
     try {
@@ -29,7 +29,7 @@ class UserList extends React.Component<IUserListProps, IUserListState> {
 
       this.setState({
         users: data,
-        isLoading: false;
+        isLoading: false,
       });
     } catch (e) {
       console.error(e);

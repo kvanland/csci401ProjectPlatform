@@ -1,14 +1,17 @@
 import * as React from 'react';
 import {
-    Panel,
+    Card,
     Table,
     Alert,
     Button
-} from 'react-bootstrap';
+} from 'reactstrap';
 import {
     LinkContainer
 } from 'react-router-bootstrap';
 import { getApiURI } from '../../../common/server';
+import CardHeader from 'reactstrap/lib/CardHeader';
+import CardTitle from 'reactstrap/lib/CardTitle';
+import CardBody from 'reactstrap/lib/CardBody';
 const viewIcon = require('../../../svg/viewIcon.svg');
 const style = {
     width: 1000,
@@ -78,11 +81,11 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
 
                 <h3>Welcome back!</h3>
 
-                <Panel>
-                    <Panel.Heading>
-                        <Panel.Title componentClass="h3">Your Projects</Panel.Title>
-                    </Panel.Heading>
-                    <Panel.Body>
+                <Card>
+                    <CardHeader>
+                        <CardTitle componentClass="h3">Your Projects</CardTitle>
+                    </CardHeader>
+                    <CardBody>
                         <Table>
                             <thead>
                                 <th>Project</th>
@@ -103,8 +106,8 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
                                 )}
                             </tbody>
                         </Table>
-                    </Panel.Body>
-                </Panel>
+                    </CardBody>
+                </Card>
             </div>
         );
     }

@@ -2,12 +2,10 @@ import * as React from 'react';
 
 import {
     Button,
-    Table,
     Form,
-    FormGroup,
-    FormControl
-} from 'react-bootstrap';
+} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
+import { HTMLTable } from '@blueprintjs/core';
 
 interface IProjectListProps {
 }
@@ -139,7 +137,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
             <div style={{ margin: 'auto', float: 'none', width: 1500 }}>
                 <h2>Project Proposals</h2>
                 <Form>
-                    <Table bordered={true}>
+                    <HTMLTable bordered={true} striped={true}>
                         <thead>
                             <tr>
                                 <th>Select</th>
@@ -167,7 +165,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
                                 </tr>
                             )}
                         </tbody>
-                    </Table>
+                    </HTMLTable>
                 </Form>
             </div>);
     }

@@ -1,10 +1,13 @@
 import * as React from 'react';
 import {
-    Panel,
     Button,
     Table
-} from 'react-bootstrap';
+} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
+import { Card } from 'reactstrap';
+import CardHeader from 'reactstrap/lib/CardHeader';
+import CardTitle from 'reactstrap/lib/CardTitle';
+import CardBody from 'reactstrap/lib/CardBody';
 
 interface IProjectProps {
 }
@@ -86,7 +89,6 @@ class StudentProject extends React.Component<IProjectProps, IProjectState> {
             console.error(e);
         }
 
-
         /*
                 var request = new XMLHttpRequest();
                 request.withCredentials = true;
@@ -115,17 +117,17 @@ class StudentProject extends React.Component<IProjectProps, IProjectState> {
     render() {
         return (
             <div>
-                <Panel>
-                    <Panel.Heading>
-                        <Panel.Title componentClass="h3">Overview</Panel.Title>
-                    </Panel.Heading>
-                    <Panel.Body>
+                <Card>
+                    <CardHeader>
+                        <CardTitle componentClass="h3">Overview</CardTitle>
+                    </CardHeader>
+                    <CardBody>
                         <h3>Project: {this.state.project.projectName}</h3>
-                        <Panel>
-                            <Panel.Heading>
+                        <Card>
+                            <CardHeader>
                                 Team Contact Information
-                    </Panel.Heading>
-                            <Panel.Body>
+                    </CardHeader>
+                            <CardBody>
                                 <div>
                                     <Table bordered={true}>
                                         <thead>
@@ -147,13 +149,13 @@ class StudentProject extends React.Component<IProjectProps, IProjectState> {
                                         </tbody>
                                     </Table>
                                 </div>
-                            </Panel.Body>
-                        </Panel>
-                        <Panel>
-                            <Panel.Heading>
+                            </CardBody>
+                        </Card>
+                        <Card>
+                            <CardHeader>
                                 Stakeholder Contact Information
-                    </Panel.Heading>
-                            <Panel.Body>
+                    </CardHeader>
+                            <CardBody>
                                 <Table bordered={true}>
                                     <thead>
                                         <tr>
@@ -172,22 +174,22 @@ class StudentProject extends React.Component<IProjectProps, IProjectState> {
                                         </tr>
                                     </tbody>
                                 </Table>
-                            </Panel.Body>
-                        </Panel>
-                    </Panel.Body>
-                </Panel>
+                            </CardBody>
+                        </Card>
+                    </CardBody>
+                </Card>
 
-                <Panel>
-                    <Panel.Heading>
+                <Card>
+                    <CardHeader>
                         Actions
-                </Panel.Heading>
-                    <Panel.Body>
+                </CardHeader>
+                    <CardBody>
                         <Button>Submit Deliverable</Button>
                         <Button href="./weeklyreport">Submit Weekly Status Report</Button>
                         <Button href="./peerreview">Submit Peer Review Form</Button>
                         <Button>Submit Stakeholder Review Form</Button>
-                    </Panel.Body>
-                </Panel>
+                    </CardBody>
+                </Card>
             </div>
         );
 

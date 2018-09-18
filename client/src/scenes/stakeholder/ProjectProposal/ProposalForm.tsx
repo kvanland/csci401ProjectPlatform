@@ -3,11 +3,11 @@ import {
     Form,
     FormGroup,
     Col,
-    FormControl,
+    Input,
     Button,
-    ControlLabel,
-    FormControlProps
-} from 'react-bootstrap';
+    Label,
+    InputProps
+} from 'reactstrap';
 import autobind from 'autobind-decorator';
 
 interface IProjectProps {
@@ -65,18 +65,18 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
         */
     }
 
-    public handleChange = (id: keyof IProjectState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
     renderFormGroup = (id: keyof IProjectState, label: string, placeholder: string, componentClass?: string) => {
         return (
             <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
+                <Col componentClass={Label} sm={2}>
                     <b>{label}</b>
                 </Col>
                 <Col sm={10}>
-                    <FormControl
+                    <Input
                         componentClass={componentClass}
                         type="text"
                         id={id}

@@ -9,7 +9,7 @@ import {
   NavItem,
   FormGroup,
   Button
-} from 'react-bootstrap';
+} from 'reactstrap';
 import {
   LinkContainer
 } from 'react-router-bootstrap';
@@ -20,13 +20,18 @@ import YourProject from './YourProject/index';
 import FinalPresentationReviews from './FinalPresentationReviews/index';
 import WeeklyReportForm from './WeeklyReportForm/index';
 import PeerReviewForm from './PeerReviewForm/index';
+import { RouteComponentProps, withRouter } from 'react-router';
+import NavbarBrand from 'reactstrap/lib/NavbarBrand';
 const logo = require('../../svg/logo.svg');
 
-class StudentNavigation extends React.Component {
+interface IStudentNavigationProps extends RouteComponentProps<any> {
+}
+
+class StudentNavigation extends React.Component<IStudentNavigationProps> {
   logOutClicked() {
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('userType');
-    window.location.href = '/';
+    this.props.history.push('/');
   }
 
   render() {
@@ -34,17 +39,15 @@ class StudentNavigation extends React.Component {
       <BrowserRouter>
         <div>
           <Navbar>
-            <Navbar.Header>
-              <Navbar.Brand>
-                <img src={logo} className="App-logo" alt="logo" />
-              </Navbar.Brand>
+            <NavbarBrand>
+              <img src={logo} className="App-logo" alt="logo" />
+            </NavbarBrand>
 
-              <Navbar.Brand>
-                <LinkContainer to="/student">
-                  <a>CSCI 401</a>
-                </LinkContainer>
-              </Navbar.Brand>
-            </Navbar.Header>
+            <NavbarBrand>
+              <LinkContainer to="/student">
+                <a>CSCI 401</a>
+              </LinkContainer>
+            </NavbarBrand>
             <Nav>
               <LinkContainer to="/student/profile">
                 <NavItem eventKey={1}>
@@ -90,4 +93,4 @@ class StudentNavigation extends React.Component {
   }
 }
 
-export default StudentNavigation;
+export default withRouter(StudentNavigation);

@@ -1,32 +1,32 @@
 import * as React from 'react';
 import {
-    Panel,
-    Button,
+    Card,
+    CardHeader,
+    CardBody,
     Table,
     Form,
     FormGroup,
-    FormControl,
-} from 'react-bootstrap';
+    Input,
+} from 'reactstrap';
+import { Button, Intent } from '@blueprintjs/core';
 const viewIcon = require('../../../svg/viewIcon.svg');
 
 class ClassOverview extends React.Component {
     render() {
         return (
             <div>
-                <Panel>
+                <Card>
                     <Form horizontal={true}>
                         <FormGroup>
-                            <FormControl type="text" placeholder="Search..." />
+                            <Input type="text" placeholder="Search..." />
                         </FormGroup>
-                        <Button type="submit" bsStyle="primary">Search Assignments</Button>
+                        <Button type="submit" intent={Intent.PRIMARY} >Search Assignments</Button>
                     </Form>
-                </Panel>
-                <Panel>
-                    <Panel.Heading>
-                        Assignments
-              </Panel.Heading>
-                    <Panel.Body>
-                        <Button bsStyle="info">Update Selected on Blackboard</Button>
+                </Card>
+                <Card>
+                    <CardHeader>Assignments</CardHeader>
+                    <CardBody>
+                        <Button>Update Selected on Blackboard</Button>
                         <Table>
                             <thead>
                                 <tr>
@@ -63,8 +63,8 @@ class ClassOverview extends React.Component {
                                 </tr>
                             </tbody>
                         </Table>
-                    </Panel.Body>
-                </Panel>
+                    </CardBody>
+                </Card>
             </div>
         );
     }

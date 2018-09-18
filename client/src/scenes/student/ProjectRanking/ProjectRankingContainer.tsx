@@ -6,10 +6,10 @@ import ProjectCard from './ProjectCard';
 import ItemTypes from './ItemTypes';
 import {
     Button,
-    Grid,
+    Container,
     Row,
     Col,
-} from 'react-bootstrap';
+} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
 
 const style = {
@@ -96,7 +96,7 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ isLoading: true });
 
         try {
@@ -156,7 +156,7 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
             <div style={style as any}>
                 <div style={{ width: 600 }}>
                     <h3>Rank Projects</h3>
-                    <Grid>
+                    <Container>
                         <Row>
                             <Col lg={4}>
                                 Drag to reorder projects by priority.
@@ -170,7 +170,7 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
                                 </Button>
                             </Col>
                         </Row>
-                    </Grid>
+                    </Container>
                 </div>
                 <br />
                 {projectCards.map((projectCard: IProject, index: number) => (

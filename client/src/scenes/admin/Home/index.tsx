@@ -2,7 +2,7 @@ import * as React from 'react';
 // import {
 //   Panel,
 //   Alert
-// } from 'react-bootstrap';
+// } from 'reactstrap';
 
 const style = {
   width: 1000,

@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {
   Route,
-  BrowserRouter
+  BrowserRouter,
+  RouteComponentProps,
+  withRouter
 } from 'react-router-dom';
 import {
   Navbar,
@@ -9,7 +11,7 @@ import {
   NavItem,
   FormGroup,
   Button
-} from 'react-bootstrap';
+} from 'reactstrap';
 import {
   LinkContainer
 } from 'react-router-bootstrap';
@@ -17,9 +19,11 @@ import Home from './Home/index';
 import Profile from './Profile/index';
 import ProjectProposal from './ProjectProposal/index';
 import ProjectPage from './ProjectPage/index';
+import autobind from 'autobind-decorator';
+import NavbarBrand from 'reactstrap/lib/NavbarBrand';
 const logo = require('../../svg/logo.svg');
 
-interface IStakeholderProps {
+interface IStakeholderProps extends RouteComponentProps<any> {
 }
 interface IStakeholderState {
   currentProject: number;
@@ -34,11 +38,12 @@ class StakeholderNavigation extends React.Component<IStakeholderProps, IStakehol
       currentProject: 0
     };
   }
+
+  @autobind
   logOutClicked() {
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('userType');
-    sessionStorage.clear();
-    window.location.href = '/';
+    this.props.history.push('/');
   }
 
   render() {
@@ -46,17 +51,15 @@ class StakeholderNavigation extends React.Component<IStakeholderProps, IStakehol
       <BrowserRouter>
         <div>
           <Navbar>
-            <Navbar.Header>
-              <Navbar.Brand>
-                <img src={logo} className="App-logo" alt="logo" />
-              </Navbar.Brand>
+            <NavbarBrand>
+              <img src={logo} className="App-logo" alt="logo" />
+            </NavbarBrand>
 
-              <Navbar.Brand>
-                <LinkContainer to="/stakeholder">
-                  <a>CSCI 401</a>
-                </LinkContainer>
-              </Navbar.Brand>
-            </Navbar.Header>
+            <NavbarBrand>
+              <LinkContainer to="/stakeholder">
+                <a>CSCI 401</a>
+              </LinkContainer>
+            </NavbarBrand>
             <Nav>
               <LinkContainer to="/stakeholder/profile">
                 <NavItem eventKey={1}>
@@ -89,4 +92,4 @@ class StakeholderNavigation extends React.Component<IStakeholderProps, IStakehol
   }
 }
 
-export default StakeholderNavigation;
+export default withRouter(StakeholderNavigation);

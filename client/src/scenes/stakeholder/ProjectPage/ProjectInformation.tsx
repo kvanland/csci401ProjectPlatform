@@ -4,14 +4,16 @@ import {
     Form,
     FormGroup,
     Col,
-    FormControl,
+    Input,
     Button,
-    ControlLabel,
-    Panel,
+    Label,
+    Card,
     Table,
-    FormControlProps
-} from 'react-bootstrap';
+    InputProps
+} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
+import CardHeader from 'reactstrap/lib/CardHeader';
+import CardBody from 'reactstrap/lib/CardBody';
 
 interface IProjectProps {
     projectId: string;
@@ -58,7 +60,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         }
     }
 
-    public handleChange = (id: keyof IProjectState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
@@ -76,16 +78,16 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         }
 
         return (
-            <Panel>
-                <Panel.Heading>Project Information</Panel.Heading>
-                <Panel.Body>
+            <Card>
+                <CardHeader>Project Information</CardHeader>
+                <CardBody>
                     <Form horizontal={true} >
                         <FormGroup>
-                            <Col componentClass={ControlLabel} sm={2}>
+                            <Col componentClass={Label} sm={2}>
                                 <b>Project Name</b>
                             </Col>
                             <Col sm={10}>
-                                <FormControl
+                                <Input
                                     type="text"
                                     id="projectName"
                                     value={this.state.projectName}
@@ -96,11 +98,11 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                         </FormGroup>
 
                         <FormGroup>
-                            <Col componentClass={ControlLabel} sm={2}>
+                            <Col componentClass={Label} sm={2}>
                                 <b>Number of Students</b>
                             </Col>
                             <Col sm={10}>
-                                <FormControl
+                                <Input
                                     type="text"
                                     id="projectSize"
                                     placeholder="Number of Students"
@@ -111,11 +113,11 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                         </FormGroup>
 
                         <FormGroup>
-                            <Col componentClass={ControlLabel} sm={2}>
+                            <Col componentClass={Label} sm={2}>
                                 <b>Technologies Expected</b>
                             </Col>
                             <Col sm={10}>
-                                <FormControl
+                                <Input
                                     type="text"
                                     id="technologies"
                                     value={this.state.technologies}
@@ -126,11 +128,11 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                         </FormGroup>
 
                         <FormGroup>
-                            <Col componentClass={ControlLabel} sm={2}>
+                            <Col componentClass={Label} sm={2}>
                                 <b>Background Requested</b>
                             </Col>
                             <Col sm={10}>
-                                <FormControl
+                                <Input
                                     type="text"
                                     id="backgroundRequested"
                                     value={this.state.background}
@@ -141,11 +143,11 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                         </FormGroup>
 
                         <FormGroup>
-                            <Col componentClass={ControlLabel} sm={2}>
+                            <Col componentClass={Label} sm={2}>
                                 <b>Description</b>
                             </Col>
                             <Col sm={10}>
-                                <FormControl
+                                <Input
                                     componentClass="textarea"
                                     type="text"
                                     id="description"
@@ -162,12 +164,12 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                             </Col>
                         </FormGroup>
                     </Form>
-                </Panel.Body>
-                <Panel>
-                    <Panel.Heading>
+                </CardBody>
+                <Card>
+                    <CardHeader>
                         Team Contact Information
-                    </Panel.Heading>
-                    <Panel.Body>
+                    </CardHeader>
+                    <CardBody>
                         <div>
                             <Table bordered={true}>
                                 <thead>
@@ -189,9 +191,9 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                 </tbody>
                             </Table>
                         </div>
-                    </Panel.Body>
-                </Panel>
-            </Panel>
+                    </CardBody>
+                </Card>
+            </Card>
 
         );
 

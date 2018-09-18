@@ -1,19 +1,22 @@
 import * as React from 'react';
 import {
-    Panel,
     Button,
     Table,
     Form,
     FormGroup,
     Col,
-    FormControl,
-    ControlLabel,
-    FormControlProps
-} from 'react-bootstrap';
+    Input,
+    Label,
+    InputProps,
+    Card
+} from 'reactstrap';
 import { IUser } from '../../../common/interfaces';
 import autobind from 'autobind-decorator';
 
 import { getApiURI } from '../../../common/server';
+import CardHeader from 'reactstrap/lib/CardHeader';
+import CardBody from 'reactstrap/lib/CardBody';
+import { InputType } from 'reactstrap/lib/Input';
 const style = {
     width: 1000,
     float: 'none',
@@ -34,9 +37,9 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
         isLoading: false,
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ isLoading: true });
-        
+
         try {
             const response = await fetch(getApiURI('/users/') + sessionStorage.getItem('email'));
             const data = await response.json();
@@ -71,18 +74,18 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
              }; */
     }
 
-    public handleChange = (id: keyof IProfileState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof IProfileState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    renderFormGroup = (id: keyof IUser, label: string, placeholder: string, formType: string = 'text', componentClass?: string) => {
+    renderFormGroup = (id: keyof IUser, label: string, placeholder: string, formType: InputType = 'text', componentClass?: string) => {
         return (
             <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
+                <Col componentClass={Label} sm={2}>
                     <b>{label}</b>
                 </Col>
                 <Col sm={10}>
-                    <FormControl
+                    <Input
                         componentClass={componentClass}
                         type={formType}
                         id={id}
@@ -102,9 +105,9 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
 
         return (
             <div style={style as any}>
-                <Panel>
-                    <Panel.Heading>Profile</Panel.Heading>
-                    <Panel.Body>
+                <Card>
+                    <CardHeader>Profile</CardHeader>
+                    <CardBody>
                         <Form horizontal={true}>
                             {this.renderFormGroup('firstName', 'First Name', 'Tommy')}
                             {this.renderFormGroup('email', 'Email', 'ttrojan@usc.edu')}
@@ -116,8 +119,8 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
                                 </Col>
                             </FormGroup>
                         </Form>
-                    </Panel.Body>
-                </Panel>
+                    </CardBody>
+                </Card>
             </div>
         );
     }

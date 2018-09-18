@@ -1,8 +1,7 @@
 import * as React from 'react';
 import {
-  Panel,
   Alert
-} from 'react-bootstrap';
+} from 'reactstrap';
 
 class StudentHome extends React.Component {
 

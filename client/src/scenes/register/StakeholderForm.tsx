@@ -3,13 +3,16 @@ import {
     Form,
     FormGroup,
     Col,
-    FormControl,
+    Input,
     Button,
-    ControlLabel,
+    Label,
     Row,
-    FormControlProps
-} from 'react-bootstrap';
+    InputProps
+} from 'reactstrap';
 import autobind from 'autobind-decorator';
+import { getApiURI } from '../../common/server';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { InputType } from 'reactstrap/lib/Input';
 
 const style = {
     width: 600,
@@ -17,7 +20,7 @@ const style = {
     margin: 'auto',
 };
 
-interface IStakeholderRegistrationProps {
+interface IStakeholderRegistrationProps extends RouteComponentProps<any> {
 }
 interface IStakeholderRegistrationState {
     firstName: string;
@@ -40,39 +43,44 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
     };
 
     @autobind
-    submitClicked() {
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080/users/stakeholder-registration');
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            email: this.state.email,
-            phone: this.state.phone,
-            company: this.state.company,
-            password: this.state.password
-        });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
-        request.onreadystatechange = function () {
-            window.location.href = '/';
-        };
+    async submitClicked() {
+        try {
+            const request = new Request(getApiURI('/users/stakeholder-registration'));
+            await fetch(request, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Cache-Control': 'no-cache',
+                },
+                body: JSON.stringify({
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                    phone: this.state.phone,
+                    company: this.state.company,
+                    password: this.state.password
+                }),
+            });
+            this.props.history.push('/');
+        } catch (e) {
+            console.error(e);
+        }
     }
 
-    public handleChange = (id: keyof IStakeholderRegistrationState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof IStakeholderRegistrationState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
     @autobind
-    formGroup(type: string, id: keyof IStakeholderRegistrationState, placeholder: string, value: any) {
+    formGroup(type: InputType, id: keyof IStakeholderRegistrationState, placeholder: string, value: any) {
         return (
             <FormGroup>
-                <Col componentClass={ControlLabel} sm={3}>
+                <Col componentClass={Label} sm={3}>
                     {placeholder}
                 </Col>
                 <Col sm={8}>
-                    <FormControl
+                    <Input
                         type={type}
                         id={id}
                         value={value}
@@ -114,4 +122,4 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
     }
 }
 
-export default StakeholderRegistrationForm;
+export default withRouter(StakeholderRegistrationForm);

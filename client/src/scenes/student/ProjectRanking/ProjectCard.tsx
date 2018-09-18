@@ -2,10 +2,10 @@ import * as React from 'react';
 import { DragSource, DropTarget } from 'react-dnd';
 import ItemTypes from './ItemTypes';
 import {
-    Button,
-    Glyphicon,
-    Panel,
-} from 'react-bootstrap';
+    Button, Card,
+} from 'reactstrap';
+import { MdMenu, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/md';
+import CardBody from 'reactstrap/lib/CardBody';
 
 const panelStyle = {
     width: 600,
@@ -112,28 +112,26 @@ class ProjectCard extends React.Component<IProjectCardProps, IProjectCardState> 
             connectDropTarget(
                 <div style={{ opacity }}>
                     <Button onClick={() => this.setState({ open: !this.state.open })} style={cardStyle as any}>
-                        <Glyphicon glyph="menu-hamburger" style={glyphStyle} />
+                        <MdMenu style={glyphStyle} />
                         {rank <= 5
                             ? <strong>{rank + '. ' + title}</strong>
                             : <small>{title}</small>
                         }
-                        <Glyphicon glyph={this.state.open ? 'menu-up' : 'menu-down'} style={{ padding }} />
+                        {this.state.open ? <MdKeyboardArrowUp style={{ padding }} /> : <MdKeyboardArrowDown style={{ padding }} />}
                     </Button>
                     <br />
-                    <Panel expanded={this.state.open} style={panelStyle}>
-                        <Panel.Collapse>
-                            <Panel.Body>
-                                <strong>Project Description</strong>
-                                <p>{this.props.description}</p>
-                                <br />
-                                <strong>Technologies Expected</strong>
-                                <p>{this.props.technologies}</p>
-                                <br />
-                                <strong>Background Requested</strong>
-                                <p>{this.props.background}</p>
-                            </Panel.Body>
-                        </Panel.Collapse>
-                    </Panel>
+                    <Card expanded={this.state.open} style={panelStyle}>
+                        <CardBody>
+                            <strong>Project Description</strong>
+                            <p>{this.props.description}</p>
+                            <br />
+                            <strong>Technologies Expected</strong>
+                            <p>{this.props.technologies}</p>
+                            <br />
+                            <strong>Background Requested</strong>
+                            <p>{this.props.background}</p>
+                        </CardBody>
+                    </Card>
                 </div>
             ),
         );

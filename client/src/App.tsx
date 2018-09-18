@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   Route, BrowserRouter, Switch, Redirect
 } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import LandingPage from './scenes/login/index';
 import RegisterPage from './scenes/register/index';
 import AdminHome from './scenes/admin/AdminNavigation';
@@ -67,7 +67,6 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
         <BrowserRouter>
           <Switch>
             <Route exact={true} path="/" component={LandingPage} />
@@ -77,7 +76,6 @@ class App extends React.Component {
             <StudentPrivateRoute path="/student" component={StudentHome} />
           </Switch>
         </BrowserRouter>
-      </div>
     );
   }
 }

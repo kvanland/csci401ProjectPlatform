@@ -1,16 +1,19 @@
 import * as React from 'react';
 import {
-    Panel,
+    Card,
     Button,
     Form,
     FormGroup,
     Col,
-    FormControl,
-    ControlLabel,
-    FormControlProps
-} from 'react-bootstrap';
+    Input,
+    Label,
+    InputProps
+} from 'reactstrap';
 import { IUser } from '../../../common/interfaces';
 import { getApiURI } from '../../../common/server';
+import CardHeader from 'reactstrap/lib/CardHeader';
+import CardTitle from 'reactstrap/lib/CardTitle';
+import CardBody from 'reactstrap/lib/CardBody';
 const style = {
     width: 1000,
     float: 'none',
@@ -94,7 +97,7 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
              }; */
     }
 
-    public handleChange = (id: keyof IProfileState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof IProfileState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
@@ -105,18 +108,16 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
 
         return (
             <div style={style as any}>
-                <Panel>
-                    <Panel.Heading>
-                        Profile
-            </Panel.Heading>
-                    <Panel.Body>
+                <Card>
+                    <CardHeader><CardTitle>Profile</CardTitle></CardHeader>
+                    <CardBody>
                         <Form horizontal={true}>
                             <FormGroup>
-                                <Col componentClass={ControlLabel} sm={2}>
+                                <Col componentClass={Label} sm={2}>
                                     First Name:
                     </Col>
                                 <Col sm={10}>
-                                    <FormControl
+                                    <Input
                                         type="text"
                                         id="firstName"
                                         value={this.state.firstName}
@@ -126,11 +127,11 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                             </FormGroup>
 
                             <FormGroup>
-                                <Col componentClass={ControlLabel} sm={2}>
+                                <Col componentClass={Label} sm={2}>
                                     Email:
                     </Col>
                                 <Col sm={10}>
-                                    <FormControl
+                                    <Input
                                         type="email"
                                         id="email"
                                         value={this.state.email}
@@ -140,11 +141,11 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                             </FormGroup>
 
                             <FormGroup>
-                                <Col componentClass={ControlLabel} sm={2}>
+                                <Col componentClass={Label} sm={2}>
                                     Company/Organization:
                     </Col>
                                 <Col sm={10}>
-                                    <FormControl
+                                    <Input
                                         type="text"
                                         id="organization"
                                         value={this.state.organization}
@@ -154,11 +155,11 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                             </FormGroup>
 
                             <FormGroup>
-                                <Col componentClass={ControlLabel} sm={2}>
+                                <Col componentClass={Label} sm={2}>
                                     Phone:
                     </Col>
                                 <Col sm={10}>
-                                    <FormControl
+                                    <Input
                                         type="tel"
                                         id="phone"
                                         value={this.state.phone}
@@ -173,8 +174,8 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                                 </Col>
                             </FormGroup>
                         </Form>
-                    </Panel.Body>
-                </Panel>
+                    </CardBody>
+                </Card>
             </div>
         );
     }

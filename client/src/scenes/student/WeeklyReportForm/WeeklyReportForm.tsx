@@ -3,12 +3,13 @@ import {
     Form,
     FormGroup,
     Col,
-    FormControl,
+    Input,
     Button,
-    ControlLabel,
-    FormControlProps
-} from 'react-bootstrap';
+    Label,
+    InputProps
+} from 'reactstrap';
 import autobind from 'autobind-decorator';
+import { InputType } from 'reactstrap/lib/Input';
 
 interface IWeeklyReportProps {
 }
@@ -142,18 +143,18 @@ class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReport
 
     }
 
-    public handleChange = (id: keyof IWeeklyReportState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof IWeeklyReportState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    renderFormGroup = (id: keyof IWeeklyReportState, label: string, placeholder: string, formType: string = 'text', componentClass?: string) => {
+    renderFormGroup = (id: keyof IWeeklyReportState, label: string, placeholder: string, formType: InputType = 'text', componentClass?: string) => {
         return (
             <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
+                <Col componentClass={Label} sm={2}>
                     <b>{label}</b>
                 </Col>
                 <Col sm={10}>
-                    <FormControl
+                    <Input
                         componentClass={componentClass}
                         type={formType}
                         id={id}

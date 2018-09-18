@@ -1,0 +1,34 @@
+@import "~normalize.css/normalize.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import "~@blueprintjs/core/lib/scss/variables";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+#csci-logo {
+  width: 64px;
+  display: block;
+}
+
+#csci-login-form-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $light-gray4;
+
+  #csci-login-form {
+    flex: 0 1 auto;
+    max-width: 500px;
+  }
+}
+
+#csci-navbar-tabs {
+  margin: 0 auto;
+}

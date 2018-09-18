@@ -4,11 +4,11 @@ import {
     Form,
     FormGroup,
     Col,
-    FormControl,
+    Input,
     Button,
-    ControlLabel,
-    FormControlProps
-} from 'react-bootstrap';
+    Label,
+    InputProps
+} from 'reactstrap';
 
 interface IPeerReviewProps {
 }
@@ -57,18 +57,18 @@ class PeerReviewForm extends React.Component<IPeerReviewProps, IPeerReviewState>
 
     }
 
-    public handleChange = (id: keyof IPeerReviewState) => (e: React.FormEvent<FormControlProps>) => {
+    public handleChange = (id: keyof IPeerReviewState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
     renderFormGroup = (id: keyof IPeerReviewState, label: string, placeholder: string, componentClass?: string) => {
         return (
             <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
+                <Col componentClass={Label} sm={2}>
                     <b>{label}</b>
                 </Col>
                 <Col sm={10}>
-                    <FormControl
+                    <Input
                         componentClass={componentClass}
                         type="text"
                         id={id}

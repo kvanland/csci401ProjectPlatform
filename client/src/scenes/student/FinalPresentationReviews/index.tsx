@@ -1,39 +1,39 @@
 import * as React from 'react';
 import {
-    Panel,
+    Card,
+    CardHeader,
+    CardBody,
     Button,
     Form,
     FormGroup,
     Col,
-    FormControl,
-    ControlLabel
-} from 'react-bootstrap';
+    Input,
+    Label
+} from 'reactstrap';
 
 class FinalPresentationReviews extends React.Component {
     render() {
         return (
             <div>
-                <Panel>
-                    <Panel.Heading>
-                        Final Presentation Review
-            </Panel.Heading>
-                    <Panel.Body>
+                <Card>
+                    <CardHeader>Final Presentation Review</CardHeader>
+                    <CardBody>
                         <Form horizontal={true}>
                             <FormGroup>
-                                <Col componentClass={ControlLabel} sm={2}>
+                                <Col componentClass={Label} sm={2}>
                                     Project Name:
                     </Col>
                                 <Col sm={10}>
-                                    <FormControl type="text" />
+                                    <Input type="text" />
                                 </Col>
                             </FormGroup>
 
                             <FormGroup>
-                                <Col componentClass={ControlLabel} sm={2}>
+                                <Col componentClass={Label} sm={2}>
                                     Review:
                                 </Col>
                                 <Col sm={10}>
-                                    <FormControl componentClass="textarea" />
+                                    <Input componentClass="textarea" />
                                 </Col>
                             </FormGroup>
 
@@ -43,17 +43,17 @@ class FinalPresentationReviews extends React.Component {
                                 </Col>
                             </FormGroup>
                         </Form>
-                    </Panel.Body>
-                </Panel>
+                    </CardBody>
+                </Card>
 
-                <Panel>
-                    <Panel.Heading>
+                <Card>
+                    <CardHeader>
                         Submitted Reviews
-              </Panel.Heading>
-                    <Panel.Body>
-                        <Panel>Project Name</Panel>
-                    </Panel.Body>
-                </Panel>
+              </CardHeader>
+                    <CardBody>
+                        <Card>Project Name</Card>
+                    </CardBody>
+                </Card>
             </div>
         );
     }
