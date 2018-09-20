@@ -16,24 +16,22 @@ interface IProfileState extends IUser {
 }
 
 class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
-    constructor(props: IProfileProps) {
-        super(props);
-        this.state = {
-            firstName: '',
-            email: '',
-            phone: '',
-            organization: '',
-            isLoading: false,
-        };
-        this.submitClicked = this.submitClicked.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
+    state: IProfileState = {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        organization: '',
+        isLoading: false,
+    };
+
     async componentDidMount() {
         this.setState({ isLoading: true });
 
         try {
-            const response = await fetch(getApiURI('users/' + sessionStorage.getItem('email')));
+            const response = await fetch(getApiURI('/users/' + sessionStorage.getItem('email')));
             const data = await response.json();
+            console.log(data);
 
             this.setState({
                 ...data,
@@ -67,6 +65,8 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
             }
         };*/
     }
+
+    @autobind
     submitClicked() {
         /*     var request = new XMLHttpRequest();
              request.withCredentials = true;
@@ -111,17 +111,22 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
         }
 
         return (
-            <Card>
-                <h1>Profile</h1>
-                {this.renderFormGroup('firstName', 'text', 'First Name', 'Tommy')}
-                {this.renderFormGroup('email', 'email', 'Email', 'ttrojan@usc.edu')}
-                {this.renderFormGroup('organization', 'text', 'Company/Organization', 'USC Viterbi')}
-                {this.renderFormGroup('phone', 'tel', 'Phone', '(123) 456-7890')}
+            <div className="csci-container">
+                <div className="csci-main">
+                    <Card>
+                        <h1 style={{ marginTop: 0 }}>Profile</h1>
+                        {this.renderFormGroup('firstName', 'text', 'First Name', 'Tommy')}
+                        {this.renderFormGroup('lastName', 'text', 'Last Name', 'Trojan')}
+                        {this.renderFormGroup('email', 'email', 'Email', 'ttrojan@usc.edu')}
+                        {this.renderFormGroup('organization', 'text', 'Company/Organization', 'USC Viterbi')}
+                        {this.renderFormGroup('phone', 'tel', 'Phone', '(123) 456-7890')}
 
-                <FormGroup>
-                    <Button text="Edit/Save Profile" intent={Intent.PRIMARY} />
-                </FormGroup>
-            </Card>
+                        <FormGroup>
+                            <Button text="Edit/Save Profile" intent={Intent.PRIMARY} />
+                        </FormGroup>
+                    </Card>
+                </div>
+            </div>
         );
     }
 }

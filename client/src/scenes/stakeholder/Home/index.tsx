@@ -1,23 +1,10 @@
 import * as React from 'react';
 import {
-    Card,
-    Table,
-    Alert,
-    Button
-} from 'reactstrap';
-import {
     LinkContainer
 } from 'react-router-bootstrap';
 import { getApiURI } from '../../../common/server';
-import CardHeader from 'reactstrap/lib/CardHeader';
-import CardTitle from 'reactstrap/lib/CardTitle';
-import CardBody from 'reactstrap/lib/CardBody';
-const viewIcon = require('../../../svg/viewIcon.svg');
-const style = {
-    width: 1000,
-    float: 'none',
-    margin: 'auto'
-};
+import { HTMLTable, Button, Card } from '@blueprintjs/core';
+import { RouteComponentProps } from 'react-router';
 interface IProject {
     projectId: number;
     projectName: string;
@@ -29,7 +16,7 @@ interface IHomeState {
     isLoading: Boolean;
 }
 
-interface IHomeProps {
+interface IHomeProps extends RouteComponentProps {
 }
 
 class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
@@ -77,20 +64,18 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
         }
 
         return (
-            <div style={style as any}>
+            <div className="csci-container">
+                <div className="csci-main">
 
-                <h3>Welcome back!</h3>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle componentClass="h3">Your Projects</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                        <Table>
+                    <Card>
+                        <h1 style={{ marginTop: 0 }}>Your Projects</h1>
+                        <HTMLTable style={{ width: '100%' }} striped={true} bordered={true}>
                             <thead>
-                                <th>Project</th>
-                                <th>Status</th>
-                                <th>View/Edit</th>
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Status</th>
+                                    <th>View/Edit</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {projects.map((project: IProject, index: number) =>
@@ -98,16 +83,14 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
                                         <td>{project.projectName}</td>
                                         <td>{this.getStatus(project.statusId)}</td>
                                         <td>
-                                            <LinkContainer to={{ pathname: 'stakeholder/project/' + project.projectId }}>
-                                                <img src={viewIcon} />
-                                            </LinkContainer>
+                                            <Button icon="eye-open" onClick={() => this.props.history.push('/stakeholder/project/' + project.projectId)} />
                                         </td>
                                     </tr>
                                 )}
                             </tbody>
-                        </Table>
-                    </CardBody>
-                </Card>
+                        </HTMLTable>
+                    </Card>
+                </div>
             </div>
         );
     }

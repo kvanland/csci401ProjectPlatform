@@ -29,6 +29,11 @@ class StakeholderNavigation extends React.Component<IStakeholderProps, IStakehol
     navbarTabId: 'home',
   };
 
+  componentDidMount() {
+    const navbarTabId = this.inferNavbarTabId();
+    this.setState({ navbarTabId });
+  }
+
   @autobind
   inferNavbarTabId() {
     const mappings = [
@@ -79,7 +84,7 @@ class StakeholderNavigation extends React.Component<IStakeholderProps, IStakehol
 
   render() {
     return (
-      <div>
+      <div className="csci-root">
         <Navbar>
           <Navbar.Group>
             <Navbar.Heading>
@@ -101,17 +106,17 @@ class StakeholderNavigation extends React.Component<IStakeholderProps, IStakehol
                 selectedTabId={this.state.navbarTabId}
               >
                 <Tab id="home" title="Home" />
-                <Tab id="profile" title="Profile" />
-                <Tab id="proposals" title="Proposals" />
+                <Tab id="profile" title="Stakeholder Profile" />
+                <Tab id="proposals" title="Create Proposal" />
               </Tabs>
             </div>
           </Navbar.Group>
         </Navbar>
         <div className="content">
-          <Route exact={true} path="/stakeholder" component={Home} />
-          <Route path="/stakeholder/profile" component={Profile} />
-          <Route path="/stakeholder/proposals" component={ProjectProposal} />
-          <Route path="/stakeholder/project/:projectId" handler={ProjectPage} component={ProjectPage} />
+          <Route exact={true} path={this.props.match.url} component={Home} />
+          <Route path={`${this.props.match.url}/profile`} component={Profile} />
+          <Route path={`${this.props.match.url}/proposals`} component={ProjectProposal} />
+          <Route path={`${this.props.match.url}/project/:projectId`} handler={ProjectPage} component={ProjectPage} />
         </div>
       </div>
     );

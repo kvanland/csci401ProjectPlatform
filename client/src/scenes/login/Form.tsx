@@ -4,6 +4,9 @@ import {
     InputGroup,
     Button,
     Intent,
+    HotkeysTarget,
+    Hotkeys,
+    Hotkey,
 } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -16,6 +19,8 @@ interface ILoginState {
     password: string;
     isLoading: boolean;
 }
+
+@HotkeysTarget
 class LoginForm extends React.Component<ILoginProps, ILoginState> {
     public state: ILoginState = {
         email: '',
@@ -74,6 +79,14 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
         } finally {
             this.setState({ isLoading: false });
         }
+    }
+
+    renderHotkeys() {
+        return (
+            <Hotkeys>
+                <Hotkey combo="enter" label="Submit login form" onKeyDown={this.submit} allowInInput={true} />
+            </Hotkeys>
+        );
     }
 
     render() {

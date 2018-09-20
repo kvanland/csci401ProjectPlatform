@@ -5,7 +5,8 @@ import {
     Label,
 } from 'reactstrap';
 import autobind from 'autobind-decorator';
-import { InputGroup, FormGroup, Card, TextArea } from '@blueprintjs/core';
+import { InputGroup, FormGroup, Card, TextArea, Button, Intent } from '@blueprintjs/core';
+import { getApiURI } from '../../../common/server';
 
 interface IProjectProps {
 }
@@ -28,38 +29,32 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
     };
 
     @autobind
-    submitClicked() {
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080/projects/save/' + sessionStorage.getItem('email'));
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
-            projectName: this.state.projectName,
-            minSize: this.state.projectSize,
-            maxSize: this.state.projectSize,
-            technologies: this.state.technologies,
-            background: this.state.background,
-            description: this.state.description,
-        });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
-        alert('Your project proposal has been submitted!');
-        /*
-        fetch('http://localhost:8080/projectData/', {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-        projectName: this.state.projectName,
-        projectSize: this.state.projectSize,
-        technologiesExpected: this.state.technologiesExpected,
-        backgroundRequested: this.state.backgroundRequested,
-        projectDescription: this.state.projectDescription,
-        })
-        });
-        */
+    async submitClicked() {
+        try {
+            const response = await fetch(getApiURI('/projects/save/' + sessionStorage.getItem('email')), {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Cache-Control': 'no-cache',
+                },
+                body: JSON.stringify({
+                    projectName: this.state.projectName,
+                    minSize: this.state.projectSize,
+                    maxSize: this.state.projectSize,
+                    technologies: this.state.technologies,
+                    background: this.state.background,
+                    description: this.state.description,
+                }),
+            });
+
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<any>) => {
@@ -83,7 +78,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
 
     render() {
         return (
-            <Card>
+            <div>
                 {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
                 {this.renderFormGroup('projectSize', 'text', 'Number of Students', 'Number of Students')}
                 {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
@@ -96,7 +91,11 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                         onChange={this.handleChange('description')}
                     />
                 </FormGroup>
-            </Card>
+
+                <FormGroup>
+                    <Button intent={Intent.PRIMARY} text="Submit Proposal" onClick={this.submitClicked} />
+                </FormGroup>
+            </div>
         );
 
     }
