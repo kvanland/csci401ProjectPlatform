@@ -34,6 +34,13 @@ class StakeholderNavigation extends React.Component<IStakeholderProps, IStakehol
     this.setState({ navbarTabId });
   }
 
+  componentDidUpdate(oldProps: IStakeholderProps) {
+    if (oldProps.location.pathname !== this.props.location.pathname) {
+      const navbarTabId = this.inferNavbarTabId();
+      this.setState({ navbarTabId });
+    }
+  }
+
   @autobind
   inferNavbarTabId() {
     const mappings = [

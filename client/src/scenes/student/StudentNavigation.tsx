@@ -3,15 +3,7 @@ import {
   Route,
   BrowserRouter
 } from 'react-router-dom';
-// import {
-//   Navbar,
-//   Nav,
-//   NavItem,
-//   FormGroup,
-//   Button
-// } from 'reactstrap';
-import
-{
+import {
   Navbar,
   Button,
   Alignment,
@@ -22,13 +14,12 @@ import
 import {
   LinkContainer
 } from 'react-router-bootstrap';
-import Home from './Home/index';
-import Profile from './Profile/index';
-import ProjectRanking from './ProjectRanking/index';
-import YourProject from './YourProject/index';
-import FinalPresentationReviews from './FinalPresentationReviews/index';
-import WeeklyReportForm from './WeeklyReportForm/index';
-import PeerReviewForm from './PeerReviewForm/index';
+import Home from './Home';
+import Profile from './Profile';
+import ProjectRanking from './ProjectRanking';
+import FinalPresentationReviews from './FinalPresentationReviews';
+import WeeklyReportForm from './WeeklyReportForm';
+import PeerReviewForm from './PeerReviewForm';
 import { RouteComponentProps, withRouter } from 'react-router';
 import NavbarBrand from 'reactstrap/lib/NavbarBrand';
 import autobind from 'autobind-decorator';
@@ -48,7 +39,14 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
 
   componentDidMount() {
     const navbarTabId = this.inferNavbarTabId();
-    this.setState({navbarTabId});
+    this.setState({ navbarTabId });
+  }
+
+  componentDidUpdate(oldProps: IStudentNavigationProps) {
+    if (oldProps.location.pathname !== this.props.location.pathname) {
+      const navbarTabId = this.inferNavbarTabId();
+      this.setState({ navbarTabId });
+    }
   }
 
   @autobind
@@ -61,10 +59,6 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
       {
         pathname: '/student/ranking',
         navbarTabId: 'ranking',
-      },
-      {
-        pathname: '/student/project',
-        navbarTabId: 'project',
       },
       {
         pathname: '/student/reviews',
@@ -92,7 +86,7 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
 
     return 'home';
   }
-  
+
   @autobind
   logOutClicked() {
     sessionStorage.removeItem('jwt');
@@ -112,9 +106,6 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
         break;
       case 'ranking':
         this.props.history.push('/student/ranking');
-        break;
-      case 'project':
-        this.props.history.push('/student/project');
         break;
       case 'review':
         this.props.history.push('/student/reviews');
@@ -153,12 +144,11 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
                 selectedTabId={this.state.navbarTabId}
               >
                 <Tab id="home" title="Home" />
-                <Tab id="profile" title="Profile"/>
-                <Tab id="ranking" title="Project Rankings"/>
-                <Tab id="project" title="Project"/>
-                <Tab id="review" title="Final Presentation Reviews"/>
-                <Tab id="report" title="Weekly Reports"/>
-                <Tab id="peer" title="Peer Reviews"/>
+                <Tab id="profile" title="Profile" />
+                <Tab id="ranking" title="Project Rankings" />
+                <Tab id="review" title="Final Presentation Reviews" />
+                <Tab id="report" title="Weekly Reports" />
+                <Tab id="peer" title="Peer Reviews" />
               </Tabs>
             </div>
           </Navbar.Group>
@@ -167,7 +157,6 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
           <Route exact={true} path={this.props.match.url} component={Home} />
           <Route path={`${this.props.match.url}/profile`} component={Profile} />
           <Route path={`${this.props.match.url}/ranking`} component={ProjectRanking} />
-          <Route path={`${this.props.match.url}/project`} component={YourProject} />
           <Route path={`${this.props.match.url}/reviews`} component={FinalPresentationReviews} />
           <Route path={`${this.props.match.url}/weeklyreport`} component={WeeklyReportForm} />
           <Route path={`${this.props.match.url}/peerreview`} component={PeerReviewForm} />

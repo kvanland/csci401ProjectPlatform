@@ -1,17 +1,8 @@
 import * as React from 'react';
-
-import {
-    Table,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    Col,
-} from 'reactstrap';
 import StudentRegistrationForm from './StudentRegistrationForm';
 import { getApiURI } from '../../../common/server';
 import autobind from 'autobind-decorator';
-import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card } from '@blueprintjs/core';
+import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Dialog } from '@blueprintjs/core';
 import { InputType } from 'reactstrap/lib/Input';
 
 interface IUserListProps {
@@ -181,38 +172,6 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
             return <p>Loading...</p>;
         }
 
-        var modalEditUser = <div />;
-        if (typeof userToEdit !== 'undefined') {
-            modalEditUser = (
-                <Modal show={userIndexToEdit !== -1} onHide={this.cancelEdit}>
-                    <ModalHeader closeButton={true}>Edit User</ModalHeader>
-                    <ModalBody>
-                        {this.renderFormGroup('editFirstName', 'text', 'First Name', 'Tommy')}
-                        {this.renderFormGroup('editLastName', 'text', 'Last Name', 'Trojan')}
-                        {this.renderFormGroup('editEmail', 'email', 'Email', 'ttrojan@usc.edu')}
-                        <FormGroup label="User Type" labelFor="editUserType">
-                            <Col sm={10}>
-                                <select
-                                    id="editUserType"
-                                    value={this.state.editUserType}
-                                    onChange={this.handleChange('editUserType')}
-                                >
-                                    <option value="Student">Student</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Stakeholder">Stakeholder</option>
-                                </select>
-                            </Col>
-                        </FormGroup>
-                        {this.renderFormGroup('editYear', 'text', 'Year', 'YYYY')}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={this.cancelEdit}>Cancel</Button>
-                        <Button onClick={this.submitEdit} intent={Intent.SUCCESS}>Save</Button>
-                    </ModalFooter>
-                </Modal>
-            );
-        }
-
         return (
             <div className="csci-container">
                 <div className="csci-side">
@@ -259,7 +218,35 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                     </Card>
                 </div>
 
-                {modalEditUser}
+                <Dialog
+                    isOpen={typeof userToEdit !== 'undefined' && userIndexToEdit !== -1}
+                    onClose={this.cancelEdit}
+                    title="Edit User"
+                    icon="edit"
+                >
+                    <div style={{ padding: 20 }}>
+                        {this.renderFormGroup('editFirstName', 'text', 'First Name', 'Tommy')}
+                        {this.renderFormGroup('editLastName', 'text', 'Last Name', 'Trojan')}
+                        {this.renderFormGroup('editEmail', 'email', 'Email', 'ttrojan@usc.edu')}
+                        <FormGroup label="User Type" labelFor="editUserType">
+                            <select
+                                id="editUserType"
+                                value={this.state.editUserType}
+                                onChange={this.handleChange('editUserType')}
+                            >
+                                <option value="Student">Student</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Stakeholder">Stakeholder</option>
+                            </select>
+                        </FormGroup>
+                        {this.renderFormGroup('editYear', 'text', 'Year', 'YYYY')}
+
+                        <div>
+                            <Button onClick={this.cancelEdit}>Cancel</Button>
+                            <Button onClick={this.submitEdit} intent={Intent.SUCCESS}>Save</Button>
+                        </div>
+                    </div>
+                </Dialog>
             </div>);
     }
 }
