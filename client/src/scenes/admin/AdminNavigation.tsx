@@ -49,6 +49,13 @@ class AdminNavigation extends React.Component<IAdminNavigationProps, IAdminNavig
     this.setState({ navbarTabId });
   }
 
+  componentDidUpdate(oldProps: IAdminNavigationProps) {
+    if (oldProps.location.pathname !== this.props.location.pathname) {
+      const navbarTabId = this.inferNavbarTabId();
+      this.setState({ navbarTabId });
+    }
+  }
+
   @autobind
   inferNavbarTabId() {
     const mappings = [
