@@ -3,7 +3,7 @@ import autobind from 'autobind-decorator';
 import { getApiURI } from '../../common/server';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
-import { Card, FormGroup, Button, Intent, InputGroup } from '@blueprintjs/core';
+import { Card, FormGroup, Button, Intent, InputGroup, Callout } from '@blueprintjs/core';
 
 const style = {
     width: 600,
@@ -21,6 +21,9 @@ interface IStakeholderRegistrationState {
     company: string;
     password: string;
     confirm: string;
+
+    isLoading: boolean;
+    error: string;
 }
 class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrationProps, IStakeholderRegistrationState> {
     public state: IStakeholderRegistrationState = {
@@ -30,14 +33,22 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
         phone: '',
         company: '',
         password: '',
-        confirm: ''
+        confirm: '',
+
+        isLoading: false,
+        error: '',
     };
 
     @autobind
     async submitClicked() {
+        if (this.state.isLoading) {
+            return;
+        }
+
+        this.setState({ isLoading: true, error: '' });
+
         try {
-            const request = new Request(getApiURI('/users/stakeholder-registration'));
-            await fetch(request, {
+            const response = await fetch(getApiURI('/users/stakeholder-registration'), {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -53,9 +64,17 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
                     password: this.state.password
                 }),
             });
+
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
+            await this.setState({ error: 'Registration could not be completed.' });
+        } finally {
+            this.setState({ isLoading: false });
         }
     }
 
@@ -70,9 +89,10 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
                 <InputGroup
                     type={type}
                     id={id}
-                    value={this.state[id]}
+                    value={this.state[id] as any}
                     placeholder={placeholder}
                     onChange={this.handleChange(id)}
+                    disabled={this.state.isLoading}
                 />
             </FormGroup>
         );
@@ -83,6 +103,7 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
             <div id="csci-login-form-container">
                 <Card id="csci-login-form">
                     <h1 style={{ marginTop: 0 }}>Stakeholder Registration</h1>
+
                     {this.formGroup('text', 'firstName', 'First Name', 'Hecuba')}
                     {this.formGroup('text', 'lastName', 'Last Name', 'Queen of Troy')}
                     {this.formGroup('text', 'email', 'Email', 'hecuba@usc.edu')}
@@ -92,8 +113,14 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
                     {this.formGroup('password', 'confirm', 'Confirm Password', '********')}
 
                     <FormGroup>
-                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} />
+                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} loading={this.state.isLoading} />
                     </FormGroup>
+
+                    {this.state.error !== '' && (
+                        <Callout intent={Intent.DANGER}>
+                            An error occurred: {this.state.error}
+                        </Callout>
+                    )}
                 </Card>
             </div>
         );

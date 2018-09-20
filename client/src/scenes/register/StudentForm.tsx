@@ -3,7 +3,7 @@ import autobind from 'autobind-decorator';
 import { getApiURI } from '../../common/server';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
-import { Card, FormGroup, InputGroup, Button, Intent } from '@blueprintjs/core';
+import { Card, FormGroup, InputGroup, Button, Intent, Callout } from '@blueprintjs/core';
 
 const style = {
     width: 600,
@@ -20,6 +20,9 @@ interface IStudentRegistrationState {
     phone: string;
     password: string;
     confirm: string;
+
+    isLoading: boolean;
+    error: string;
 }
 class StudentRegistrationForm extends React.Component<IStudentRegistrationProps, IStudentRegistrationState> {
     public state: IStudentRegistrationState = {
@@ -28,14 +31,22 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         email: '',
         phone: '',
         password: '',
-        confirm: ''
+        confirm: '',
+
+        isLoading: false,
+        error: '',
     };
 
     @autobind
     async submitClicked() {
+        if (this.state.isLoading) {
+            return;
+        }
+
+        this.setState({ isLoading: true, error: '' });
 
         try {
-            await fetch(getApiURI('/users/student-registration'), {
+            const response = await fetch(getApiURI('/users/student-registration'), {
                 method: 'POST',
                 body: JSON.stringify({
                     firstName: this.state.firstName,
@@ -51,9 +62,16 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
                 credentials: 'include'
             });
 
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
+            await this.setState({ error: 'Registration could not be completed.' });
+        } finally {
+            this.setState({ isLoading: false });
         }
     }
 
@@ -68,9 +86,10 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
                 <InputGroup
                     type={type}
                     id={id}
-                    value={this.state[id]}
+                    value={this.state[id] as any}
                     placeholder={placeholder}
                     onChange={this.handleChange(id)}
+                    disabled={this.state.isLoading}
                 />
             </FormGroup>
         );
@@ -89,8 +108,14 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
                     {this.formGroup('password', 'confirm', 'Confirm Password', '********')}
 
                     <FormGroup>
-                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} />
+                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} loading={this.state.isLoading} />
                     </FormGroup>
+
+                    {this.state.error !== '' && (
+                        <Callout intent={Intent.DANGER}>
+                            An error occurred: {this.state.error}
+                        </Callout>
+                    )}
                 </Card>
             </div>
         );
