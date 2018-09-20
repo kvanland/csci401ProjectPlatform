@@ -10,6 +10,22 @@ body,
   height: 100%;
 }
 
+.csci-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  >.bp3-navbar {
+    flex: 0;
+  }
+
+  >.content {
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+  }
+}
+
 #csci-logo {
   width: 64px;
   display: block;
@@ -17,7 +33,7 @@ body,
 
 #csci-login-form-container {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,9 +42,28 @@ body,
   #csci-login-form {
     flex: 0 1 auto;
     max-width: 500px;
+    margin: 20px;
   }
 }
 
 #csci-navbar-tabs {
   margin: 0 auto;
+}
+
+.csci-container {
+  background-color: $light-gray4;
+  min-height: 100%;
+  display: flex;
+  flex-direction: row;
+
+  .csci-main {
+    flex: 1;
+  }
+
+  .csci-side,
+  .csci-main {
+    .bp3-card {
+      margin: 20px;
+    }
+  }
 }

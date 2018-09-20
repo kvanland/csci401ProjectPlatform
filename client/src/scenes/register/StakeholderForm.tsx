@@ -1,18 +1,9 @@
 import * as React from 'react';
-import {
-    Form,
-    FormGroup,
-    Col,
-    Input,
-    Button,
-    Label,
-    Row,
-    InputProps
-} from 'reactstrap';
 import autobind from 'autobind-decorator';
 import { getApiURI } from '../../common/server';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
+import { Card, FormGroup, Button, Intent, InputGroup } from '@blueprintjs/core';
 
 const style = {
     width: 600,
@@ -73,50 +64,37 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
     }
 
     @autobind
-    formGroup(type: InputType, id: keyof IStakeholderRegistrationState, placeholder: string, value: any) {
+    formGroup(type: InputType, id: keyof IStakeholderRegistrationState, label: string, placeholder: string) {
         return (
-            <FormGroup>
-                <Col componentClass={Label} sm={3}>
-                    {placeholder}
-                </Col>
-                <Col sm={8}>
-                    <Input
-                        type={type}
-                        id={id}
-                        value={value}
-                        placeholder={placeholder}
-                        onChange={this.handleChange(id)}
-                    />
-                </Col>
+            <FormGroup label={label} labelFor={id}>
+                <InputGroup
+                    type={type}
+                    id={id}
+                    value={this.state[id]}
+                    placeholder={placeholder}
+                    onChange={this.handleChange(id)}
+                />
             </FormGroup>
         );
     }
 
     render() {
         return (
-            <div style={style as any}>
-                <h2>Stakeholder Registration</h2>
-                <Row>
-                    <Col>
-                        <div>
-                            <Form horizontal={true} >
-                                {this.formGroup('text', 'firstName', 'First Name', this.state.firstName)}
-                                {this.formGroup('text', 'lastName', 'Last Name', this.state.lastName)}
-                                {this.formGroup('text', 'email', 'Email', this.state.email)}
-                                {this.formGroup('text', 'phone', 'Phone', this.state.phone)}
-                                {this.formGroup('text', 'company', 'Company/Organization', this.state.company)}
-                                {this.formGroup('password', 'password', 'Password', this.state.password)}
-                                {this.formGroup('password', 'confirm', 'Confirm Password', this.state.confirm)}
+            <div id="csci-login-form-container">
+                <Card id="csci-login-form">
+                    <h1 style={{ marginTop: 0 }}>Stakeholder Registration</h1>
+                    {this.formGroup('text', 'firstName', 'First Name', 'Hecuba')}
+                    {this.formGroup('text', 'lastName', 'Last Name', 'Queen of Troy')}
+                    {this.formGroup('text', 'email', 'Email', 'hecuba@usc.edu')}
+                    {this.formGroup('text', 'phone', 'Phone', '(098) 765-4321')}
+                    {this.formGroup('text', 'company', 'Company/Organization', 'USC Village')}
+                    {this.formGroup('password', 'password', 'Password', '********')}
+                    {this.formGroup('password', 'confirm', 'Confirm Password', '********')}
 
-                                <FormGroup>
-                                    <Col smOffset={3} sm={10}>
-                                        <Button type="reset" onClick={this.submitClicked}>Register</Button>
-                                    </Col>
-                                </FormGroup>
-                            </Form>
-                        </div>
-                    </Col>
-                </Row>
+                    <FormGroup>
+                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} />
+                    </FormGroup>
+                </Card>
             </div>
         );
     }

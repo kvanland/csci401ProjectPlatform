@@ -91,38 +91,28 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
       return <p>Loading...</p>;
     }
 
-    const header = (
-      <Card>
-        <h2>Project Matching</h2>
-        <FormGroup>
-          <InputGroup
-            type="text"
-            placeholder="Enter number of ranked projects to consider"
-            rightElement={<Button minimal={true} icon="arrow-right" intent={Intent.PRIMARY} onClick={this.launch} />}
-          />
-        </FormGroup>
-        <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" />
-      </Card>
-    );
-
-    if (!isLaunched) {
-      return header;
-    }
-
-    if (isLaunched && !projects.length) {
-      return (
-        <div style={{ margin: 'auto', float: 'none', width: 1000 }}>
-          {header}
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
     return (
-      <div>
-        {header}
-
-        <ProjectsList projects={this.state.projects} />
+      <div className="csci-container">
+        <div className="csci-main">
+          <Card>
+            <FormGroup>
+              <InputGroup
+                type="text"
+                placeholder="Enter number of ranked projects to consider"
+                rightElement={<Button minimal={true} icon="arrow-right" intent={Intent.PRIMARY} onClick={this.launch} />}
+              />
+            </FormGroup>
+            <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" />
+          </Card>
+          {isLaunched && (
+            <Card>
+              {projects.length > 0 ? (
+                <ProjectsList projects={this.state.projects} />
+              ) : <p>Loading...</p>
+              }
+            </Card>
+          )}
+        </div>
 
       </div>
     );

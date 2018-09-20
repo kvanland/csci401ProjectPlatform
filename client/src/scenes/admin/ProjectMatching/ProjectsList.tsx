@@ -127,7 +127,7 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
     render() {
         const { projects } = this.state;
         return (
-            <HTMLTable bordered={true} striped={true}>
+            <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
                 <thead>
                     <tr>
                         <th>Project Name</th>

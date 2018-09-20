@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Card, Callout } from '@blueprintjs/core';
 import LoginForm from './Form';
+import { Link } from 'react-router-dom';
 
 const style = {
     width: 600,
@@ -13,14 +14,11 @@ class Login extends React.Component {
         return (
             <div id="csci-login-form-container">
                 <Card id="csci-login-form">
-                    <h1> Welcome to CSCI 401</h1>
+                    <h1 style={{ marginTop: 0 }}>Welcome to CSCI 401</h1>
                     <LoginForm />
 
                     <Callout>
-                        <p>
-                            Interested in being a stakeholder for a project?
-                        <a href="/register/stakeholder"> Register here. </a>
-                        </p>
+                        Not registered? <Link to="/register/student">I'm a student</Link> or <Link to="/register/stakeholder">I'm a stakeholder</Link>.
                     </Callout>
                 </Card>
             </div>

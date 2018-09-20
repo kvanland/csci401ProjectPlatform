@@ -11,7 +11,7 @@ import {
 import StudentRegistrationForm from './StudentRegistrationForm';
 import { getApiURI } from '../../../common/server';
 import autobind from 'autobind-decorator';
-import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable } from '@blueprintjs/core';
+import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card } from '@blueprintjs/core';
 import { InputType } from 'reactstrap/lib/Input';
 
 interface IUserListProps {
@@ -214,44 +214,50 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         }
 
         return (
-            <div>
-                <h2>Manage Users</h2>
-
-                <div>
-                    <StudentRegistrationForm />
-                    <ButtonGroup>
-                        <Button onClick={this.handleUserFilterChange('All')} icon="filter" active={this.state.userFilterType === 'All'}>All</Button>
-                        <Button onClick={this.handleUserFilterChange('Student')} active={this.state.userFilterType === 'Student'}>Student</Button>
-                        <Button onClick={this.handleUserFilterChange('Stakeholder')} active={this.state.userFilterType === 'Stakeholder'}>Stakeholder</Button>
-                        <Button onClick={this.handleUserFilterChange('Admin')} active={this.state.userFilterType === 'Admin'}>Admin</Button>
-                    </ButtonGroup>
+            <div className="csci-container">
+                <div className="csci-side">
+                    <Card>
+                        <h3 style={{ marginTop: 0 }}>Invite New Users</h3>
+                        <StudentRegistrationForm />
+                    </Card>
                 </div>
 
-                <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>User Type</th>
-                            <th>Email</th>
-                            <th>Edit/Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {usersToDisplay.map((user: IUser, index: number) =>
-                            <tr key={user.userId}>
-                                <td>{user.firstName}</td>
-                                <td>{user.lastName}</td>
-                                <td>{user.userType}</td>
-                                <td>{user.email}</td>
-                                <td>
-                                    <Button intent={Intent.WARNING} onClick={() => this.editUser(index, user)} text="Edit" />
-                                    <Button intent={Intent.DANGER} onClick={() => this.deleteUser(user)} text="Delete" />
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </HTMLTable>
+                <div className="csci-main">
+                    <Card>
+                        <ButtonGroup minimal={true}>
+                            <Button onClick={this.handleUserFilterChange('All')} icon="filter" active={this.state.userFilterType === 'All'}>All</Button>
+                            <Button onClick={this.handleUserFilterChange('Student')} active={this.state.userFilterType === 'Student'}>Student</Button>
+                            <Button onClick={this.handleUserFilterChange('Stakeholder')} active={this.state.userFilterType === 'Stakeholder'}>Stakeholder</Button>
+                            <Button onClick={this.handleUserFilterChange('Admin')} active={this.state.userFilterType === 'Admin'}>Admin</Button>
+                        </ButtonGroup>
+
+                        <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>User Type</th>
+                                    <th>Email</th>
+                                    <th>Edit/Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {usersToDisplay.map((user: IUser, index: number) =>
+                                    <tr key={user.userId}>
+                                        <td>{user.firstName}</td>
+                                        <td>{user.lastName}</td>
+                                        <td>{user.userType}</td>
+                                        <td>{user.email}</td>
+                                        <td>
+                                            <Button intent={Intent.WARNING} onClick={() => this.editUser(index, user)} text="Edit" />
+                                            <Button intent={Intent.DANGER} onClick={() => this.deleteUser(user)} text="Delete" />
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </HTMLTable>
+                    </Card>
+                </div>
 
                 {modalEditUser}
             </div>);

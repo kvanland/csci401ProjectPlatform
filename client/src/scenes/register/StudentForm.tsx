@@ -1,17 +1,9 @@
 import * as React from 'react';
-import {
-    Form,
-    FormGroup,
-    Col,
-    Input,
-    Button,
-    Label,
-    InputProps
-} from 'reactstrap';
 import autobind from 'autobind-decorator';
 import { getApiURI } from '../../common/server';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
+import { Card, FormGroup, InputGroup, Button, Intent } from '@blueprintjs/core';
 
 const style = {
     width: 600,
@@ -70,44 +62,36 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
     }
 
     @autobind
-    formGroup(type: InputType, id: keyof IStudentRegistrationState, placeholder: string, value: any) {
+    formGroup(type: InputType, id: keyof IStudentRegistrationState, label: string, placeholder: string) {
         return (
-            <FormGroup>
-                <Col componentClass={Label} sm={2}>
-                    {placeholder}
-                </Col>
-                <Col sm={10}>
-                    <Input
-                        type={type}
-                        id={id}
-                        value={value}
-                        placeholder={placeholder}
-                        onChange={this.handleChange(id)}
-                    />
-                </Col>
+            <FormGroup label={label} labelFor={id}>
+                <InputGroup
+                    type={type}
+                    id={id}
+                    value={this.state[id]}
+                    placeholder={placeholder}
+                    onChange={this.handleChange(id)}
+                />
             </FormGroup>
         );
-
     }
 
     render() {
         return (
-            <div style={style as any}>
-                <h2>Student Registration</h2>
-                <Form horizontal={true} >
-                    {this.formGroup('text', 'firstName', 'First Name', this.state.firstName)}
-                    {this.formGroup('text', 'lastName', 'Last Name', this.state.lastName)}
-                    {this.formGroup('text', 'email', 'Email', this.state.email)}
-                    {this.formGroup('text', 'phone', 'Phone', this.state.phone)}
-                    {this.formGroup('password', 'password', 'Password', this.state.password)}
-                    {this.formGroup('password', 'confirm', 'Confirm Password', this.state.confirm)}
+            <div id="csci-login-form-container">
+                <Card id="csci-login-form">
+                    <h1 style={{ marginTop: 0 }}>Student Registration</h1>
+                    {this.formGroup('text', 'firstName', 'First Name', 'Tommy')}
+                    {this.formGroup('text', 'lastName', 'Last Name', 'Trojan')}
+                    {this.formGroup('text', 'email', 'Email', 'ttrojan@usc.edu')}
+                    {this.formGroup('text', 'phone', 'Phone', '(123) 456-7890')}
+                    {this.formGroup('password', 'password', 'Password', '********')}
+                    {this.formGroup('password', 'confirm', 'Confirm Password', '********')}
 
                     <FormGroup>
-                        <Col smOffset={2} sm={10}>
-                            <Button type="reset" onClick={this.submitClicked}>Register</Button>
-                        </Col>
+                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} />
                     </FormGroup>
-                </Form>
+                </Card>
             </div>
         );
     }

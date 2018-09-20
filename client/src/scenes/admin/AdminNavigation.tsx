@@ -113,7 +113,7 @@ class AdminNavigation extends React.Component<IAdminNavigationProps, IAdminNavig
 
   render() {
     return (
-      <div>
+      <div className="csci-root">
         <Navbar>
           <Navbar.Group>
             <Navbar.Heading>
