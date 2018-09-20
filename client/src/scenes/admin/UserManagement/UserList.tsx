@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IUser } from '../../../common/interfaces';
 import { getApiURI } from '../../../common/server';
+import { Loading } from 'components/Loading';
 
 interface IUserListProps {
 }
@@ -47,7 +48,7 @@ class UserList extends React.Component<IUserListProps, IUserListState> {
     const { users, isLoading } = this.state;
 
     if (isLoading) {
-      return <p>Loading...</p>;
+      return <Loading />;
     }
 
     return (

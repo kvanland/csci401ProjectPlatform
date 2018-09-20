@@ -5,6 +5,7 @@ import {
 import { getApiURI } from '../../../common/server';
 import { HTMLTable, Button, Card } from '@blueprintjs/core';
 import { RouteComponentProps } from 'react-router';
+import { Loading } from 'components/Loading';
 interface IProject {
     projectId: number;
     projectName: string;
@@ -60,7 +61,7 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
         const { projects, isLoading } = this.state;
 
         if (isLoading) {
-            return <p>Loading...</p>;
+            return <Loading />;
         }
 
         return (

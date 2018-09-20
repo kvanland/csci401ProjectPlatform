@@ -8,6 +8,7 @@ import { getApiURI } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardTitle from 'reactstrap/lib/CardTitle';
 import CardBody from 'reactstrap/lib/CardBody';
+import { Loading } from 'components/Loading';
 
 interface IDeliverable {
     id: number;
@@ -81,7 +82,7 @@ class DeliverableList extends React.Component<IDeliverableProps, IDeliverableSta
         const { deliverables, isLoading } = this.state;
 
         if (isLoading) {
-            return <p>Loading...</p>;
+            return <Loading />;
         }
         return (
             <Card>

@@ -3,13 +3,11 @@ import autobind from 'autobind-decorator';
 import { getApiURI } from '../../common/server';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
-import { Card, FormGroup, Button, Intent, InputGroup, Callout } from '@blueprintjs/core';
+import { Card, FormGroup, Button, Intent, InputGroup, Callout, IconName, Toaster, Position } from '@blueprintjs/core';
 
-const style = {
-    width: 600,
-    float: 'none',
-    margin: 'auto',
-};
+const RegisterToast = Toaster.create({
+    position: Position.TOP,
+});
 
 interface IStakeholderRegistrationProps extends RouteComponentProps<any> {
 }
@@ -23,7 +21,7 @@ interface IStakeholderRegistrationState {
     confirm: string;
 
     isLoading: boolean;
-    error: string;
+    hasError: boolean;
 }
 class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrationProps, IStakeholderRegistrationState> {
     public state: IStakeholderRegistrationState = {
@@ -36,7 +34,7 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
         confirm: '',
 
         isLoading: false,
-        error: '',
+        hasError: false,
     };
 
     @autobind
@@ -45,7 +43,7 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
             return;
         }
 
-        this.setState({ isLoading: true, error: '' });
+        this.setState({ isLoading: true });
 
         try {
             const response = await fetch(getApiURI('/users/stakeholder-registration'), {
@@ -72,10 +70,21 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
-            await this.setState({ error: 'Registration could not be completed.' });
+            await this.setState({ hasError: true });
+            RegisterToast.show({
+                intent: Intent.DANGER,
+                icon: 'error',
+                message: 'Could not create an account because a problem occurred.',
+            });
+
         } finally {
             this.setState({ isLoading: false });
         }
+    }
+
+    @autobind
+    cancelClicked() {
+        this.props.history.push('/');
     }
 
     public handleChange = (id: keyof IStakeholderRegistrationState) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,18 +92,23 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
     }
 
     @autobind
-    formGroup(type: InputType, id: keyof IStakeholderRegistrationState, label: string, placeholder: string) {
+    formGroup(type: InputType, id: keyof IStakeholderRegistrationState, label: string, placeholder: string, icon?: IconName) {
         return (
-            <FormGroup label={label} labelFor={id}>
-                <InputGroup
-                    type={type}
-                    id={id}
-                    value={this.state[id] as any}
-                    placeholder={placeholder}
-                    onChange={this.handleChange(id)}
-                    disabled={this.state.isLoading}
-                />
-            </FormGroup>
+            <div style={{ flex: 1, marginRight: 5 }}>
+                <FormGroup label={label} labelFor={id}>
+                    <InputGroup
+                        type={type}
+                        id={id}
+                        value={this.state[id] as any}
+                        placeholder={placeholder}
+                        onChange={this.handleChange(id)}
+                        disabled={this.state.isLoading}
+                        leftIcon={icon}
+                        large={true}
+                        intent={this.state.hasError ? Intent.DANGER : Intent.NONE}
+                    />
+                </FormGroup>
+            </div>
         );
     }
 
@@ -103,24 +117,24 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
             <div id="csci-login-form-container">
                 <Card id="csci-login-form">
                     <h1 style={{ marginTop: 0 }}>Stakeholder Registration</h1>
+                    <div style={{ marginRight: -5 }}>
+                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                            {this.formGroup('text', 'firstName', 'First Name', 'Hecuba', 'person')}
+                            {this.formGroup('text', 'lastName', 'Last Name', 'Queen of Troy')}
+                        </div>
+                        {this.formGroup('text', 'email', 'Email', 'hecuba@usc.edu', 'envelope')}
+                        {this.formGroup('text', 'phone', 'Phone', '(098) 765-4321', 'phone')}
+                        {this.formGroup('text', 'company', 'Company/Organization', 'USC Village', 'globe')}
+                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                            {this.formGroup('password', 'password', 'Password', '********', 'lock')}
+                            {this.formGroup('password', 'confirm', 'Confirm Password', '********')}
+                        </div>
+                    </div>
 
-                    {this.formGroup('text', 'firstName', 'First Name', 'Hecuba')}
-                    {this.formGroup('text', 'lastName', 'Last Name', 'Queen of Troy')}
-                    {this.formGroup('text', 'email', 'Email', 'hecuba@usc.edu')}
-                    {this.formGroup('text', 'phone', 'Phone', '(098) 765-4321')}
-                    {this.formGroup('text', 'company', 'Company/Organization', 'USC Village')}
-                    {this.formGroup('password', 'password', 'Password', '********')}
-                    {this.formGroup('password', 'confirm', 'Confirm Password', '********')}
-
-                    <FormGroup>
-                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} loading={this.state.isLoading} />
-                    </FormGroup>
-
-                    {this.state.error !== '' && (
-                        <Callout intent={Intent.DANGER}>
-                            An error occurred: {this.state.error}
-                        </Callout>
-                    )}
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} loading={this.state.isLoading} large={true} />
+                        <Button intent={Intent.NONE} text="Cancel" onClick={this.cancelClicked} loading={this.state.isLoading} large={true} />
+                    </div>
                 </Card>
             </div>
         );

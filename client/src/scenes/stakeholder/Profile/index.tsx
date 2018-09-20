@@ -3,6 +3,7 @@ import { IUser } from '../../../common/interfaces';
 import { getApiURI } from '../../../common/server';
 import { FormGroup, InputGroup, Card, Button, Intent } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
+import { Loading } from '../../../components/Loading';
 const style = {
     width: 1000,
     float: 'none',
@@ -107,7 +108,7 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
 
     render() {
         if (this.state.isLoading) {
-            return <p>Loading...</p>;
+            return <Loading />;
         }
 
         return (

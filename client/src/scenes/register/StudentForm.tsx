@@ -3,13 +3,11 @@ import autobind from 'autobind-decorator';
 import { getApiURI } from '../../common/server';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
-import { Card, FormGroup, InputGroup, Button, Intent, Callout } from '@blueprintjs/core';
+import { Card, FormGroup, InputGroup, Button, Intent, Callout, IconName, Toaster, Position } from '@blueprintjs/core';
 
-const style = {
-    width: 600,
-    float: 'none',
-    margin: 'auto',
-};
+const RegisterToast = Toaster.create({
+    position: Position.TOP,
+});
 
 interface IStudentRegistrationProps extends RouteComponentProps<any> {
 }
@@ -22,7 +20,7 @@ interface IStudentRegistrationState {
     confirm: string;
 
     isLoading: boolean;
-    error: string;
+    hasError: boolean;
 }
 class StudentRegistrationForm extends React.Component<IStudentRegistrationProps, IStudentRegistrationState> {
     public state: IStudentRegistrationState = {
@@ -34,7 +32,7 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         confirm: '',
 
         isLoading: false,
-        error: '',
+        hasError: false,
     };
 
     @autobind
@@ -43,7 +41,7 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
             return;
         }
 
-        this.setState({ isLoading: true, error: '' });
+        this.setState({ isLoading: true });
 
         try {
             const response = await fetch(getApiURI('/users/student-registration'), {
@@ -69,10 +67,20 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
-            await this.setState({ error: 'Registration could not be completed.' });
+            await this.setState({ hasError: true });
+            RegisterToast.show({
+                intent: Intent.DANGER,
+                icon: 'error',
+                message: 'Could not create an account because a problem occurred.',
+            });
         } finally {
             this.setState({ isLoading: false });
         }
+    }
+
+    @autobind
+    cancelClicked() {
+        this.props.history.push('/');
     }
 
     public handleChange = (id: keyof IStudentRegistrationState) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,18 +88,23 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
     }
 
     @autobind
-    formGroup(type: InputType, id: keyof IStudentRegistrationState, label: string, placeholder: string) {
+    formGroup(type: InputType, id: keyof IStudentRegistrationState, label: string, placeholder: string, icon?: IconName) {
         return (
-            <FormGroup label={label} labelFor={id}>
-                <InputGroup
-                    type={type}
-                    id={id}
-                    value={this.state[id] as any}
-                    placeholder={placeholder}
-                    onChange={this.handleChange(id)}
-                    disabled={this.state.isLoading}
-                />
-            </FormGroup>
+            <div style={{ flex: 1, marginRight: 5 }}>
+                <FormGroup label={label} labelFor={id}>
+                    <InputGroup
+                        large={true}
+                        type={type}
+                        id={id}
+                        value={this.state[id] as any}
+                        placeholder={placeholder}
+                        onChange={this.handleChange(id)}
+                        disabled={this.state.isLoading}
+                        leftIcon={icon}
+                        intent={this.state.hasError ? Intent.DANGER : Intent.NONE}
+                    />
+                </FormGroup>
+            </div>
         );
     }
 
@@ -100,22 +113,23 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
             <div id="csci-login-form-container">
                 <Card id="csci-login-form">
                     <h1 style={{ marginTop: 0 }}>Student Registration</h1>
-                    {this.formGroup('text', 'firstName', 'First Name', 'Tommy')}
-                    {this.formGroup('text', 'lastName', 'Last Name', 'Trojan')}
-                    {this.formGroup('text', 'email', 'Email', 'ttrojan@usc.edu')}
-                    {this.formGroup('text', 'phone', 'Phone', '(123) 456-7890')}
-                    {this.formGroup('password', 'password', 'Password', '********')}
-                    {this.formGroup('password', 'confirm', 'Confirm Password', '********')}
+                    <div style={{ marginRight: -5 }}>
+                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                            {this.formGroup('text', 'firstName', 'First Name', 'Tommy', 'person')}
+                            {this.formGroup('text', 'lastName', 'Last Name', 'Trojan')}
+                        </div>
+                        {this.formGroup('text', 'email', 'Email', 'ttrojan@usc.edu', 'envelope')}
+                        {this.formGroup('text', 'phone', 'Phone', '(123) 456-7890', 'phone')}
+                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                            {this.formGroup('password', 'password', 'Password', '********', 'lock')}
+                            {this.formGroup('password', 'confirm', 'Confirm', '********')}
+                        </div>
+                    </div>
 
-                    <FormGroup>
-                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} loading={this.state.isLoading} />
-                    </FormGroup>
-
-                    {this.state.error !== '' && (
-                        <Callout intent={Intent.DANGER}>
-                            An error occurred: {this.state.error}
-                        </Callout>
-                    )}
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Button intent={Intent.PRIMARY} text="Register" onClick={this.submitClicked} loading={this.state.isLoading} large={true} />
+                        <Button intent={Intent.NONE} text="Cancel" onClick={this.cancelClicked} loading={this.state.isLoading} large={true} />
+                    </div>
                 </Card>
             </div>
         );

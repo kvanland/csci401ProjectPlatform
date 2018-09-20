@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { getApiURI } from '../../../common/server';
 import { HTMLTable, Button, Intent, Card } from '@blueprintjs/core';
+import { Loading } from 'components/Loading';
 
 interface IProjectListProps {
 }
@@ -126,7 +127,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
         const { projects, isLoading } = this.state;
 
         if (isLoading) {
-            return <p>Loading...</p>;
+            return <Loading />;
         }
 
         return (

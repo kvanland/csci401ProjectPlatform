@@ -17,6 +17,7 @@ import { getApiURI } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardBody from 'reactstrap/lib/CardBody';
 import { InputType } from 'reactstrap/lib/Input';
+import { Loading } from 'components/Loading';
 const style = {
     width: 1000,
     float: 'none',
@@ -100,7 +101,7 @@ class StudentProfile extends React.Component<IProfileProps, IProfileState> {
 
     render() {
         if (this.state.isLoading) {
-            return <p>Loading...</p>;
+            return <Loading />;
         }
 
         return (

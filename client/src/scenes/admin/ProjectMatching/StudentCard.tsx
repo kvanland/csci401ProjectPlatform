@@ -5,17 +5,14 @@ import autobind from 'autobind-decorator';
 import {
     StudentInfo,
 } from './index';
-import {
-    Popover,
-    PopoverHeader,
-    PopoverBody
-} from 'reactstrap';
+import { Popover } from '@blueprintjs/core';
 
 const style = {
     cursor: 'move',
     backgroundColor: 'lightgray',
     margin: 5,
-    padding: 5
+    padding: 5,
+    borderRadius: 3,
 };
 
 interface IStudentCardProps {
@@ -65,29 +62,38 @@ class StudentCard extends React.Component<IStudentCardProps, IStudentCardState> 
     render() {
         const { student, key, connectDragSource, isDragging } = this.props;
 
+        const popoverContent = (
+            <div style={{ padding: 20 }}>
+                <h2>Rankings</h2>
+                <ol>
+                    <li>{student.orderedRankings[0]}</li>
+                    <li>{student.orderedRankings[1]}</li>
+                    <li>{student.orderedRankings[2]}</li>
+                    <li>{student.orderedRankings[3]}</li>
+                    <li>{student.orderedRankings[4]}</li>
+                </ol>
+            </div>
+        );
+
         return connectDragSource(
-            <div>
-                <div
-                    key={key}
-                    style={{
-                        ...style,
-                        opacity: isDragging ? 0.5 : 1,
-                    }}
-                    id={'target-' + key}
-                    onMouseOver={this.showPopover}
-                    onMouseOut={this.hidePopover}
+            <div style={{ width: '100%' }}>
+                <Popover
+                    interactionKind="hover"
+                    content={popoverContent}
+                    targetTagName="div"
                 >
-                    {student.firstName + ' ' + student.lastName}
-                </div>
-                <Popover id="popover-positioned-left" placement="left" target={'target-' + key} isOpen={this.state.popoverOpen}>
-                    <PopoverHeader>Rankings</PopoverHeader>
-                    <PopoverBody>
-                        <p>{'1. ' + student.orderedRankings[0]}</p>
-                        <p>{'2. ' + student.orderedRankings[1]}</p>
-                        <p>{'3. ' + student.orderedRankings[2]}</p>
-                        <p>{'4. ' + student.orderedRankings[3]}</p>
-                        <p>{'5. ' + student.orderedRankings[4]}</p>
-                    </PopoverBody>
+                    <div
+                        key={key}
+                        style={{
+                            ...style,
+                            opacity: isDragging ? 0.5 : 1,
+                        }}
+                        id={'target-' + key}
+                        onMouseOver={this.showPopover}
+                        onMouseOut={this.hidePopover}
+                    >
+                        {student.firstName + ' ' + student.lastName}
+                    </div>
                 </Popover>
             </div>
         );

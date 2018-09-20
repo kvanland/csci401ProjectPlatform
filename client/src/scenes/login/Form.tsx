@@ -7,10 +7,16 @@ import {
     HotkeysTarget,
     Hotkeys,
     Hotkey,
+    Toaster,
+    Position,
 } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { getApiURI } from '../../common/server';
+
+const LoginToast = Toaster.create({
+    position: Position.TOP,
+});
 
 interface ILoginProps extends RouteComponentProps<any> {
 }
@@ -18,15 +24,26 @@ interface ILoginState {
     email: string;
     password: string;
     isLoading: boolean;
+    hasError: boolean;
 }
 
 @HotkeysTarget
 class LoginForm extends React.Component<ILoginProps, ILoginState> {
-    public state: ILoginState = {
+    state: ILoginState = {
         email: '',
         password: '',
         isLoading: false,
+        hasError: false,
     };
+
+    private passwordInputRef: HTMLInputElement | null = null;
+    private emailInputRef: HTMLInputElement | null = null;
+
+    componentDidMount() {
+        if (this.emailInputRef) {
+            this.emailInputRef.select();
+        }
+    }
 
     public handleChange = (id: keyof ILoginState) => (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
@@ -48,6 +65,10 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
                 },
                 credentials: 'include'
             });
+
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
 
             if (response.body === null) {
                 throw Error('invalid server response: null');
@@ -76,9 +97,25 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
             }
         } catch (e) {
             console.error(e);
+            await this.setState({ hasError: true });
+            LoginToast.show({
+                intent: Intent.DANGER,
+                icon: 'error',
+                message: 'Email or password does not match our records.',
+            });
         } finally {
             this.setState({ isLoading: false });
         }
+    }
+
+    @autobind
+    setEmailInputRef(ref: HTMLInputElement) {
+        this.emailInputRef = ref;
+    }
+
+    @autobind
+    setPasswordInputRef(ref: HTMLInputElement) {
+        this.passwordInputRef = ref;
     }
 
     renderHotkeys() {
@@ -97,11 +134,14 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
                     labelFor="email-input"
                 >
                     <InputGroup
+                        leftIcon="envelope"
+                        inputRef={this.setEmailInputRef}
                         large={true}
                         disabled={this.state.isLoading}
                         id="email-input"
                         placeholder="ttrojan@usc.edu"
                         onChange={this.handleChange('email')}
+                        intent={this.state.hasError ? Intent.DANGER : Intent.NONE}
                     />
                 </FormGroup>
                 <FormGroup
@@ -109,12 +149,15 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
                     labelFor="password-input"
                 >
                     <InputGroup
+                        leftIcon="lock"
+                        inputRef={this.setPasswordInputRef}
                         disabled={this.state.isLoading}
                         id="password-input"
                         type="password"
                         placeholder="********"
                         onChange={this.handleChange('password')}
                         large={true}
+                        intent={this.state.hasError ? Intent.DANGER : Intent.NONE}
                     />
                 </FormGroup>
 

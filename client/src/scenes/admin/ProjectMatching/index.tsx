@@ -2,6 +2,8 @@ import * as React from 'react';
 import ProjectsList from './ProjectsList';
 import { getApiURI } from '../../../common/server';
 import { FormGroup, InputGroup, Button, Intent, Card } from '@blueprintjs/core';
+import { Loading } from '../../../components/Loading';
+import autobind from 'autobind-decorator';
 
 interface IProjectMatchingProps {
 }
@@ -82,13 +84,20 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     alert('Projects Assigned');
   }
 
+  @autobind
+  handleKeyDownProjectRanker(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.keyCode === 13) {
+      this.launch();
+    }
+  }
+
   render() {
     const isLoading = this.state.isLoading;
     const isLaunched = this.state.isLaunched;
     const projects = this.state.projects;
 
     if (isLoading) {
-      return <p>Loading...</p>;
+      return <Loading />;
     }
 
     return (
@@ -99,7 +108,16 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
               <InputGroup
                 type="text"
                 placeholder="Enter number of ranked projects to consider"
-                rightElement={<Button minimal={true} icon="arrow-right" intent={Intent.PRIMARY} onClick={this.launch} />}
+                rightElement={(
+                  <Button
+                    minimal={true}
+                    rightIcon="arrow-right"
+                    intent={Intent.PRIMARY}
+                    onClick={this.launch}
+                    text="Generate"
+                  />
+                )}
+                onKeyDown={this.handleKeyDownProjectRanker}
               />
             </FormGroup>
             <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" />

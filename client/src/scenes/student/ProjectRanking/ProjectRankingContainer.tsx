@@ -11,6 +11,7 @@ import {
     Col,
 } from 'reactstrap';
 import { getApiURI } from '../../../common/server';
+import { Loading } from 'components/Loading';
 
 const style = {
     width: 600,
@@ -149,7 +150,7 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
         }
 
         if (isLoading) {
-            return <p>Loading...</p>;
+            return <Loading />;
         }
 
         return connectDropTarget(

@@ -4,6 +4,7 @@ import { getApiURI } from '../../../common/server';
 import autobind from 'autobind-decorator';
 import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Dialog } from '@blueprintjs/core';
 import { InputType } from 'reactstrap/lib/Input';
+import { Loading } from '../../../components/Loading';
 
 interface IUserListProps {
 }
@@ -169,7 +170,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         const { allUsers, usersToDisplay, isLoading, userIndexToEdit, userToEdit } = this.state;
 
         if (isLoading) {
-            return <p>Loading...</p>;
+            return <Loading />;
         }
 
         return (
