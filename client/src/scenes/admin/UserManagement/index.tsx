@@ -18,7 +18,6 @@ interface IUserListState {
     userToDelete?: IUser;
     editFirstName: string;
     editLastName: string;
-    editUserType: string;
     editYear: string;
     editEmail: string;
     originalEmail: string;
@@ -46,7 +45,6 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
 
         editFirstName: '',
         editLastName: '',
-        editUserType: '',
         editYear: '',
         editEmail: '',
 
@@ -94,7 +92,6 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                 body: JSON.stringify({
                     firstName: this.state.editFirstName,
                     lastName: this.state.editLastName,
-                    userType: this.state.editUserType,
                     year: this.state.editYear,
                     email: this.state.editEmail,
                     originalEmail: this.state.originalEmail
@@ -133,7 +130,6 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
             userToEdit: user,
             editFirstName: user.firstName,
             editLastName: user.lastName,
-            editUserType: user.userType,
             editEmail: user.email,
             originalEmail: user.email
         });
@@ -235,17 +231,6 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                         {this.renderFormGroup('editFirstName', 'text', 'First Name', 'Tommy')}
                         {this.renderFormGroup('editLastName', 'text', 'Last Name', 'Trojan')}
                         {this.renderFormGroup('editEmail', 'email', 'Email', 'ttrojan@usc.edu')}
-                        <FormGroup label="User Type" labelFor="editUserType">
-                            <select
-                                id="editUserType"
-                                value={this.state.editUserType}
-                                onChange={this.handleChange('editUserType')}
-                            >
-                                <option value="Student">Student</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Stakeholder">Stakeholder</option>
-                            </select>
-                        </FormGroup>
                         {this.renderFormGroup('editYear', 'text', 'Year', 'YYYY')}
 
                         <div>

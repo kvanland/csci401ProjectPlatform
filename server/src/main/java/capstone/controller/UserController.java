@@ -87,13 +87,11 @@ public class UserController
 		String newEmail = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);
 		String lastName = info.get(Constants.LAST_NAME);
-		String userType = info.get(Constants.USER_TYPE);
 		
 		User user = findUser(originalEmail);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setEmail(newEmail);
-		user.setUserType(userType);
 		userService.saveUser(user);
 	}
 	
