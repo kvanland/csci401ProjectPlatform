@@ -45,7 +45,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     this.assignProjects = this.assignProjects.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({ isLoading: false });
   }
 

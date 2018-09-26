@@ -30,7 +30,9 @@ interface IUser {
     firstName: string;
     lastName: string;
     userType: string;
+    uscid: number;
     email: string;
+    semester: string;
 }
 
 class UserManagement extends React.Component<IUserListProps, IUserListState> {
@@ -63,7 +65,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                 })
             });
             const data = await response.json();
-
+            console.log(data);
             this.setState({
                 allUsers: data,
                 usersToDisplay: data,
@@ -197,7 +199,9 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>User Type</th>
+                                    <th>USC ID</th>
                                     <th>Email</th>
+                                    <th>Semester</th>
                                     <th>Edit/Delete</th>
                                 </tr>
                             </thead>
@@ -207,7 +211,9 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                         <td>{user.firstName}</td>
                                         <td>{user.lastName}</td>
                                         <td>{user.userType}</td>
+                                        <td>{user.uscid}</td>
                                         <td>{user.email}</td>
+                                        <td>{user.semester}</td>
                                         <td>
                                             <Button intent={Intent.WARNING} onClick={() => this.editUser(index, user)} text="Edit" />
                                             <Button intent={Intent.DANGER} onClick={() => this.deleteUser(user)} text="Delete" />
