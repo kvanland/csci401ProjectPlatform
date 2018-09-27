@@ -142,7 +142,7 @@ class AdminNavigation extends React.Component<IAdminNavigationProps, IAdminNavig
           </Navbar.Group>
         </Navbar>
         <div className="content">
-          <Route exact={true} path={this.props.match.url} render={() => <Redirect to="/users" />} />
+          <Route exact={true} path={this.props.match.url} render={() => <Redirect to={`${this.props.match.url}/users`} />} />
           <Route path={`${this.props.match.url}/users`} component={UserManagement} />
           <Route path={`${this.props.match.url}/proposals`} component={ProjectProposals} />
           <Route path={`${this.props.match.url}/class`} component={ClassOverview} />
