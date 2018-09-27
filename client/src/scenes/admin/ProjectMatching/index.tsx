@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ProjectsList from './ProjectsList';
 import { getApiURI } from '../../../common/server';
-import { FormGroup, InputGroup, Button, Intent, Card } from '@blueprintjs/core';
+import { FormGroup, InputGroup, Button, Intent, Card, NonIdealState, Spinner } from '@blueprintjs/core';
 import { Loading } from '../../../components/Loading';
 import autobind from 'autobind-decorator';
 
@@ -102,7 +102,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
 
     return (
       <div className="csci-container">
-        <div className="csci-main">
+        <div className="csci-side">
           <Card>
             <FormGroup>
               <InputGroup
@@ -122,14 +122,26 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
             </FormGroup>
             <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" />
           </Card>
-          {isLaunched && (
+        </div>
+        <div className="csci-main">
+          {isLaunched ? (
             <Card>
               {projects.length > 0 ? (
                 <ProjectsList projects={this.state.projects} />
-              ) : <p>Loading...</p>
+              ) : (
+                  <NonIdealState
+                    icon={<Spinner size={Spinner.SIZE_LARGE} />}
+                  />
+                )
               }
             </Card>
-          )}
+          ) : (
+              <NonIdealState
+                icon="search-around"
+                title="Match Students With Projects"
+                description="Enter number of ranked projects to consider on the left side panel."
+              />
+            )}
         </div>
 
       </div>

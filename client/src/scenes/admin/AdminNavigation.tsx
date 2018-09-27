@@ -2,12 +2,7 @@
 import * as React from 'react';
 import {
   Route,
-  Switch,
-  BrowserRouter,
 } from 'react-router-dom';
-import {
-  FormGroup
-} from 'reactstrap';
 import {
   Navbar,
   Button,
@@ -16,17 +11,14 @@ import {
   Tab,
   TabId,
 } from '@blueprintjs/core';
-import {
-  LinkContainer
-} from 'react-router-bootstrap';
-import AdminHome from './Home/index';
-import UserManagement from './UserManagement/index';
-import ProjectProposals from './ProjectProposals/index';
-import ClassOverview from './ClassOverview/index';
-import ProjectMatching from './ProjectMatching/index';
+import UserManagement from './UserManagement';
+import ProjectProposals from './ProjectProposals';
+import ClassOverview from './ClassOverview';
+import ProjectMatching from './ProjectMatching';
 import {
   RouteComponentProps,
-  withRouter
+  withRouter,
+  Redirect
 } from 'react-router';
 import autobind from 'autobind-decorator';
 const logo = require('../../svg/logo.svg');
@@ -141,7 +133,6 @@ class AdminNavigation extends React.Component<IAdminNavigationProps, IAdminNavig
                 onChange={this.handleNavbarTabChange}
                 selectedTabId={this.state.navbarTabId}
               >
-                <Tab id="home" title="Home" />
                 <Tab id="users" title="Manage Users" />
                 <Tab id="proposals" title="Proposals" />
                 {/* <Tab id="class" title="Class Overview" /> */}
@@ -151,7 +142,7 @@ class AdminNavigation extends React.Component<IAdminNavigationProps, IAdminNavig
           </Navbar.Group>
         </Navbar>
         <div className="content">
-          <Route exact={true} path={this.props.match.url} component={AdminHome} />
+          <Route exact={true} path={this.props.match.url} render={() => <Redirect to="/users" />} />
           <Route path={`${this.props.match.url}/users`} component={UserManagement} />
           <Route path={`${this.props.match.url}/proposals`} component={ProjectProposals} />
           <Route path={`${this.props.match.url}/class`} component={ClassOverview} />

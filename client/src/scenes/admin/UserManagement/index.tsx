@@ -22,7 +22,9 @@ interface IUserListState {
     editYear: string;
     editEmail: string;
     originalEmail: string;
+
     isLoading: boolean;
+    inviteUsersIsOpen: boolean;
 }
 
 interface IUser {
@@ -50,6 +52,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
 
         originalEmail: '',
         isLoading: false,
+        inviteUsersIsOpen: false,
     };
 
     async componentDidMount() {
@@ -102,6 +105,13 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         } catch (e) {
             console.error(e);
         }
+    }
+
+    @autobind
+    toggleInviteUsers() {
+        this.setState({
+            inviteUsersIsOpen: !this.state.inviteUsersIsOpen,
+        });
     }
 
     handleChange = (id: keyof IUserListState) => (e: React.FormEvent<any>) => {
@@ -175,15 +185,9 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
 
         return (
             <div className="csci-container">
-                <div className="csci-side">
-                    <Card>
-                        <h3 style={{ marginTop: 0 }}>Invite New Users</h3>
-                        <StudentRegistrationForm />
-                    </Card>
-                </div>
-
                 <div className="csci-main">
                     <Card>
+                        <Button text="Invite Users" icon="plus" intent={Intent.PRIMARY} style={{ float: 'right' }} onClick={this.toggleInviteUsers} />
                         <ButtonGroup minimal={true}>
                             <Button onClick={this.handleUserFilterChange('All')} icon="filter" active={this.state.userFilterType === 'All'}>All</Button>
                             <Button onClick={this.handleUserFilterChange('Student')} active={this.state.userFilterType === 'Student'}>Student</Button>
@@ -246,6 +250,17 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                             <Button onClick={this.cancelEdit}>Cancel</Button>
                             <Button onClick={this.submitEdit} intent={Intent.SUCCESS}>Save</Button>
                         </div>
+                    </div>
+                </Dialog>
+
+                <Dialog
+                    isOpen={this.state.inviteUsersIsOpen}
+                    onClose={this.toggleInviteUsers}
+                    title="Invite Users"
+                    icon="plus"
+                >
+                    <div style={{ padding: 20 }}>
+                        <StudentRegistrationForm />
                     </div>
                 </Dialog>
             </div>);
