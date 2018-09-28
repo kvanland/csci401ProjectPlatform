@@ -23,6 +23,8 @@ public class User
 	private String email;
 	private String phone;
 	private String userType;
+	private String semester;
+	
 	public Long getUserId() {
 		return userId;
 	}
@@ -92,5 +94,15 @@ public class User
 	public void setPhone(String phone) 
 	{
 		this.phone = phone;
+	}
+	
+	public String getSemester()
+	{
+		return semester;
+	}
+	
+	public void setSemester(String semester)
+	{
+		this.semester = semester;
 	}
 }

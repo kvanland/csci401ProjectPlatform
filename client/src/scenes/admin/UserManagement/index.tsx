@@ -19,7 +19,7 @@ interface IUserListState {
     editFirstName: string;
     editLastName: string;
     editUserType: string;
-    editYear: string;
+    editSemester: string;
     editEmail: string;
     originalEmail: string;
 
@@ -33,6 +33,7 @@ interface IUser {
     lastName: string;
     userType: string;
     email: string;
+    semester: string;
 }
 
 class UserManagement extends React.Component<IUserListProps, IUserListState> {
@@ -47,7 +48,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         editFirstName: '',
         editLastName: '',
         editUserType: '',
-        editYear: '',
+        editSemester: '',
         editEmail: '',
 
         originalEmail: '',
@@ -96,7 +97,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                     firstName: this.state.editFirstName,
                     lastName: this.state.editLastName,
                     userType: this.state.editUserType,
-                    year: this.state.editYear,
+                    semester: this.state.editSemester,
                     email: this.state.editEmail,
                     originalEmail: this.state.originalEmail
                 }),
@@ -143,7 +144,8 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
             editLastName: user.lastName,
             editUserType: user.userType,
             editEmail: user.email,
-            originalEmail: user.email
+            originalEmail: user.email,
+            editSemester: user.semester
         });
     }
 
@@ -202,6 +204,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                     <th>Last Name</th>
                                     <th>User Type</th>
                                     <th>Email</th>
+                                    <th>Semester</th>
                                     <th>Edit/Delete</th>
                                 </tr>
                             </thead>
@@ -212,6 +215,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                         <td>{user.lastName}</td>
                                         <td>{user.userType}</td>
                                         <td>{user.email}</td>
+                                        <td>{user.semester}</td>
                                         <td>
                                             <Button intent={Intent.WARNING} onClick={() => this.editUser(index, user)} text="Edit" />
                                             <Button intent={Intent.DANGER} onClick={() => this.deleteUser(user)} text="Delete" />
@@ -244,7 +248,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                 <option value="Stakeholder">Stakeholder</option>
                             </select>
                         </FormGroup>
-                        {this.renderFormGroup('editYear', 'text', 'Year', 'YYYY')}
+                        {this.renderFormGroup('editSemester', 'text', 'Semester', 'SP19')}
 
                         <div>
                             <Button onClick={this.cancelEdit}>Cancel</Button>

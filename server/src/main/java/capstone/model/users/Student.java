@@ -35,6 +35,7 @@ public class Student extends User {
 		this.setLastName(orig.getLastName());
 		this.setEmail(orig.getEmail());
 		this.setUserId(orig.getUserId());
+		this.setSemester(orig.getSemester());
 		this.project = orig.project;
 		this.rankings = orig.rankings;
 		this.orderedRankings = orig.orderedRankings;
