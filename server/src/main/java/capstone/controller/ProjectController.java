@@ -19,6 +19,7 @@ import capstone.model.Project;
 import capstone.model.users.Stakeholder;
 import capstone.model.users.Student;
 import capstone.model.users.User;
+import capstone.service.EmailService;
 import capstone.service.ProjectService;
 import capstone.service.UserService;
 import capstone.util.Constants;
@@ -31,6 +32,8 @@ public class ProjectController
 	private ProjectService projectService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private EmailService emailService;
 	
 	
 	// Initialize database tables with sample students and projects taken from the Spring 2018 class.
@@ -124,18 +127,25 @@ public class ProjectController
 	
 	// Assign projects to students
 	@PostMapping("/assign-to-students")
-	public @ResponseBody String assignProjectsToStudents(@RequestBody ArrayList<Project> projects) {
-		for (Project project : projects) {
-			if (project.getProjectId() > 0) {
-				for (Student student : project.getMembers()) {
+	public @ResponseBody String assignProjectsToStudents(@RequestBody List<Project> projectMatches) {
+		List<Project> updatedProjects = new ArrayList<Project>();
+		for (Project proj : projectMatches) {
+			if (proj.getProjectId() > 0) {
+				Project project = projectService.findByProjectId(proj.getProjectId());
+				updatedProjects.add(project);
+				String messageBody = project.getProjectName() + "\n\n" + project.getBackground() + "\n\n" + project.getDescription()
+				+ "\n\n";
+				
+				for (Student student : proj.getMembers()) {
 					// Set the given project for each student
 					Student saveStudent = userService.findByUserId(student.getUserId());
 					saveStudent.setProject(project);
+					emailService.sendEmail("CSCI 401 Project Assignment", messageBody, saveStudent.getEmail());
 					userService.saveUser(saveStudent);
 				}
 			}
 		}
-		projectService.saveAssignment(projects);
+		projectService.saveAssignment(updatedProjects);
 		return Constants.SUCCESS;
 	}
 	

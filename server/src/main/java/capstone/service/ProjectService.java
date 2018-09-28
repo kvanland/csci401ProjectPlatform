@@ -205,7 +205,7 @@ public class ProjectService {
 		return repository.findByProjectId(projectId);
 	}
 	
-	public void saveAssignment(ArrayList<Project> projects) {
+	public void saveAssignment(List<Project> projects) {
 		/*AdminConfiguration ac = configRepo.findById(Long.valueOf(1));
 		if (ac == null) {
 			ac = new AdminConfiguration();

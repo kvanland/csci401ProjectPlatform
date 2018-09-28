@@ -167,7 +167,7 @@ public class UserController
 	
 	// Stakeholder registration
 	@PostMapping("/stakeholder-registration")
-	public @ResponseBody String stakeholderRegistrationAttempt(@RequestBody Map<String, String> info) {
+	public @ResponseBody BodyBuilder stakeholderRegistrationAttempt(@RequestBody Map<String, String> info) {
 		System.out.println("Start reg");
 		String email = info.get(Constants.EMAIL);
 		String name = info.get(Constants.FIRST_NAME);
@@ -188,9 +188,9 @@ public class UserController
 			s.setUserType(Constants.STAKEHOLDER);
 			userService.saveUser(s);
 			System.out.println("New stakeholder created");
-			return Constants.SUCCESS;
+			return ResponseEntity.ok();
 		}
-		return Constants.EMPTY;
+		return ResponseEntity.badRequest();
 	}
 	
 	// Admin can register student emails and send an invitation to the platform
