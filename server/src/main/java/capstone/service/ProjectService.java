@@ -117,8 +117,6 @@ public class ProjectService {
                 
                 System.out.println("Saving project: " + newProject.getProjectName());
                 save(newProject);
-                
-                //writer.println(newProject);
             }
             
             projectsBR.close();         
@@ -126,7 +124,6 @@ public class ProjectService {
         catch(Exception e) {
             e.printStackTrace();
         }
-        //writer.println("");
         
         // import users and rankings from text file
         try {
@@ -141,6 +138,7 @@ public class ProjectService {
                 newStudent.setLastName(last);
                 newStudent.setEmail(elements[0] + "@usc.edu");
                 newStudent.setPassword(EncryptPassword.encryptPassword("student"));
+                
                 //newStudent.setStudentId(students.size());
                 //newStudent.setUserId(students.size());
                 

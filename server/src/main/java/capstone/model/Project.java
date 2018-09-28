@@ -57,6 +57,8 @@ public class Project implements Comparable<Object> {
 		String background;
 		String technologies;
 		String adminComments;
+		// User ID of the stake holder associated with this 
+		int stakeholderId;
 		
 		public double getSum_p() {
 			return sum_p;
@@ -213,6 +215,14 @@ public class Project implements Comparable<Object> {
 
 		public void setAdminComments(String adminComments) {
 			this.adminComments = adminComments;
+		}
+		
+		public int getStakeholderId() {
+			return stakeholderId;
+		}
+		
+		public void setStakeholderId(int stakeholderId) {
+			this.stakeholderId = stakeholderId;
 		}
 		
 		// RANKING ALGORITHM FUNCTIONALITY:
