@@ -3,6 +3,7 @@ import { IUser } from 'common/interfaces';
 import autobind from 'autobind-decorator';
 import { getApiURI } from 'common/server';
 import { FormGroup, InputGroup, Spinner, NonIdealState, Button, Intent } from '@blueprintjs/core';
+import { Loading } from 'components/Loading';
 
 interface IProfileProps {
 }
@@ -77,7 +78,7 @@ class EditProfileForm extends React.Component<IProfileProps, IProfileState> {
 
     render() {
         if (this.state.isLoading) {
-            return <NonIdealState icon={<Spinner size={Spinner.SIZE_LARGE} />} />;
+            return <Loading />;
         }
 
         return (

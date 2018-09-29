@@ -129,9 +129,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
               {projects.length > 0 ? (
                 <ProjectsList projects={this.state.projects} />
               ) : (
-                  <NonIdealState
-                    icon={<Spinner size={Spinner.SIZE_LARGE} />}
-                  />
+                  <Loading />
                 )
               }
             </Card>

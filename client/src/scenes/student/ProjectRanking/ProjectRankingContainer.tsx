@@ -6,6 +6,7 @@ import ProjectCard from './ProjectCard';
 import ItemTypes from './ItemTypes';
 import { getApiURI } from '../../../common/server';
 import { Button, Intent, NonIdealState, Spinner, Card, Tooltip } from '@blueprintjs/core';
+import { Loading } from 'components/Loading';
 
 const cardTarget = {
     drop() {
@@ -138,7 +139,7 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
         }
 
         if (isLoading) {
-            return <NonIdealState icon={<Spinner size={Spinner.SIZE_LARGE} />} />;
+            return <Loading />;
         }
 
         return connectDropTarget(
