@@ -38,12 +38,35 @@ body,
   align-items: center;
   justify-content: center;
   background-color: $light-gray4;
+  flex-direction: column;
 
   #csci-login-form {
     flex: 0 1 auto;
     max-width: 450px;
     margin: 20px;
     width: 100%;
+  }
+}
+
+.csci-form-container {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $light-gray4;
+  flex-direction: column;
+  padding: 20px;
+
+  .csci-form {
+    flex: 0 1 auto;
+    margin-bottom: 20px;
+    min-width: 450px;
+  }
+
+  .csci-form-actions {
+    flex: 0 1 auto;
+    margin-bottom: 20px;
   }
 }
 
