@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   Route,
-  BrowserRouter
 } from 'react-router-dom';
 import {
   Navbar,
@@ -15,7 +14,6 @@ import {
   LinkContainer
 } from 'react-router-bootstrap';
 import Home from './Home';
-import Profile from './EditProfileForm';
 import ProjectRanking from './ProjectRanking';
 import FinalPresentationReviews from './FinalPresentationReviews';
 import WeeklyReportForm from './WeeklyReportForm';

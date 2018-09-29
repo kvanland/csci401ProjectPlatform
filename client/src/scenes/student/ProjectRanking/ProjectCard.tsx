@@ -1,15 +1,8 @@
 import * as React from 'react';
 import { DragSource, DropTarget } from 'react-dnd';
 import ItemTypes from './ItemTypes';
-import {
-    Button, Card,
-} from 'reactstrap';
 import { MdMenu, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/md';
-import CardBody from 'reactstrap/lib/CardBody';
-
-const panelStyle = {
-    width: 600,
-};
+import { Button } from '@blueprintjs/core';
 
 const glyphStyle = {
     padding: '5px',
@@ -99,43 +92,49 @@ class ProjectCard extends React.Component<IProjectCardProps, IProjectCardState> 
             name,
             minSize,
             maxSize,
-            isDragging,
             connectDragSource,
             connectDropTarget,
+            isDragging,
         } = this.props;
-        const opacity = isDragging ? 0 : 1;
-        const padding = 5;
 
         const title = name + ' (' + minSize + '-' + maxSize + ' students)';
 
         return connectDragSource(
             connectDropTarget(
-                <div style={{ opacity }}>
-                    <Button onClick={() => this.setState({ open: !this.state.open })} style={cardStyle as any}>
-                        <MdMenu style={glyphStyle} />
+                <div style={{ opacity: isDragging ? 0.3 : 1 }}>
+                    <Button
+                        onClick={() => this.setState({ open: !this.state.open })}
+                        minimal={true}
+                        fill={true}
+                        large={true}
+                        rightIcon="drag-handle-vertical"
+                        alignText="left"
+                        style={{ cursor: 'move' }}
+                    >
                         {rank <= 5
                             ? <strong>{rank + '. ' + title}</strong>
                             : <small>{title}</small>
                         }
-                        {this.state.open ? <MdKeyboardArrowUp style={{ padding }} /> : <MdKeyboardArrowDown style={{ padding }} />}
                     </Button>
-                    <br />
-                    <Card expanded={this.state.open} style={panelStyle}>
-                        <CardBody>
-                            <strong>Project Description</strong>
-                            <p>{this.props.description}</p>
-                            <br />
-                            <strong>Technologies Expected</strong>
-                            <p>{this.props.technologies}</p>
-                            <br />
-                            <strong>Background Requested</strong>
-                            <p>{this.props.background}</p>
-                        </CardBody>
-                    </Card>
                 </div>
             ),
         );
     }
 }
+
+/*
+    <Card expanded={this.state.open} style={panelStyle}>
+        <CardBody>
+            <strong>Project Description</strong>
+            <p>{this.props.description}</p>
+            <br />
+            <strong>Technologies Expected</strong>
+            <p>{this.props.technologies}</p>
+            <br />
+            <strong>Background Requested</strong>
+            <p>{this.props.background}</p>
+        </CardBody>
+    </Card>
+*/
 
 export default ProjectCard;
