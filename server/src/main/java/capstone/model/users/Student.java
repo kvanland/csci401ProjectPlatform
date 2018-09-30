@@ -15,7 +15,6 @@ import capstone.model.Project;
 public class Student extends User {
 	
 	public String uscid; // only valid if userType = Student
-	public String semester;
 	
 	@OneToOne(targetEntity=Project.class)
 	Project project;
@@ -69,14 +68,4 @@ public class Student extends User {
 		this.orderedRankings = orderedRankings;
 	}
 	
-	public String getSemester()
-	{
-		System.out.println(semester);
-		return semester;
-	}
-	
-	public void setSemester(String semester)
-	{
-		this.semester = semester;
-	}
 }

@@ -83,7 +83,7 @@ public class UserController
 	
 	@PostMapping("/update-info")
 	public void updateUserInfo(@RequestBody Map<String, String> info) {
-		/*String originalEmail = info.get(Constants.ORIGINAL_EMAIL);
+		String originalEmail = info.get(Constants.ORIGINAL_EMAIL);
 		String newEmail = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);
 		String lastName = info.get(Constants.LAST_NAME);
@@ -96,7 +96,7 @@ public class UserController
 		user.setEmail(newEmail);
 		user.setUserType(userType);
 		user.setSemester(semester);
-		userService.saveUser(user);*/
+		userService.saveUser(user);
 	}
 	
 	public User findUser(String email) {
