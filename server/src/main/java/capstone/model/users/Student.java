@@ -68,4 +68,15 @@ public class Student extends User {
 	public void setOrderedRankings(List<String> orderedRankings) {
 		this.orderedRankings = orderedRankings;
 	}
+	
+	public String getSemester()
+	{
+		System.out.println(semester);
+		return semester;
+	}
+	
+	public void setSemester(String semester)
+	{
+		this.semester = semester;
+	}
 }
