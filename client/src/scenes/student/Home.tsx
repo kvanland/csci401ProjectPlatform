@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { getApiURI } from '../../common/server';
-import { Card, HTMLTable, Button, ButtonGroup } from '@blueprintjs/core';
+import { Card, HTMLTable, Button, ButtonGroup, Dialog } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { IUser } from 'common/interfaces';
+import EditProfileForm from './EditProfileForm';
+import autobind from 'autobind-decorator';
 
 interface IStudentHomeProps extends RouteComponentProps {
 }
@@ -14,6 +16,7 @@ interface IStudentHomeState {
   students: Array<IStudentInfo>;
   project: IProject;
   isLoading: boolean;
+  editProfileFormOpen: boolean;
 }
 interface IStudentInfo {
   userId: number;
@@ -45,6 +48,7 @@ class StudentHome extends React.Component<IStudentHomeProps, IStudentHomeState> 
     students: [],
     project: { projectId: 0, projectName: '', members: [] },
     isLoading: false,
+    editProfileFormOpen: false,
   };
 
   async componentDidMount() {
@@ -134,6 +138,13 @@ class StudentHome extends React.Component<IStudentHomeProps, IStudentHomeState> 
             }; */
   }
 
+  @autobind
+  toggleEditProfileForm() {
+    this.setState({
+      editProfileFormOpen: !this.state.editProfileFormOpen,
+    });
+  }
+
   render() {
     return (
       <div className="csci-container">
@@ -142,20 +153,16 @@ class StudentHome extends React.Component<IStudentHomeProps, IStudentHomeState> 
           <Card>
             {this.state.userProfile !== undefined ? (
               <div>
-                <h2>{this.state.userProfile.firstName} {this.state.userProfile.lastName}</h2>
-
-                <ul>
-                  <li>{this.state.userProfile.email}</li>
-                  <li>{this.state.userProfile.phone}</li>
-                </ul>
-
-                <Button text="Edit" icon="edit" />
+                <Button icon="edit" minimal={true} style={{ float: 'right' }} onClick={this.toggleEditProfileForm} />
+                <h2 style={{ marginTop: 0 }}>{this.state.userProfile.firstName} {this.state.userProfile.lastName}</h2>
+                <p>{this.state.userProfile.email}</p>
+                <p>{this.state.userProfile.phone}</p>
               </div>
             ) : 'Loading...'}
           </Card>
 
           <Card>
-            <h2>Actions</h2>
+            <h2 style={{ marginTop: 0 }}>Actions</h2>
             <ButtonGroup vertical={true} fill={true} alignText="left" large={true}>
               <Button text="Submit Deliverable" disabled={true} />
               <Button text="Submit Weekly Status Report" onClick={() => this.props.history.push('/student/weeklyreport')} />
@@ -167,7 +174,7 @@ class StudentHome extends React.Component<IStudentHomeProps, IStudentHomeState> 
 
         <div className="csci-main">
           <Card>
-            <h2>Team Contact Information</h2>
+            <h2 style={{ marginTop: 0 }}>Team Contact Information</h2>
             <HTMLTable bordered={true} striped={true}>
               <thead>
                 <tr>
@@ -190,7 +197,7 @@ class StudentHome extends React.Component<IStudentHomeProps, IStudentHomeState> 
           </Card>
 
           <Card>
-            <h2>Stakeholder Contact Information</h2>
+            <h2 style={{ marginTop: 0 }}>Stakeholder Contact Information</h2>
             <HTMLTable bordered={true} striped={true}>
               <thead>
                 <tr>
@@ -211,6 +218,17 @@ class StudentHome extends React.Component<IStudentHomeProps, IStudentHomeState> 
             </HTMLTable>
           </Card>
         </div>
+
+        <Dialog
+          isOpen={this.state.editProfileFormOpen}
+          onClose={this.toggleEditProfileForm}
+          title="Edit Profile"
+          icon="edit"
+        >
+          <div style={{ padding: 20 }}>
+            <EditProfileForm />
+          </div>
+        </Dialog>
       </div>
     );
   }

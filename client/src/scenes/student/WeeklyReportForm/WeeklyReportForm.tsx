@@ -1,15 +1,7 @@
 import * as React from 'react';
-import {
-    Form,
-    FormGroup,
-    Col,
-    Input,
-    Button,
-    Label,
-    InputProps
-} from 'reactstrap';
 import autobind from 'autobind-decorator';
 import { InputType } from 'reactstrap/lib/Input';
+import { Card, Button, Intent, FormGroup, InputGroup, HTMLTable, TextArea } from '@blueprintjs/core';
 
 interface IWeeklyReportProps {
 }
@@ -143,78 +135,136 @@ class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReport
 
     }
 
-    public handleChange = (id: keyof IWeeklyReportState) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    public handleChange = (id: keyof IWeeklyReportState) => (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    renderFormGroup = (id: keyof IWeeklyReportState, label: string, placeholder: string, formType: InputType = 'text', componentClass?: string) => {
+    renderFormGroup = (id: keyof IWeeklyReportState, label: string, placeholder: string, formType: InputType = 'text') => {
         return (
-            <FormGroup>
-                <Col componentClass={Label} sm={2}>
-                    <b>{label}</b>
-                </Col>
-                <Col sm={10}>
-                    <Input
-                        componentClass={componentClass}
-                        type={formType}
-                        id={id}
-                        value={this.state[id]}
-                        onChange={this.handleChange(id)}
-                        placeholder={placeholder}
-                    />
-                </Col>
+            <FormGroup label={label} labelFor={id}>
+                <InputGroup
+                    type={formType}
+                    id={id}
+                    value={this.state[id]}
+                    onChange={this.handleChange(id)}
+                    placeholder={placeholder}
+                />
             </FormGroup>
         );
     }
 
     renderLastWeekFragment = (id: 1 | 2 | 3 | 4 | 5 | 6 | 7) => {
         return (
-            <React.Fragment>
-                {this.renderFormGroup(`lastWeekTasksH${id}` as any, `Last Week Task ${id} Hours`, '# hours')}
-                {this.renderFormGroup(`lastWeekTasksD${id}` as any, `Task ${id} Description`, 'Describe the task.')}
-            </React.Fragment>
+            <tr>
+                <td>{id}</td>
+                <td>
+                    <InputGroup
+                        value={this.state[`lastWeekTasksH${id}`]}
+                        onChange={this.handleChange(`lastWeekTasksH${id}` as any)}
+                        placeholder="# hours"
+                        style={{ width: 100 }}
+                    />
+                </td>
+                <td>
+                    <TextArea
+                        value={this.state[`lastWeekTasksH${id}`]}
+                        onChange={this.handleChange(`lastWeekTasksH${id}` as any)}
+                        placeholder="Describe the task."
+                        style={{ minWidth: 300, minHeight: 100 }}
+                    />
+                </td>
+            </tr>
         );
     }
 
     renderNextWeekFragment = (id: 1 | 2 | 3 | 4 | 5 | 6 | 7) => {
         return (
-            <React.Fragment>
-                {this.renderFormGroup(`nextWeekTasksH${id}` as any, `Next Week Task ${id} Hours`, '# hours')}
-                {this.renderFormGroup(`nextWeekTasksD${id}` as any, `Task ${id} Description`, 'Describe the task.')}
-            </React.Fragment>
+            <tr>
+                <td>{id}</td>
+                <td>
+                    <InputGroup
+                        value={this.state[`nextWeekTasksH${id}`]}
+                        onChange={this.handleChange(`nextWeekTasksH${id}` as any)}
+                        placeholder="# hours"
+                        style={{ width: 100 }}
+                    />
+                </td>
+                <td>
+                    <TextArea
+                        value={this.state[`nextWeekTasksH${id}`]}
+                        onChange={this.handleChange(`nextWeekTasksH${id}` as any)}
+                        placeholder="Describe the task."
+                        style={{ minWidth: 300, minHeight: 100 }}
+                    />
+                </td>
+            </tr>
         );
     }
 
     render() {
         return (
-            <Form horizontal={true} >
-                {this.renderFormGroup('name', 'Student Name', 'Tommy Trojan')}
-                {this.renderFormGroup('uscusername', 'USC Username', 'ttrojan')}
-                {this.renderFormGroup('project', 'Project Name', 'Project Name')}
-                {this.renderFormGroup('reportdate', 'Report Date', 'MM/DD/YYYY')}
+            <div className="csci-form-container">
+                <div className="csci-form-actions">
+                    <h1 style={{ margin: 0 }}>Weekly Report</h1>
+                </div>
+                <Card className="csci-form">
+                    {this.renderFormGroup('name', 'Student Name', 'Tommy Trojan')}
+                    {this.renderFormGroup('uscusername', 'USC Username', 'ttrojan')}
+                    {this.renderFormGroup('project', 'Project Name', 'Project Name')}
+                    {this.renderFormGroup('reportdate', 'Report Date', 'MM/DD/YYYY')}
+                </Card>
+                <Card className="csci-form">
 
-                {this.renderLastWeekFragment(1)}
-                {this.renderLastWeekFragment(2)}
-                {this.renderLastWeekFragment(3)}
-                {this.renderLastWeekFragment(4)}
-                {this.renderLastWeekFragment(5)}
-                {this.renderLastWeekFragment(6)}
-                {this.renderLastWeekFragment(7)}
+                    <h2 style={{ marginTop: 0 }}>Last Week</h2>
 
-                {this.renderNextWeekFragment(1)}
-                {this.renderNextWeekFragment(2)}
-                {this.renderNextWeekFragment(3)}
-                {this.renderNextWeekFragment(4)}
-                {this.renderNextWeekFragment(5)}
-                {this.renderNextWeekFragment(6)}
-                {this.renderNextWeekFragment(7)}
+                    <HTMLTable bordered={true} striped={true}>
+                        <thead>
+                            <tr>
+                                <td>Task#</td>
+                                <td>Hours</td>
+                                <td>Description</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.renderLastWeekFragment(1)}
+                            {this.renderLastWeekFragment(2)}
+                            {this.renderLastWeekFragment(3)}
+                            {this.renderLastWeekFragment(4)}
+                            {this.renderLastWeekFragment(5)}
+                            {this.renderLastWeekFragment(6)}
+                            {this.renderLastWeekFragment(7)}
+                        </tbody>
+                    </HTMLTable>
 
-                <FormGroup>
-                    <Col smOffset={2} sm={10}>
-                        <Button type="submit" onClick={this.submitClicked}>Submit</Button>
-                    </Col>
-                </FormGroup>
-            </Form>
+                </Card>
+                <Card className="csci-form">
+
+                    <h2 style={{ marginTop: 0 }}>Next Week</h2>
+
+                    <HTMLTable bordered={true} striped={true}>
+                        <thead>
+                            <tr>
+                                <td>Task#</td>
+                                <td>Hours</td>
+                                <td>Description</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {this.renderNextWeekFragment(1)}
+                            {this.renderNextWeekFragment(2)}
+                            {this.renderNextWeekFragment(3)}
+                            {this.renderNextWeekFragment(4)}
+                            {this.renderNextWeekFragment(5)}
+                            {this.renderNextWeekFragment(6)}
+                            {this.renderNextWeekFragment(7)}
+                        </tbody>
+                    </HTMLTable>
+                </Card>
+                <div className="csci-form-actions">
+                    <Button text="Submit" onClick={this.submitClicked} intent={Intent.PRIMARY} large={true} />
+                </div>
+            </div>
         );
     }
 }

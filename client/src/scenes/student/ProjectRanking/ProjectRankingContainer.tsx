@@ -4,20 +4,9 @@ import { DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import ProjectCard from './ProjectCard';
 import ItemTypes from './ItemTypes';
-import {
-    Button,
-    Container,
-    Row,
-    Col,
-} from 'reactstrap';
 import { getApiURI } from '../../../common/server';
+import { Button, Intent, NonIdealState, Spinner, Card, Tooltip } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
-
-const style = {
-    width: 600,
-    float: 'none',
-    margin: 'auto',
-};
 
 const cardTarget = {
     drop() {
@@ -101,7 +90,7 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
         this.setState({ isLoading: true });
 
         try {
-            const response = await fetch(getApiURI('projects'));
+            const response = await fetch(getApiURI('/projects'));
             const data = await response.json();
 
             this.setState({
@@ -141,9 +130,9 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
 
         if (submitted) {
             return (
-                <div style={style as any}>
-                    <div style={{ width: 600 }}>
-                        You have already submitted your rankings.
+                <div className="csci-form-container">
+                    <div className="csci-form-actions">
+                        <h3 style={{ margin: 0 }}>You've already submitted your rankings.</h3>
                     </div>
                 </div>
             );
@@ -154,42 +143,61 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
         }
 
         return connectDropTarget(
-            <div style={style as any}>
-                <div style={{ width: 600 }}>
-                    <h3>Rank Projects</h3>
-                    <Container>
-                        <Row>
-                            <Col lg={4}>
-                                Drag to reorder projects by priority.
-                                Your first 5 preferences will be considered.
-                                Click "Submit Rankings" when finished.
-                                Rankings can only be submitted once.
-                            </Col>
-                            <Col lg={2}>
-                                <Button bsStyle="primary" onClick={this.submitClicked}>
-                                    Submit Rankings
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
+            <div className="csci-container">
+                <div className="csci-side">
+                    <Card>
+                        <p>
+                            Drag to reorder projects by priority.
+                            Your first 5 preferences will be considered.
+                            Click "Submit Rankings" when finished.
+                        Rankings can only be submitted once.</p>
+                    </Card>
                 </div>
-                <br />
-                {projectCards.map((projectCard: IProject, index: number) => (
-                    <ProjectCard
-                        key={projectCard.projectId}
-                        rank={index + 1}
-                        id={projectCard.projectId}
-                        name={projectCard.projectName}
-                        minSize={projectCard.minSize}
-                        maxSize={projectCard.maxSize}
-                        technologies={projectCard.technologies}
-                        background={projectCard.background}
-                        description={projectCard.description}
-                        moveCard={this.moveCard}
-                        findCard={this.findCard}
-                    />
-                ))}
-            </div>
+                <div className="csci-main">
+                    <div className="csci-form-container">
+                        <div className="csci-form-actions">
+                            <h1 style={{ margin: 0 }}>Rank Projects</h1>
+                        </div>
+                        <Card className="csci-form">
+                            {projectCards.map((projectCard: IProject, index: number) => (
+                                <Tooltip
+                                    wrapperTagName="div"
+                                    targetTagName="div"
+                                    position="right"
+                                    content={
+                                        <div style={{ padding: 20 }}>
+                                            <strong>Project Description</strong>
+                                            <p>{projectCard.description}</p>
+                                            <br />
+                                            <strong>Technologies Expected</strong>
+                                            <p>{projectCard.technologies}</p>
+                                            <br />
+                                            <strong>Background Requested</strong>
+                                            <p>{projectCard.background}</p>
+                                        </div>}
+                                >
+                                    <ProjectCard
+                                        key={projectCard.projectId}
+                                        rank={index + 1}
+                                        id={projectCard.projectId}
+                                        name={projectCard.projectName}
+                                        minSize={projectCard.minSize}
+                                        maxSize={projectCard.maxSize}
+                                        technologies={projectCard.technologies}
+                                        background={projectCard.background}
+                                        description={projectCard.description}
+                                        moveCard={this.moveCard}
+                                        findCard={this.findCard}
+                                    />
+                                </Tooltip>
+                            ))}
+                        </Card>
+                        <div className="csci-form-actions">
+                            <Button text="Submit Rankings" intent={Intent.PRIMARY} large={true} onClick={this.submitClicked} />
+                        </div>
+                    </div>
+                </div>
+            </div >
         );
     }
 }

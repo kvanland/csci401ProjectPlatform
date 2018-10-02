@@ -15,7 +15,6 @@ import capstone.model.Project;
 public class Student extends User {
 	
 	public String uscid; // only valid if userType = Student
-	public String semester;
 	
 	@OneToOne(targetEntity=Project.class)
 	Project project;
@@ -68,4 +67,5 @@ public class Student extends User {
 	public void setOrderedRankings(List<String> orderedRankings) {
 		this.orderedRankings = orderedRankings;
 	}
+	
 }

@@ -145,7 +145,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
             editUserType: user.userType,
             editEmail: user.email,
             originalEmail: user.email,
-            editSemester: user.semester
+            editSemester: user.semester,
         });
     }
 

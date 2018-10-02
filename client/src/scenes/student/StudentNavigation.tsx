@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   Route,
-  BrowserRouter
 } from 'react-router-dom';
 import {
   Navbar,
@@ -15,13 +14,11 @@ import {
   LinkContainer
 } from 'react-router-bootstrap';
 import Home from './Home';
-import Profile from './Profile';
 import ProjectRanking from './ProjectRanking';
 import FinalPresentationReviews from './FinalPresentationReviews';
 import WeeklyReportForm from './WeeklyReportForm';
 import PeerReviewForm from './PeerReviewForm';
 import { RouteComponentProps, withRouter } from 'react-router';
-import NavbarBrand from 'reactstrap/lib/NavbarBrand';
 import autobind from 'autobind-decorator';
 const logo = require('../../svg/logo.svg');
 
@@ -52,10 +49,6 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
   @autobind
   inferNavbarTabId() {
     const mappings = [
-      {
-        pathname: '/student/profile',
-        navbarTabId: 'profile',
-      },
       {
         pathname: '/student/ranking',
         navbarTabId: 'ranking',
@@ -144,7 +137,6 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
                 selectedTabId={this.state.navbarTabId}
               >
                 <Tab id="home" title="Home" />
-                <Tab id="profile" title="Profile" />
                 <Tab id="ranking" title="Project Rankings" />
                 <Tab id="review" title="Final Presentation Reviews" />
                 <Tab id="report" title="Weekly Reports" />
@@ -155,7 +147,6 @@ class StudentNavigation extends React.Component<IStudentNavigationProps> {
         </Navbar>
         <div className="content">
           <Route exact={true} path={this.props.match.url} component={Home} />
-          <Route path={`${this.props.match.url}/profile`} component={Profile} />
           <Route path={`${this.props.match.url}/ranking`} component={ProjectRanking} />
           <Route path={`${this.props.match.url}/reviews`} component={FinalPresentationReviews} />
           <Route path={`${this.props.match.url}/weeklyreport`} component={WeeklyReportForm} />

@@ -10,6 +10,7 @@ interface IProject {
     projectId: number;
     projectName: string;
     statusId: number;
+    semester: string;
 }
 
 interface IHomeState {
@@ -75,6 +76,7 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
                                 <tr>
                                     <th>Project</th>
                                     <th>Status</th>
+                                    <th>Semester</th>
                                     <th>View/Edit</th>
                                 </tr>
                             </thead>
@@ -83,6 +85,7 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
                                     <tr key={project.projectId}>
                                         <td>{project.projectName}</td>
                                         <td>{this.getStatus(project.statusId)}</td>
+                                        <td>{project.semester}</td>
                                         <td>
                                             <Button icon="eye-open" onClick={() => this.props.history.push('/stakeholder/project/' + project.projectId)} />
                                         </td>

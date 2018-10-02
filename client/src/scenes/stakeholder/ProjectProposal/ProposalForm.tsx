@@ -13,6 +13,7 @@ interface IProjectProps {
 
 interface IProjectState {
     projectName: string;
+    projectSemester: string;
     projectSize: number;
     technologies: string;
     background: string;
@@ -22,6 +23,7 @@ interface IProjectState {
 class ProposalForm extends React.Component<IProjectProps, IProjectState> {
     public state: IProjectState = {
         projectName: '',
+        projectSemester: '',
         projectSize: 0,
         technologies: '',
         background: '',
@@ -40,6 +42,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                 },
                 body: JSON.stringify({
                     projectName: this.state.projectName,
+                    semester: this.state.projectSemester,
                     minSize: this.state.projectSize,
                     maxSize: this.state.projectSize,
                     technologies: this.state.technologies,
@@ -51,6 +54,8 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
             if (!response.ok) {
                 throw Error(response.statusText);
             }
+
+            alert('Proposal has been submitted succesfully!');
 
         } catch (e) {
             console.error(e);
@@ -80,6 +85,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
         return (
             <div>
                 {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
+                {this.renderFormGroup('projectSemester', 'text', 'Project Semester', 'Project Semester')}
                 {this.renderFormGroup('projectSize', 'text', 'Number of Students', 'Number of Students')}
                 {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
                 {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}

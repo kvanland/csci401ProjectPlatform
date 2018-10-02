@@ -38,12 +38,35 @@ body,
   align-items: center;
   justify-content: center;
   background-color: $light-gray4;
+  flex-direction: column;
 
   #csci-login-form {
     flex: 0 1 auto;
     max-width: 450px;
     margin: 20px;
     width: 100%;
+  }
+}
+
+.csci-form-container {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $light-gray4;
+  flex-direction: column;
+  padding: 20px;
+
+  .csci-form {
+    flex: 0 1 auto;
+    margin-bottom: 20px;
+    min-width: 450px;
+  }
+
+  .csci-form-actions {
+    flex: 0 1 auto;
+    margin-bottom: 20px;
   }
 }
 
@@ -57,18 +80,23 @@ body,
   display: flex;
   flex-direction: row;
 
+  .csci-side {
+    flex: 0;
+    min-width: 300px;
+  }
+
   .csci-main {
     flex: 1;
   }
 
   .csci-side,
   .csci-main {
-    .bp3-card {
+    >.bp3-card {
       margin: 20px;
     }
   }
 
   .csci-side>.bp3-card {
-    margin-right: 0;
+    margin-right: 1px;
   }
 }

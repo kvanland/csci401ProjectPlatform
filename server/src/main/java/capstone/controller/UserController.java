@@ -60,7 +60,7 @@ public class UserController
 	
 	@GetMapping("")
 	public Collection<User> getUsers()
-	{
+	{	
 		return userService.getUsers();
 	}
 	
@@ -88,12 +88,14 @@ public class UserController
 		String firstName = info.get(Constants.FIRST_NAME);
 		String lastName = info.get(Constants.LAST_NAME);
 		String userType = info.get(Constants.USER_TYPE);
+		String semester = info.get(Constants.SEMESTER);
 		
 		User user = findUser(originalEmail);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setEmail(newEmail);
 		user.setUserType(userType);
+		user.setSemester(semester);
 		userService.saveUser(user);
 	}
 	
