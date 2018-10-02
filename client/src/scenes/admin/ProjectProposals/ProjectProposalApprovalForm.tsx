@@ -17,6 +17,7 @@ interface IProjectListState {
 interface IProject {
     projectId: number;
     projectName: string;
+    semester: string;
     statusId: number;
     minSize: string;
     maxSize: string;
@@ -138,6 +139,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
                             <thead>
                                 <tr>
                                     <th>Project Name</th>
+                                    <th>Project Semester</th>
                                     <th>Project Status</th>
                                     <th>Min Size</th>
                                     <th>Max Size</th>
@@ -149,6 +151,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
                                 {projects.map((project: IProject) =>
                                     <tr key={project.projectId}>
                                         <td>{project.projectName}</td>
+                                        <td>{project.semester}</td>
                                         <td>{this.getStatus(project.statusId)}</td>
                                         <td>{project.minSize}</td>
                                         <td>{project.maxSize}</td>

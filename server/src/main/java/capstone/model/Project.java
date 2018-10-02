@@ -39,6 +39,8 @@ public class Project implements Comparable<Object> {
 		int projectId;
 		String projectName;
 		int statusId;
+		String semester;
+		
 		public List<Student> getMembers() {
 			return members;
 		}
@@ -46,11 +48,11 @@ public class Project implements Comparable<Object> {
 		public void setMembers(List<Student> members) {
 			this.members = members;
 		}
+		
 
 		@JsonIgnore
 		@Transient
 		String statusType; // not in db table
-		int semester;
 		int maxSize;
 		int minSize;
 		String description;
@@ -59,6 +61,7 @@ public class Project implements Comparable<Object> {
 		String adminComments;
 		// User ID of the stake holder associated with this 
 		int stakeholderId;
+		
 		
 		public double getSum_p() {
 			return sum_p;
@@ -161,11 +164,11 @@ public class Project implements Comparable<Object> {
 			}
 		}
 		
-		public int getSemester() {
+		public String getSemester() {
 			return semester;
 		}
 
-		public void setSemester(int semester) {
+		public void setSemester(String semester) {
 			this.semester = semester;
 		}
 
