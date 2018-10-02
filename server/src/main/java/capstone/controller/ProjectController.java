@@ -135,7 +135,7 @@ public class ProjectController
 				updatedProjects.add(project);
 				String messageBody = project.getProjectName() + "\n\n" + project.getBackground() + "\n\n" + project.getDescription()
 				+ "\n\n";
-				
+//				TODO Add stake holder email to this email
 				for (Student student : proj.getMembers()) {
 					// Set the given project for each student
 					Student saveStudent = userService.findByUserId(student.getUserId());

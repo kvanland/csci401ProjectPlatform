@@ -110,9 +110,11 @@ public class ProjectService {
                 
                 Project newProject = new Project(ProjectAssignment.getStudentSatScore(1));
                 newProject.setProjectName(elements[0]);
-                //newProject.setProjectId(projects.size()); // TODO: MAKE THIS DYNAMIC WITH AUTOINCREMENT
+                newProject.setProjectId(projects.size()); // TODO: MAKE THIS DYNAMIC WITH AUTOINCREMENT
                 newProject.setMinSize(Integer.parseInt(elements[1]));
                 newProject.setMaxSize(Integer.parseInt(elements[2]));
+                newProject.setSemester("F18");
+                newProject.setStakeholderId(newProject.getProjectId());
                 projects.addElement(newProject);
                 
                 System.out.println("Saving project: " + newProject.getProjectName());

@@ -50,7 +50,7 @@ public class Project implements Comparable<Object> {
 		@JsonIgnore
 		@Transient
 		String statusType; // not in db table
-		int semester;
+		String semester;
 		int maxSize;
 		int minSize;
 		String description;
@@ -161,11 +161,11 @@ public class Project implements Comparable<Object> {
 			}
 		}
 		
-		public int getSemester() {
+		public String getSemester() {
 			return semester;
 		}
 
-		public void setSemester(int semester) {
+		public void setSemester(String semester) {
 			this.semester = semester;
 		}
 
