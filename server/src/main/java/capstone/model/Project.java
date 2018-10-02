@@ -53,7 +53,6 @@ public class Project implements Comparable<Object> {
 		@JsonIgnore
 		@Transient
 		String statusType; // not in db table
-		String semester;
 		int maxSize;
 		int minSize;
 		String description;
