@@ -240,7 +240,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
 
                                     <div>
                                         {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                                        {this.renderFormGroup('projectSemester', 'text', 'Project Semester', 'Project Semester')}
+                                        {this.renderFormGroup('semester', 'text', 'Project Semester', 'Project Semester')}
                                         {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
                                         {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}
                                         {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
