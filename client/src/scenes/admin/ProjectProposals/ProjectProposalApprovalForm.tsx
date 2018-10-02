@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import { getApiURI } from '../../../common/server';
-import { HTMLTable, Button, Intent, Card } from '@blueprintjs/core';
+import { InputGroup, FormGroup, HTMLTable, Button, Intent, Card, Dialog, TextArea } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
+import autobind from 'autobind-decorator';
 
 interface IProjectListProps {
 }
@@ -11,6 +12,8 @@ interface IProjectListState {
     projects: Array<{}>;
     isLoading: boolean;
     selected: boolean;
+    isOpen: boolean;
+    selectedProject: IProject;
     // <Button onClick={this.toggleCheckboxes}>Select All</Button>
 }
 
@@ -24,16 +27,32 @@ interface IProject {
     technologies: string;
     background: string;
     description: string;
+    projectSemester: string;
 }
 
 class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IProjectListState> {
     constructor(props: IProjectListProps) {
         super(props);
 
+        var emptyProject: IProject;
+        emptyProject = ({
+            projectId: 0,
+            projectName: '',
+            semester: '',
+            statusId: 0,
+            minSize: '',
+            maxSize: '',
+            technologies: '',
+            background: '',
+            description: '',
+            projectSemester: '',
+        });
         this.state = {
             projects: [],
             isLoading: false,
             selected: false,
+            isOpen: false,
+            selectedProject: emptyProject,
         };
         this.submitClicked = this.submitClicked.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -68,6 +87,19 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
         request.setRequestHeader('Cache-Control', 'no-cache');
         request.send();
     }
+    submitProjectEdit() {
+
+        var request = new XMLHttpRequest();
+        request.withCredentials = true;
+
+        console.log(this.state.selectedProject);
+
+        request.open('POST', 'http://localhost:8080/projects/edit/' + this.state.selectedProject.projectId);
+
+        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        request.setRequestHeader('Cache-Control', 'no-cache');
+        request.send(JSON.stringify(this.state.selectedProject));
+    }
 
     handleChange(e: any) {
         let projects = this.state.projects;
@@ -86,6 +118,33 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
             projects: projects
         });
     }
+
+    handleOpenEditModal = (project) => this.setState({ isOpen: true, selectedProject: project });
+    handleCloseEditModal = () => this.setState({ isOpen: false });
+
+    @autobind
+    renderFormGroup(id: keyof IProject, type: string, label: string, placeholder: string) {
+        return (
+            <FormGroup label={label} labelFor={id}>
+                <InputGroup
+                    type={type}
+                    placeholder={placeholder}
+                    id={id}
+                    // value={(typeof this.state.selectedProject[id] == 'number') ? this.state.selectedProject[id].toString() : this.state.selectedProject[id]}
+                    value={(this.state.selectedProject[id] == null) ? '' : this.state.selectedProject[id].toString()}
+                    onChange={this.handleProjectEdit(id)}
+                />
+            </FormGroup>
+        );
+    }
+
+    handleProjectEdit = (id: keyof IProject) => (e: React.ChangeEvent<any>) => {
+        let proj: IProject;
+        proj = Object.assign({}, this.state.selectedProject);
+        proj[id] = e.currentTarget.value;
+        this.setState({ selectedProject: proj } as any);
+    }
+
     toggleCheckboxes() {
         if (this.state.selected === false) {
             this.setState({
@@ -160,10 +219,50 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
                                             <Button intent={Intent.SUCCESS} onClick={() => this.submitClicked(project.projectId, 2)}>Approve</Button>
                                             <Button intent={Intent.DANGER} onClick={() => this.submitClicked(project.projectId, 3)}>Reject</Button>
                                             <Button intent={Intent.WARNING} onClick={() => this.submitClicked(project.projectId, 4)}>Change</Button>
+                                            <Button onClick={() => this.handleOpenEditModal(project)}>Make Edit</Button>
                                         </td>
                                     </tr>
                                 )}
                             </tbody>
+                            <Dialog
+                                icon="info-sign"
+                                onClose={this.handleCloseEditModal}
+                                title="Edit Project Proposal"
+                                {...this.state}
+                            >
+
+                                <div className={'project-edit-modal-body'}>
+                                    <p>
+                                        <strong>
+                                            Make edit to project proposal here.
+                            </strong>
+                                    </p>
+
+                                    <div>
+                                        {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
+                                        {this.renderFormGroup('projectSemester', 'text', 'Project Semester', 'Project Semester')}
+                                        {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
+                                        {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}
+                                        {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
+                                        {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}
+                                        {this.renderFormGroup('description', 'text', 'Project Description', 'Project Description')}
+
+                                        <Button intent={Intent.WARNING} onClick={() => this.submitProjectEdit()}>Submit Changes</Button>
+                                        {/* <FormGroup label="Description" labelFor="description">
+                                            <TextArea
+                                                placeholder="Description"
+                                                id="description"
+                                                value={this.state.description}
+                                                onChange={this.handleChange('description')}
+                                            />
+                                        </FormGroup> */}
+
+                                        {/* <FormGroup>
+                                            <Button intent={Intent.PRIMARY} text="Submit Proposal" onClick={this.submitClicked} />
+                                        </FormGroup> */}
+                                    </div>
+                                </div>
+                            </Dialog>
                         </HTMLTable>
                     </Card>
                 </div>

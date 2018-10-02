@@ -210,6 +210,26 @@ public class ProjectController
 		return Constants.SUCCESS;
 	}
 	
+	@PostMapping("/edit/{projectId}")
+	public @ResponseBody String editProject(@PathVariable("projectId") int projectId,
+			@RequestBody Project updated_project) {
+		System.out.println("Updating Project");
+		Project project = projectService.findByProjectId(projectId);
+		project.setStatusId(4);
+
+		project.setSemester(updated_project.getSemester());
+		project.setTechnologies(updated_project.getTechnologies());
+		project.setProjectName(updated_project.getProjectName());
+		project.setDescription(updated_project.getDescription());
+		project.setBackground(updated_project.getBackground());
+		project.setMinSize(updated_project.getMinSize());
+		project.setMaxSize(updated_project.getMaxSize());
+		
+		System.out.println(project);
+		System.out.println(project.getProjectName());
+		projectService.save(project);
+		return Constants.SUCCESS;
+	}
 	
 }
 
