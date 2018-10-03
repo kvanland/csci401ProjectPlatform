@@ -85,7 +85,17 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
         return (
             <div>
                 {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                {this.renderFormGroup('projectSemester', 'text', 'Project Semester', 'Project Semester')}
+                <FormGroup label="Semester" labelFor="projectSemester">
+                            <select
+                                id="editUserType"
+                                value={this.state.projectSemester}
+                                onChange={this.handleChange('projectSemester')}
+                            >
+                                <option value="SUMMER18">Summer 2018</option>
+                                <option value="FALL18">Fall 2018</option>
+                                <option value="SPRING19">Spring 2019</option>
+                            </select>
+                </FormGroup>
                 {this.renderFormGroup('projectSize', 'text', 'Number of Students', 'Number of Students')}
                 {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
                 {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}

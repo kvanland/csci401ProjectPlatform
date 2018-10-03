@@ -248,7 +248,17 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                                 <option value="Stakeholder">Stakeholder</option>
                             </select>
                         </FormGroup>
-                        {this.renderFormGroup('editSemester', 'text', 'Semester', 'SP19')}
+                        <FormGroup label="Semester" labelFor="editSemester">
+                            <select
+                                id="editSemester"
+                                value={this.state.editSemester}
+                                onChange={this.handleChange('editSemester')}
+                            >
+                                <option value="SUMMER18">Summer 2018</option>
+                                <option value="FALL18">Fall 2018</option>
+                                <option value="SPRING19">Spring 2019</option>
+                            </select>
+                        </FormGroup>
 
                         <div>
                             <Button onClick={this.cancelEdit}>Cancel</Button>

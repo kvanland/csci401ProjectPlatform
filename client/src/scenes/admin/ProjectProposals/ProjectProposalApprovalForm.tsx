@@ -249,7 +249,17 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
 
                                     <div>
                                         {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                                        {this.renderFormGroup('semester', 'text', 'Project Semester', 'Project Semester')}
+                                        <FormGroup label="Semester" labelFor="semester">
+                                                    <select
+                                                        id="semester"
+                                                        value={this.state.selectedProject.semester}
+                                                        onChange={this.handleProjectEdit('semester')}
+                                                    >
+                                                    <option value="SUMMER18">Summer 2018</option>
+                                                    <option value="FALL18">Fall 2018</option>
+                                                    <option value="SPRING19">Spring 2019</option>
+                                                    </select>
+                                        </FormGroup>
                                         {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
                                         {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}
                                         {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
