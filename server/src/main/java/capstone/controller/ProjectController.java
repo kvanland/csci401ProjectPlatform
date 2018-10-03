@@ -23,6 +23,7 @@ import capstone.service.EmailService;
 import capstone.service.ProjectService;
 import capstone.service.UserService;
 import capstone.util.Constants;
+import javassist.bytecode.Descriptor.Iterator;
 
 @RestController
 @RequestMapping("/projects")
@@ -50,6 +51,21 @@ public class ProjectController
 	public List<Project> getProjects()
 	{
 		return projectService.findAll();
+	}
+	
+	@GetMapping("/projects/{email:.+}")
+	public List<Project> getSemesterProjects(@PathVariable("email") String email)
+	{
+		User user = userService.findUserByEmail(email);
+		String semester = user.getSemester();
+		List<Project> all = projectService.findAll();
+		for(java.util.Iterator<Project> i = all.iterator(); i.hasNext();) {
+			Project p = (Project) i.next();
+			if(!p.getSemester().equals(semester)) {
+				i.remove();
+			}
+		}
+		return all;
 	}
 	
 	// Get all projects that a stakeholder owns

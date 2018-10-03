@@ -90,7 +90,7 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
         this.setState({ isLoading: true });
 
         try {
-            const response = await fetch(getApiURI('/projects'));
+            const response = await fetch(getApiURI('/projects/projects/' + sessionStorage.getItem('email') ));
             const data = await response.json();
 
             this.setState({
