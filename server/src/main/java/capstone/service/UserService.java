@@ -134,6 +134,10 @@ public class UserService {
 	public Student findByUserId(Long studentId) {
 		return studentRepo.findByUserId(studentId);
 	}
+	
+	public Stakeholder findByStakeholderId(Long stakeholderId) {
+		return stakeholderRepo.findByUserId(stakeholderId);
+	}
 
 	public List<User> findAllByProject(Project project) {
 		return studentRepo.findAllByProject(project);

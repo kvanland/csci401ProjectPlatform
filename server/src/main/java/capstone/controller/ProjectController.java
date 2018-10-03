@@ -129,13 +129,28 @@ public class ProjectController
 	@PostMapping("/assign-to-students")
 	public @ResponseBody String assignProjectsToStudents(@RequestBody List<Project> projectMatches) {
 		List<Project> updatedProjects = new ArrayList<Project>();
+		
+		for(Stakeholder s : userService.getStakeholders()) {
+			System.out.println(s.getFirstName() + " " + s.getUserId());
+		}
 		for (Project proj : projectMatches) {
 			if (proj.getProjectId() > 0) {
 				Project project = projectService.findByProjectId(proj.getProjectId());
 				updatedProjects.add(project);
-				String messageBody = project.getProjectName() + "\n\n" + project.getBackground() + "\n\n" + project.getDescription()
-				+ "\n\n";
-//				TODO Add stake holder email to this email
+				Stakeholder stakeholder = userService.findByStakeholderId((long) project.getStakeholderId());
+				System.out.print("ID: " + project.getStakeholderId() + "\nstakeholder: ");
+				String stakeholderEmail = "";
+				if(stakeholder == null) {
+					stakeholderEmail = "Please contact the professor for the email of your stakeholder";
+				} else {
+					stakeholderEmail = stakeholder.getEmail();
+					System.out.print(stakeholder.getFirstName());
+				}
+				System.out.println(" ");
+				String messageBody = project.getProjectName() + "\n\nProject Background: " + project.getBackground() + "\n\nProject Description: " + project.getDescription()
+				+ "\n\nStakeholder Email: " + stakeholderEmail + "\n\nTo find out who is on your team please login to the class website.";
+				
+				
 				for (Student student : proj.getMembers()) {
 					// Set the given project for each student
 					Student saveStudent = userService.findByUserId(student.getUserId());
@@ -173,6 +188,7 @@ public class ProjectController
 		System.out.println(project.getProjectName());
 		project.setStatusId(1);
 		User user = userService.findUserByEmail(email);
+		project.setStakeholderId(user.getUserId()); 
 	    projectService.save(project);
 	    userService.saveProject(user, project);
 		return project;
