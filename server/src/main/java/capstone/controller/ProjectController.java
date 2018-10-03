@@ -130,31 +130,30 @@ public class ProjectController
 	public @ResponseBody String assignProjectsToStudents(@RequestBody List<Project> projectMatches) {
 		List<Project> updatedProjects = new ArrayList<Project>();
 		
-		for(Stakeholder s : userService.getStakeholders()) {
-			System.out.println(s.getFirstName() + " " + s.getUserId());
-		}
 		for (Project proj : projectMatches) {
 			if (proj.getProjectId() > 0) {
 				Project project = projectService.findByProjectId(proj.getProjectId());
 				updatedProjects.add(project);
+				
+				// Determine stakeholder for project
 				Stakeholder stakeholder = userService.findByStakeholderId((long) project.getStakeholderId());
-				System.out.print("ID: " + project.getStakeholderId() + "\nstakeholder: ");
 				String stakeholderEmail = "";
 				if(stakeholder == null) {
 					stakeholderEmail = "Please contact the professor for the email of your stakeholder";
 				} else {
 					stakeholderEmail = stakeholder.getEmail();
-					System.out.print(stakeholder.getFirstName());
 				}
-				System.out.println(" ");
+				
+				// Construct email body
 				String messageBody = project.getProjectName() + "\n\nProject Background: " + project.getBackground() + "\n\nProject Description: " + project.getDescription()
 				+ "\n\nStakeholder Email: " + stakeholderEmail + "\n\nTo find out who is on your team please login to the class website.";
 				
-				
+				// Email each student in the group the information
 				for (Student student : proj.getMembers()) {
 					// Set the given project for each student
 					Student saveStudent = userService.findByUserId(student.getUserId());
 					saveStudent.setProject(project);
+					
 					emailService.sendEmail("CSCI 401 Project Assignment", messageBody, saveStudent.getEmail());
 					userService.saveUser(saveStudent);
 				}
