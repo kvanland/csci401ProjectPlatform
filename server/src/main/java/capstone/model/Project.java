@@ -260,6 +260,7 @@ public class Project implements Comparable<Object> {
 			this.statusId = orig.statusId;
 			this.minSize = orig.minSize;
 			this.maxSize = orig.maxSize;
+			this.semester = orig.semester;
 		}
 		
 		public double returnProjSatScore() {

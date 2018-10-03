@@ -62,6 +62,7 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
         const updatedOldProjectCard = {
             projectId: projectCard.projectId,
             projectName: projectCard.projectName,
+            // semester: projectCard.semester,
             minSize: projectCard.minSize,
             maxSize: projectCard.maxSize,
             members: projectCard.members.filter((s: StudentInfo) =>
@@ -131,6 +132,7 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
                 <thead>
                     <tr>
                         <th>Project Name</th>
+                        <th>Semester</th>
                         <th>Min Size</th>
                         <th>Max Size</th>
                         <th>Members</th>

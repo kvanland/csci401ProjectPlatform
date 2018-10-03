@@ -113,7 +113,7 @@ public class ProjectService {
                 newProject.setProjectId(projects.size()); // TODO: MAKE THIS DYNAMIC WITH AUTOINCREMENT
                 newProject.setMinSize(Integer.parseInt(elements[1]));
                 newProject.setMaxSize(Integer.parseInt(elements[2]));
-                newProject.setSemester("F18");
+                newProject.setSemester("FALL18");
                 newProject.setStakeholderId(newProject.getProjectId());
                 projects.addElement(newProject);
                 
@@ -140,6 +140,7 @@ public class ProjectService {
                 newStudent.setLastName(last);
                 newStudent.setEmail(elements[0] + "@usc.edu");
                 newStudent.setPassword(EncryptPassword.encryptPassword("student"));
+                newStudent.setSemester("FALL18");
                 
                 //newStudent.setStudentId(students.size());
                 //newStudent.setUserId(students.size());
