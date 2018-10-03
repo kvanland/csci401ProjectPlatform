@@ -54,6 +54,7 @@ class ProjectCard extends React.Component<IProjectCardProps, IProjectCardState> 
         return connectDropTarget(
             <tr key={key}>
                 <td>{project.projectName}</td>
+                <td>{project.semester}</td>
                 <td>{project.minSize}</td>
                 <td>{project.maxSize}</td>
                 <td>
