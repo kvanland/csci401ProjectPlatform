@@ -60,7 +60,7 @@ public class Project implements Comparable<Object> {
 		String technologies;
 		String adminComments;
 		// User ID of the stake holder associated with this 
-		int stakeholderId;
+		long stakeholderId;
 		
 		
 		public double getSum_p() {
@@ -220,11 +220,11 @@ public class Project implements Comparable<Object> {
 			this.adminComments = adminComments;
 		}
 		
-		public int getStakeholderId() {
+		public long getStakeholderId() {
 			return stakeholderId;
 		}
 		
-		public void setStakeholderId(int stakeholderId) {
+		public void setStakeholderId(long stakeholderId) {
 			this.stakeholderId = stakeholderId;
 		}
 		

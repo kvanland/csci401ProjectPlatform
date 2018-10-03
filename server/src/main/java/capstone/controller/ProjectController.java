@@ -129,17 +129,31 @@ public class ProjectController
 	@PostMapping("/assign-to-students")
 	public @ResponseBody String assignProjectsToStudents(@RequestBody List<Project> projectMatches) {
 		List<Project> updatedProjects = new ArrayList<Project>();
+		
 		for (Project proj : projectMatches) {
 			if (proj.getProjectId() > 0) {
 				Project project = projectService.findByProjectId(proj.getProjectId());
 				updatedProjects.add(project);
-				String messageBody = project.getProjectName() + "\n\n" + project.getBackground() + "\n\n" + project.getDescription()
-				+ "\n\n";
-//				TODO Add stake holder email to this email
+				
+				// Determine stakeholder for project
+				Stakeholder stakeholder = userService.findByStakeholderId((long) project.getStakeholderId());
+				String stakeholderEmail = "";
+				if(stakeholder == null) {
+					stakeholderEmail = "Please contact the professor for the email of your stakeholder";
+				} else {
+					stakeholderEmail = stakeholder.getEmail();
+				}
+				
+				// Construct email body
+				String messageBody = project.getProjectName() + "\n\nProject Background: " + project.getBackground() + "\n\nProject Description: " + project.getDescription()
+				+ "\n\nStakeholder Email: " + stakeholderEmail + "\n\nTo find out who is on your team please login to the class website.";
+				
+				// Email each student in the group the information
 				for (Student student : proj.getMembers()) {
 					// Set the given project for each student
 					Student saveStudent = userService.findByUserId(student.getUserId());
 					saveStudent.setProject(project);
+					
 					emailService.sendEmail("CSCI 401 Project Assignment", messageBody, saveStudent.getEmail());
 					userService.saveUser(saveStudent);
 				}
@@ -173,6 +187,7 @@ public class ProjectController
 		System.out.println(project.getProjectName());
 		project.setStatusId(1);
 		User user = userService.findUserByEmail(email);
+		project.setStakeholderId(user.getUserId()); 
 	    projectService.save(project);
 	    userService.saveProject(user, project);
 		return project;

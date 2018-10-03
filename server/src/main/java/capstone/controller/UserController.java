@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import capstone.model.Project;
 import capstone.model.RegisteredStudentEmail;
 import capstone.model.users.Admin;
 import capstone.model.users.Stakeholder;
@@ -55,6 +56,13 @@ public class UserController
 		admin.setEmail("admin@usc.edu");
 		admin.setPassword(EncryptPassword.encryptPassword("admin"));
 		userService.saveUser(admin);
+		Stakeholder stakeholder = new Stakeholder();
+		stakeholder.setFirstName("Micheal");
+		stakeholder.setLastName("Schindler");
+		stakeholder.setEmail("schindler@usc.edu");
+		stakeholder.setOrganization("USC Viterbi School of Engineering");
+		stakeholder.setPassword(EncryptPassword.encryptPassword("stakeholder"));
+		userService.saveUser(stakeholder);
 		return Constants.SUCCESS;
 	}
 	

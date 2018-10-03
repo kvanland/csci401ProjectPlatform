@@ -88,7 +88,6 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
         request.send();
     }
     submitProjectEdit() {
-
         var request = new XMLHttpRequest();
         request.withCredentials = true;
 
@@ -99,6 +98,16 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
         request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         request.setRequestHeader('Cache-Control', 'no-cache');
         request.send(JSON.stringify(this.state.selectedProject));
+        request.onreadystatechange = function () {
+            if (this.readyState === this.DONE) {
+                if (request.status === 200) {
+                    alert('Change made successfully');
+                    
+                } else {
+                    alert('Change could not be made at this time');
+                }
+            } 
+        };
     }
 
     handleChange(e: any) {
