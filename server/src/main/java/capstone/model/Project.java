@@ -9,13 +9,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import capstone.model.users.Stakeholder;
 import capstone.model.users.Student;
 import capstone.util.ProjectAssignment;
 

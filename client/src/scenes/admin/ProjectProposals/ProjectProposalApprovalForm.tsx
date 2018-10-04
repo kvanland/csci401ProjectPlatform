@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { getApiURI } from '../../../common/server';
-import { InputGroup, FormGroup, HTMLTable, Button, Intent, Card, Dialog, TextArea } from '@blueprintjs/core';
+import { InputGroup, FormGroup, HTMLTable, Button, Intent, Card, Dialog, TextArea, ButtonGroup } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 import autobind from 'autobind-decorator';
 
@@ -102,11 +102,11 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
             if (this.readyState === this.DONE) {
                 if (request.status === 200) {
                     alert('Change made successfully');
-                    
+
                 } else {
                     alert('Change could not be made at this time');
                 }
-            } 
+            }
         };
     }
 
@@ -225,10 +225,12 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
                                         <td>{project.maxSize}</td>
                                         <td>{project.description}</td>
                                         <td>
-                                            <Button intent={Intent.SUCCESS} onClick={() => this.submitClicked(project.projectId, 2)}>Approve</Button>
-                                            <Button intent={Intent.DANGER} onClick={() => this.submitClicked(project.projectId, 3)}>Reject</Button>
-                                            <Button intent={Intent.WARNING} onClick={() => this.submitClicked(project.projectId, 4)}>Change</Button>
-                                            <Button onClick={() => this.handleOpenEditModal(project)}>Make Edit</Button>
+                                            <ButtonGroup>
+                                                <Button intent={Intent.SUCCESS} onClick={() => this.submitClicked(project.projectId, 2)}>Approve</Button>
+                                                <Button intent={Intent.DANGER} onClick={() => this.submitClicked(project.projectId, 3)}>Reject</Button>
+                                                <Button intent={Intent.WARNING} onClick={() => this.submitClicked(project.projectId, 4)}>Change</Button>
+                                                <Button onClick={() => this.handleOpenEditModal(project)}>Make Edit</Button>
+                                            </ButtonGroup>
                                         </td>
                                     </tr>
                                 )}
@@ -242,23 +244,21 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
 
                                 <div className={'project-edit-modal-body'}>
                                     <p>
-                                        <strong>
-                                            Make edit to project proposal here.
-                            </strong>
+                                        <strong>Make edit to project proposal here.</strong>
                                     </p>
 
                                     <div>
                                         {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
                                         <FormGroup label="Semester" labelFor="semester">
-                                                    <select
-                                                        id="semester"
-                                                        value={this.state.selectedProject.semester}
-                                                        onChange={this.handleProjectEdit('semester')}
-                                                    >
-                                                    <option value="SUMMER18">Summer 2018</option>
-                                                    <option value="FALL18">Fall 2018</option>
-                                                    <option value="SPRING19">Spring 2019</option>
-                                                    </select>
+                                            <select
+                                                id="semester"
+                                                value={this.state.selectedProject.semester}
+                                                onChange={this.handleProjectEdit('semester')}
+                                            >
+                                                <option value="SUMMER18">Summer 2018</option>
+                                                <option value="FALL18">Fall 2018</option>
+                                                <option value="SPRING19">Spring 2019</option>
+                                            </select>
                                         </FormGroup>
                                         {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
                                         {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}

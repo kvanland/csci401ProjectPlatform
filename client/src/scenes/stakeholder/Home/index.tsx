@@ -3,9 +3,10 @@ import {
     LinkContainer
 } from 'react-router-bootstrap';
 import { getApiURI } from '../../../common/server';
-import { HTMLTable, Button, Card } from '@blueprintjs/core';
+import { HTMLTable, Button, Card, NonIdealState, Intent } from '@blueprintjs/core';
 import { RouteComponentProps } from 'react-router';
 import { Loading } from 'components/Loading';
+import autobind from 'autobind-decorator';
 interface IProject {
     projectId: number;
     projectName: string;
@@ -58,6 +59,11 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
         }
     }
 
+    @autobind
+    createNewProposal() {
+        this.props.history.push('/stakeholder/proposals');
+    }
+
     render() {
         const { projects, isLoading } = this.state;
 
@@ -68,32 +74,40 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
         return (
             <div className="csci-container">
                 <div className="csci-main">
-
-                    <Card>
-                        <h1 style={{ marginTop: 0 }}>Your Projects</h1>
-                        <HTMLTable style={{ width: '100%' }} striped={true} bordered={true}>
-                            <thead>
-                                <tr>
-                                    <th>Project</th>
-                                    <th>Status</th>
-                                    <th>Semester</th>
-                                    <th>View/Edit</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {projects.map((project: IProject, index: number) =>
-                                    <tr key={project.projectId}>
-                                        <td>{project.projectName}</td>
-                                        <td>{this.getStatus(project.statusId)}</td>
-                                        <td>{project.semester}</td>
-                                        <td>
-                                            <Button icon="eye-open" onClick={() => this.props.history.push('/stakeholder/project/' + project.projectId)} />
-                                        </td>
+                    {projects.length > 0 ? (
+                        <Card>
+                            <h1 style={{ marginTop: 0 }}>Your Projects</h1>
+                            <HTMLTable style={{ width: '100%' }} striped={true} bordered={true}>
+                                <thead>
+                                    <tr>
+                                        <th>Project</th>
+                                        <th>Status</th>
+                                        <th>Semester</th>
+                                        <th>View/Edit</th>
                                     </tr>
-                                )}
-                            </tbody>
-                        </HTMLTable>
-                    </Card>
+                                </thead>
+                                <tbody>
+                                    {projects.map((project: IProject, index: number) =>
+                                        <tr key={project.projectId}>
+                                            <td>{project.projectName}</td>
+                                            <td>{this.getStatus(project.statusId)}</td>
+                                            <td>{project.semester}</td>
+                                            <td>
+                                                <Button icon="eye-open" onClick={() => this.props.history.push('/stakeholder/project/' + project.projectId)} />
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </HTMLTable>
+                        </Card>
+                    ) : (
+                            <NonIdealState
+                                icon="folder-new"
+                                title="Empty Project Proposals"
+                                description="You haven't submitted any project proposals for CSCI 401."
+                                action={<Button intent={Intent.PRIMARY} large={true} text="Create New Proposal" onClick={this.createNewProposal} />}
+                            />
+                        )}
                 </div>
             </div>
         );

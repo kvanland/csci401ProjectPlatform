@@ -1,90 +1,85 @@
 import * as React from 'react';
 import { IUser } from '../../../common/interfaces';
-import { getApiURI } from '../../../common/server';
-import { FormGroup, InputGroup, Card, Button, Intent } from '@blueprintjs/core';
+import { getApiURI, fetchServer } from '../../../common/server';
+import { FormGroup, InputGroup, Card, Button, Intent, IconName, Toaster, Position } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { Loading } from '../../../components/Loading';
-const style = {
-    width: 1000,
-    float: 'none',
-    margin: 'auto'
-};
+
+const FormToast = Toaster.create({
+    position: Position.TOP,
+});
 
 interface IProfileProps {
 }
 interface IProfileState extends IUser {
     isLoading: boolean;
+    originalEmail: string;
 }
 
 class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
     state: IProfileState = {
+        originalEmail: '',
         firstName: '',
         lastName: '',
         email: '',
         phone: '',
+        userType: '',
         organization: '',
+        semester: '',
         isLoading: false,
     };
 
     async componentDidMount() {
-        this.setState({ isLoading: true });
+        await this.setState({ isLoading: true });
+        await this.fetchProfileData();
+        await this.setState({ isLoading: false });
+    }
+
+    @autobind
+    async fetchProfileData() {
 
         try {
             const response = await fetch(getApiURI('/users/' + sessionStorage.getItem('email')));
             const data = await response.json();
-            console.log(data);
 
             this.setState({
                 ...data,
-                isLoading: false
+                originalEmail: data.email,
             });
         } catch (e) {
-            console.error(e);
+            FormToast.show({
+                message: 'An error occurred: could not retrieve stakeholder profile.',
+                intent: Intent.DANGER,
+                icon: 'error',
+            });
         }
-        /*var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('GET', 'http://localhost:8080/users/' + sessionStorage.getItem('email'));
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send();
-
-        var that = this;
-        request.onreadystatechange = function() {
-            if (request.readyState === 4) {
-                var response = request.responseText;
-                var jsonResponse = JSON.parse(response);
-                var firstNameLiteral = 'firstName';
-                var emailLiteral = 'email';
-                var phoneLiteral = 'phone';
-                var companyLiteral = 'companyName';
-                that.setState({
-                    name: jsonResponse[firstNameLiteral], 
-                    email: jsonResponse[emailLiteral],
-                    phone: jsonResponse[phoneLiteral],
-                    company: jsonResponse[companyLiteral],
-                    isLoading: false
-                });
-            }
-        };*/
     }
 
     @autobind
-    submitClicked() {
-        /*     var request = new XMLHttpRequest();
-             request.withCredentials = true;
-             request.open('POST', 'http://localhost:8080//');
-             request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-             var data = JSON.stringify({
-                 fullName: this.state.name,
-                 email: this.state.email,
-                 phone: this.state.phone
-             });
-             request.setRequestHeader('Cache-Control', 'no-cache');
-             request.send(data);
-             alert(request.responseText + 'Logging you in...');
-             request.onreadystatechange = function() {
-                 if (request.readyState === 4) {
-                 }
-             }; */
+    async submitClicked() {
+        await this.setState({ isLoading: true });
+
+        try {
+            const { originalEmail, email, firstName, lastName, userType, semester, phone } = this.state;
+            await fetchServer('/users/update-info', 'POST', {
+                originalEmail,
+                email,
+                firstName,
+                lastName,
+                userType,
+                phone,
+                semester,
+            });
+            await this.fetchProfileData();
+        } catch (e) {
+            FormToast.show({
+                message: 'An error occurred: could not update profile.',
+                intent: Intent.DANGER,
+                icon: 'error',
+            });
+        } finally {
+            this.setState({ isLoading: false });
+        }
     }
 
     public handleChange = (id: keyof IProfileState) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,17 +87,21 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
     }
 
     @autobind
-    renderFormGroup(id: keyof IProfileState, type: string, label: string, placeholder: string) {
+    formGroup(type: string, id: keyof IProfileState, label: string, placeholder: string, icon?: IconName) {
         return (
-            <FormGroup label={label} labelFor={id}>
-                <InputGroup
-                    type={type}
-                    placeholder={placeholder}
-                    id={id}
-                    value={this.state[id] as any}
-                    onChange={this.handleChange(id)}
-                />
-            </FormGroup>
+            <div style={{ flex: 1, marginRight: 5 }}>
+                <FormGroup label={label} labelFor={id}>
+                    <InputGroup
+                        type={type}
+                        placeholder={placeholder}
+                        id={id}
+                        value={this.state[id] as any || ''}
+                        onChange={this.handleChange(id)}
+                        leftIcon={icon}
+                        large={true}
+                    />
+                </FormGroup>
+            </div>
         );
     }
 
@@ -112,20 +111,23 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
         }
 
         return (
-            <div className="csci-container">
-                <div className="csci-main">
-                    <Card>
-                        <h1 style={{ marginTop: 0 }}>Profile</h1>
-                        {this.renderFormGroup('firstName', 'text', 'First Name', 'Tommy')}
-                        {this.renderFormGroup('lastName', 'text', 'Last Name', 'Trojan')}
-                        {this.renderFormGroup('email', 'email', 'Email', 'ttrojan@usc.edu')}
-                        {this.renderFormGroup('organization', 'text', 'Company/Organization', 'USC Viterbi')}
-                        {this.renderFormGroup('phone', 'tel', 'Phone', '(123) 456-7890')}
-
-                        <FormGroup>
-                            <Button text="Edit/Save Profile" intent={Intent.PRIMARY} />
-                        </FormGroup>
-                    </Card>
+            <div className="csci-form-container">
+                <div className="csci-form-actions">
+                    <h1 style={{ margin: 0 }}>Stakeholder Profile</h1>
+                </div>
+                <Card className="csci-form">
+                    <div style={{ marginRight: -5 }}>
+                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                            {this.formGroup('text', 'firstName', 'First Name', 'Hecuba', 'person')}
+                            {this.formGroup('text', 'lastName', 'Last Name', 'Queen of Troy')}
+                        </div>
+                        {this.formGroup('text', 'email', 'Email', 'hecuba@usc.edu', 'envelope')}
+                        {this.formGroup('text', 'phone', 'Phone', '(098) 765-4321', 'phone')}
+                        {this.formGroup('text', 'organization', 'Company/Organization', 'USC Village', 'globe')}
+                    </div>
+                </Card>
+                <div className="csci-form-actions">
+                    <Button text="Save Profile" intent={Intent.PRIMARY} large={true} onClick={this.submitClicked} />
                 </div>
             </div>
         );

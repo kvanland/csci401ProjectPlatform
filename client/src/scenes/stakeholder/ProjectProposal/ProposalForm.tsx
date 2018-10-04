@@ -83,34 +83,39 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
 
     render() {
         return (
-            <div>
-                {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                <FormGroup label="Semester" labelFor="projectSemester">
-                            <select
-                                id="editUserType"
-                                value={this.state.projectSemester}
-                                onChange={this.handleChange('projectSemester')}
-                            >
-                                <option value="SUMMER18">Summer 2018</option>
-                                <option value="FALL18">Fall 2018</option>
-                                <option value="SPRING19">Spring 2019</option>
-                            </select>
-                </FormGroup>
-                {this.renderFormGroup('projectSize', 'text', 'Number of Students', 'Number of Students')}
-                {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
-                {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}
-                <FormGroup label="Description" labelFor="description">
-                    <TextArea
-                        placeholder="Description"
-                        id="description"
-                        value={this.state.description}
-                        onChange={this.handleChange('description')}
-                    />
-                </FormGroup>
+            <div className="csci-form-container">
+                <div className="csci-form-actions">
+                    <h1 style={{ margin: 0 }}>Create Proposal</h1>
+                </div>
+                <Card className="csci-form">
+                    {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
+                    <FormGroup label="Semester" labelFor="projectSemester">
+                        <select
+                            id="editUserType"
+                            value={this.state.projectSemester}
+                            onChange={this.handleChange('projectSemester')}
+                        >
+                            <option value="SUMMER18">Summer 2018</option>
+                            <option value="FALL18">Fall 2018</option>
+                            <option value="SPRING19">Spring 2019</option>
+                        </select>
+                    </FormGroup>
+                    {this.renderFormGroup('projectSize', 'text', 'Number of Students', 'Number of Students')}
+                    {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
+                    {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}
+                    <FormGroup label="Description" labelFor="description">
+                        <TextArea
+                            placeholder="Description"
+                            id="description"
+                            value={this.state.description}
+                            onChange={this.handleChange('description')}
+                        />
+                    </FormGroup>
 
-                <FormGroup>
-                    <Button intent={Intent.PRIMARY} text="Submit Proposal" onClick={this.submitClicked} />
-                </FormGroup>
+                </Card>
+                <div className="csci-form-actions">
+                    <Button intent={Intent.PRIMARY} text="Submit Proposal" onClick={this.submitClicked} large={true} />
+                </div>
             </div>
         );
 

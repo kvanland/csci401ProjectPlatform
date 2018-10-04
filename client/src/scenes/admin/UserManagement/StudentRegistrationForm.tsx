@@ -61,7 +61,7 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         });
 
         try {
-            await fetchServer('/users/student-emails-registration', {
+            await fetchServer('/users/student-emails-registration', 'POST', {
                 emails: this.state.emailsParsed.join('\n'),
             });
             this.setState({

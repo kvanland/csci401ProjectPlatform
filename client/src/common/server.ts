@@ -4,9 +4,9 @@ export function getApiURI(endpoint: string) {
     return requestEndpointBase + endpoint;
 }
 
-export async function fetchServer(endpoint: string, body: any) {
+export async function fetchServer(endpoint: string, method: string = 'GET', body: any = {}) {
     const response = await fetch(getApiURI(endpoint), {
-        method: 'POST',
+        method,
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json; charset=UTF-8',

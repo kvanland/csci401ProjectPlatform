@@ -2,7 +2,7 @@ import * as React from 'react';
 import StudentRegistrationForm from './StudentRegistrationForm';
 import { getApiURI } from '../../../common/server';
 import autobind from 'autobind-decorator';
-import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Dialog } from '@blueprintjs/core';
+import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Dialog, Tabs, Tab, TabId, Icon } from '@blueprintjs/core';
 import { InputType } from 'reactstrap/lib/Input';
 import { Loading } from '../../../components/Loading';
 
@@ -12,10 +12,12 @@ interface IUserListProps {
 interface IUserListState {
     allUsers: Array<{}>;
     userFilterType: string;
-    usersToDisplay: Array<{}>;
     userIndexToEdit: number;
     userToEdit?: IUser;
     userToDelete?: IUser;
+
+    userTypeTab: TabId;
+
     editFirstName: string;
     editLastName: string;
     editUserType: string;
@@ -40,10 +42,11 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
     state: IUserListState = {
         allUsers: [],
         userFilterType: 'All',
-        usersToDisplay: [],
         userIndexToEdit: -1,
         userToEdit: undefined,
         userToDelete: undefined,
+
+        userTypeTab: 'students',
 
         editFirstName: '',
         editLastName: '',
@@ -70,7 +73,6 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
 
             this.setState({
                 allUsers: data,
-                usersToDisplay: data,
                 isLoading: false,
             });
         } catch (e) {
@@ -121,21 +123,6 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         } as any);
     }
 
-    handleUserFilterChange = (userFilterType: string) => () => {
-        var _usersToDisplay: IUser[] = [];
-        const { allUsers } = this.state;
-
-        allUsers.forEach((user: IUser) => {
-            if (user.userType === userFilterType) {
-                _usersToDisplay.push(user);
-            } else if (userFilterType === 'All') {
-                _usersToDisplay.push(user);
-            }
-        });
-
-        this.setState({ userFilterType, usersToDisplay: _usersToDisplay });
-    }
-
     editUser(index: number, user: IUser) {
         this.setState({
             userIndexToEdit: index,
@@ -178,8 +165,15 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         );
     }
 
+    @autobind
+    handleTabChange(newTabId: TabId) {
+        this.setState({
+            userTypeTab: newTabId,
+        });
+    }
+
     render() {
-        const { allUsers, usersToDisplay, isLoading, userIndexToEdit, userToEdit } = this.state;
+        const { isLoading } = this.state;
 
         if (isLoading) {
             return <Loading />;
@@ -188,96 +182,196 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         return (
             <div className="csci-container">
                 <div className="csci-main">
-                    <Card>
-                        <Button text="Invite Users" icon="plus" intent={Intent.PRIMARY} style={{ float: 'right' }} onClick={this.toggleInviteUsers} />
-                        <ButtonGroup minimal={true}>
-                            <Button onClick={this.handleUserFilterChange('All')} icon="filter" active={this.state.userFilterType === 'All'}>All</Button>
-                            <Button onClick={this.handleUserFilterChange('Student')} active={this.state.userFilterType === 'Student'}>Student</Button>
-                            <Button onClick={this.handleUserFilterChange('Stakeholder')} active={this.state.userFilterType === 'Stakeholder'}>Stakeholder</Button>
-                            <Button onClick={this.handleUserFilterChange('Admin')} active={this.state.userFilterType === 'Admin'}>Admin</Button>
-                        </ButtonGroup>
+                    <div style={{ margin: 20 }}>
+                        <Tabs id="UserTypeTabs" onChange={this.handleTabChange} selectedTabId={this.state.userTypeTab} large={true}>
+                            <Tab id="students" title="Students" />
+                            <Tab id="stakeholders" title="Stakeholders" />
+                            <Tab id="admins" title="Admins" />
+                            <Tabs.Expander />
+                            <Button text="Invite Users" icon="plus" intent={Intent.PRIMARY} onClick={this.toggleInviteUsers} />
+                        </Tabs>
+                    </div>
 
-                        <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
-                            <thead>
-                                <tr>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>User Type</th>
-                                    <th>Email</th>
-                                    <th>Semester</th>
-                                    <th>Edit/Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {usersToDisplay.map((user: IUser, index: number) =>
-                                    <tr key={user.userId}>
-                                        <td>{user.firstName}</td>
-                                        <td>{user.lastName}</td>
-                                        <td>{user.userType}</td>
-                                        <td>{user.email}</td>
-                                        <td>{user.semester}</td>
-                                        <td>
-                                            <Button intent={Intent.WARNING} onClick={() => this.editUser(index, user)} text="Edit" />
-                                            <Button intent={Intent.DANGER} onClick={() => this.deleteUser(user)} text="Delete" />
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </HTMLTable>
-                    </Card>
+                    {this.state.userTypeTab === 'students' && this.renderStudentsCard()}
+
+                    {this.state.userTypeTab === 'stakeholders' && this.renderStakeholdersCard()}
+
+                    {this.state.userTypeTab === 'admins' && this.renderAdminsCard()}
                 </div>
 
-                <Dialog
-                    isOpen={typeof userToEdit !== 'undefined' && userIndexToEdit !== -1}
-                    onClose={this.cancelEdit}
-                    title="Edit User"
-                    icon="edit"
-                >
-                    <div style={{ padding: 20 }}>
-                        {this.renderFormGroup('editFirstName', 'text', 'First Name', 'Tommy')}
-                        {this.renderFormGroup('editLastName', 'text', 'Last Name', 'Trojan')}
-                        {this.renderFormGroup('editEmail', 'email', 'Email', 'ttrojan@usc.edu')}
-                        <FormGroup label="User Type" labelFor="editUserType">
-                            <select
-                                id="editUserType"
-                                value={this.state.editUserType}
-                                onChange={this.handleChange('editUserType')}
-                            >
-                                <option value="Student">Student</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Stakeholder">Stakeholder</option>
-                            </select>
-                        </FormGroup>
-                        <FormGroup label="Semester" labelFor="editSemester">
-                            <select
-                                id="editSemester"
-                                value={this.state.editSemester}
-                                onChange={this.handleChange('editSemester')}
-                            >
-                                <option value="SUMMER18">Summer 2018</option>
-                                <option value="FALL18">Fall 2018</option>
-                                <option value="SPRING19">Spring 2019</option>
-                            </select>
-                        </FormGroup>
+                {this.renderEditUserDialog()}
 
-                        <div>
-                            <Button onClick={this.cancelEdit}>Cancel</Button>
-                            <Button onClick={this.submitEdit} intent={Intent.SUCCESS}>Save</Button>
-                        </div>
-                    </div>
-                </Dialog>
-
-                <Dialog
-                    isOpen={this.state.inviteUsersIsOpen}
-                    onClose={this.toggleInviteUsers}
-                    title="Invite Users"
-                    icon="plus"
-                >
-                    <div style={{ padding: 20 }}>
-                        <StudentRegistrationForm />
-                    </div>
-                </Dialog>
+                {this.renderInviteUsers()}
             </div>);
+    }
+
+    @autobind
+    renderStudentsCard() {
+        const users = this.state.allUsers.filter((user: IUser) => user.userType === 'Student');
+        return (
+            <Card>
+                <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Semester</th>
+                            <th>Edit/Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user: IUser, index: number) =>
+                            <tr key={user.userId}>
+                                <td>{user.firstName}</td>
+                                <td>{user.lastName}</td>
+                                <td>{user.email}</td>
+                                <td>{user.semester}</td>
+                                <td>
+                                    <ButtonGroup>
+                                        <Button intent={Intent.WARNING} onClick={() => this.editUser(index, user)} text="Edit" icon="edit" />
+                                        <Button intent={Intent.DANGER} onClick={() => this.deleteUser(user)} text="Delete" icon="trash" />
+                                    </ButtonGroup>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </HTMLTable>
+            </Card>
+        );
+    }
+
+    @autobind
+    renderStakeholdersCard() {
+        const users = this.state.allUsers.filter((user: IUser) => user.userType === 'Stakeholder');
+
+        return (
+            <Card>
+                <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Edit/Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user: IUser, index: number) =>
+                            <tr key={user.userId}>
+                                <td>{user.firstName}</td>
+                                <td>{user.lastName}</td>
+                                <td>{user.email}</td>
+                                <td>
+                                    <ButtonGroup>
+                                        <Button intent={Intent.WARNING} onClick={() => this.editUser(index, user)} text="Edit" icon="edit" />
+                                        <Button intent={Intent.DANGER} onClick={() => this.deleteUser(user)} text="Delete" icon="trash" />
+                                    </ButtonGroup>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </HTMLTable>
+            </Card>
+        );
+    }
+
+    @autobind
+    renderAdminsCard() {
+        const users = this.state.allUsers.filter((user: IUser) => user.userType === 'Admin');
+
+        return (
+            <Card>
+                <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Edit/Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user: IUser, index: number) =>
+                            <tr key={user.userId}>
+                                <td>{user.firstName}</td>
+                                <td>{user.lastName}</td>
+                                <td>{user.email}</td>
+                                <td>
+                                    <ButtonGroup>
+                                        <Button intent={Intent.WARNING} onClick={() => this.editUser(index, user)} text="Edit" icon="edit" />
+                                        <Button intent={Intent.DANGER} onClick={() => this.deleteUser(user)} text="Delete" icon="trash" />
+                                    </ButtonGroup>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </HTMLTable>
+            </Card>
+        );
+    }
+
+    @autobind
+    renderEditUserDialog() {
+        const { userIndexToEdit, userToEdit } = this.state;
+
+        return (
+            <Dialog
+                isOpen={typeof userToEdit !== 'undefined' && userIndexToEdit !== -1}
+                onClose={this.cancelEdit}
+                title="Edit User"
+                icon="edit"
+            >
+                <div style={{ padding: 20 }}>
+                    {this.renderFormGroup('editFirstName', 'text', 'First Name', 'Tommy')}
+                    {this.renderFormGroup('editLastName', 'text', 'Last Name', 'Trojan')}
+                    {this.renderFormGroup('editEmail', 'email', 'Email', 'ttrojan@usc.edu')}
+                    <FormGroup label="User Type" labelFor="editUserType">
+                        <select
+                            id="editUserType"
+                            value={this.state.editUserType}
+                            onChange={this.handleChange('editUserType')}
+                        >
+                            <option value="Student">Student</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Stakeholder">Stakeholder</option>
+                        </select>
+                    </FormGroup>
+                    <FormGroup label="Semester" labelFor="editSemester">
+                        <select
+                            id="editSemester"
+                            value={this.state.editSemester}
+                            onChange={this.handleChange('editSemester')}
+                        >
+                            <option value="SUMMER18">Summer 2018</option>
+                            <option value="FALL18">Fall 2018</option>
+                            <option value="SPRING19">Spring 2019</option>
+                        </select>
+                    </FormGroup>
+
+                    <div>
+                        <Button onClick={this.cancelEdit}>Cancel</Button>
+                        <Button onClick={this.submitEdit} intent={Intent.SUCCESS}>Save</Button>
+                    </div>
+                </div>
+            </Dialog>
+        );
+    }
+
+    @autobind
+    renderInviteUsers() {
+        return (
+            <Dialog
+                isOpen={this.state.inviteUsersIsOpen}
+                onClose={this.toggleInviteUsers}
+                title="Invite Users"
+                icon="plus"
+            >
+                <div style={{ padding: 20 }}>
+                    <StudentRegistrationForm />
+                </div>
+            </Dialog>
+        );
     }
 }
 export default UserManagement;

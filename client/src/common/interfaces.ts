@@ -5,6 +5,8 @@ export interface IUser {
     email?: string;
     phone?: string;
     organization?: string;
+    userType?: string;
+    semester?: string;
 }
 
 export interface IProject {

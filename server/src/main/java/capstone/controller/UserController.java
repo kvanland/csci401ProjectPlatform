@@ -96,6 +96,7 @@ public class UserController
 		String firstName = info.get(Constants.FIRST_NAME);
 		String lastName = info.get(Constants.LAST_NAME);
 		String userType = info.get(Constants.USER_TYPE);
+		String phone = info.get(Constants.PHONE);
 		String semester = info.get(Constants.SEMESTER);
 		
 		User user = findUser(originalEmail);
@@ -103,6 +104,7 @@ public class UserController
 		user.setLastName(lastName);
 		user.setEmail(newEmail);
 		user.setUserType(userType);
+		user.setPhone(phone);
 		user.setSemester(semester);
 		userService.saveUser(user);
 	}
