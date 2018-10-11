@@ -9,7 +9,7 @@ import {
     Card,
     HTMLTable
 } from '@blueprintjs/core';
-
+import autobind from 'autobind-decorator';
 import { getApiURI } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardBody from 'reactstrap/lib/CardBody';
@@ -42,6 +42,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
             description: '',
             isLoading: true
         };
+
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -72,11 +73,32 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
+    @autobind
+    async submitProjectEdit() {
+        var request = new XMLHttpRequest();
+        request.withCredentials = true;
+
+        request.open('POST', 'http://localhost:8080/projects/editMinor/' + this.state.projectId);
+
+        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        request.setRequestHeader('Cache-Control', 'no-cache');
+        request.send(JSON.stringify(this.state));
+        request.onreadystatechange = function () {
+            if (this.readyState === this.DONE) {
+                if (request.status === 200) {
+                    alert('Change made successfully');
+                } else {
+                    alert('Change could not be made at this time');
+                }
+            }
+        };
+    }
+
     render() {
         return (
             <div className="csci-form-container">
                 <div className="csci-main">
-                <h1 style={{ margin: 0, textAlign: 'center' }}>Project Information</h1>
+                    <h1 style={{ margin: 0, textAlign: 'center' }}>Project Information</h1>
                     <Card>
                         <CardBody>
                             <FormGroup label="Project Name">
@@ -135,7 +157,11 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                             </FormGroup>
 
                             <FormGroup>
-                                <Button type="submit">Edit/Save</Button>
+                                <Button
+                                    type="submit"
+                                    onClick={this.submitProjectEdit}
+                                    text="Edit/Save"
+                                />
                             </FormGroup>
                         </CardBody>
                         <Card>
@@ -168,7 +194,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                         </Card>
                     </Card>
                 </div>
-            </div>
+            </div >
         );
 
     }

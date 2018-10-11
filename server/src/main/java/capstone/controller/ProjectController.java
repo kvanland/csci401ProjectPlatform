@@ -92,7 +92,6 @@ public class ProjectController
 	@GetMapping("/student/{email:.+}")
 	public @ResponseBody Project getUserProject(@PathVariable("email") String email) {
 		Student user = (Student) userService.findUserByEmail(email);
-		System.out.println(user.getProject().getProjectName());
 		return user.getProject();
 	}
 	
@@ -122,11 +121,12 @@ public class ProjectController
 	public List<Project> projectAssignment()
 	{
 		System.out.println("running assignment");
-		/*// WIP: Return an existing matching if students have already been assigned to projects
-		 * List<Project> existing = projectService.getExistingAssignments();
+		// Return an existing matching if students have already been assigned to projects
+		List<Project> existing = projectService.getExistingAssignments();
 		if (existing != null && existing.size() > 0) {
+			System.out.println("Returning existing assignment");
 			return existing;
-		}*/
+		}
 		return projectService.runAlgorithm();
 	}
 	
@@ -147,6 +147,12 @@ public class ProjectController
 		for (Project proj : projectMatches) {
 			if (proj.getProjectId() > 0) {
 				Project project = projectService.findByProjectId(proj.getProjectId());
+				
+//				List<Long> projectMembers = new ArrayList<Long>();
+//				for(Student s : proj.getMembers()) {
+//					projectMembers.add(s.getUserId());
+//				}
+//				project.setMemberIDs(projectMembers);
 				updatedProjects.add(project);
 				
 				// Determine stakeholder for project
@@ -161,14 +167,37 @@ public class ProjectController
 				// Construct email body
 				String messageBody = project.getProjectName() + "\n\nProject Background: " + project.getBackground() + "\n\nProject Description: " + project.getDescription()
 				+ "\n\nStakeholder Email: " + stakeholderEmail + "\n\nTo find out who is on your team please login to the class website.";
-				
 				// Email each student in the group the information
 				for (Student student : proj.getMembers()) {
 					// Set the given project for each student
 					Student saveStudent = userService.findByUserId(student.getUserId());
 					saveStudent.setProject(project);
 					
-					emailService.sendEmail("CSCI 401 Project Assignment", messageBody, saveStudent.getEmail());
+					String email = saveStudent.getEmail();
+					emailService.sendEmail("CSCI 401 Project Assignment", messageBody, email);
+					userService.saveUser(saveStudent);
+				}
+			}
+		}
+		projectService.saveAssignment(updatedProjects);
+		return Constants.SUCCESS;
+	}
+	
+	// Save projects when altered
+	@PostMapping("/save-assignments")
+	public @ResponseBody String saveProjectsToStudents(@RequestBody List<Project> projectMatches) {
+		List<Project> updatedProjects = new ArrayList<Project>();
+		
+		for (Project proj : projectMatches) {
+			if (proj.getProjectId() > 0) {
+				Project project = projectService.findByProjectId(proj.getProjectId());
+				updatedProjects.add(project);
+				
+				for (Student student : proj.getMembers()) {
+					// Set the given project for each student
+					Student saveStudent = userService.findByUserId(student.getUserId());
+					saveStudent.setProject(project);
+					
 					userService.saveUser(saveStudent);
 				}
 			}
@@ -260,6 +289,18 @@ public class ProjectController
 		return Constants.SUCCESS;
 	}
 	
+	@PostMapping("/editMinor/{projectid}")
+	public @ResponseBody String editProjectMinor(@PathVariable("projectId") int projectId,
+			@RequestBody Project updated_project) {
+		Project project = projectService.findByProjectId(projectId);
+		project.setProjectName(updated_project.getProjectName());
+		project.setTechnologies(updated_project.getTechnologies());
+		project.setBackground(updated_project.getBackground());
+		project.setDescription(updated_project.getDescription());
+		
+		projectService.save(project);
+		return Constants.SUCCESS;
+	}
 }
 
 	
