@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { getApiURI } from '../../../common/server';
-import { InputGroup, FormGroup, HTMLTable, Button, Intent, Card, Dialog, TextArea, ButtonGroup } from '@blueprintjs/core';
+import { InputGroup, FormGroup, HTMLTable, Button, Intent, Card, Dialog, TextArea, ButtonGroup, HTMLSelect } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 import autobind from 'autobind-decorator';
 
@@ -250,7 +250,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
                                     <div>
                                         {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
                                         <FormGroup label="Semester" labelFor="semester">
-                                            <select
+                                            <HTMLSelect
                                                 id="semester"
                                                 value={this.state.selectedProject.semester}
                                                 onChange={this.handleProjectEdit('semester')}
@@ -258,7 +258,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
                                                 <option value="SUMMER18">Summer 2018</option>
                                                 <option value="FALL18">Fall 2018</option>
                                                 <option value="SPRING19">Spring 2019</option>
-                                            </select>
+                                            </HTMLSelect>
                                         </FormGroup>
                                         {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
                                         {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}

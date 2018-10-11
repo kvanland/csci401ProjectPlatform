@@ -5,7 +5,7 @@ import {
     Label,
 } from 'reactstrap';
 import autobind from 'autobind-decorator';
-import { InputGroup, FormGroup, Card, TextArea, Button, Intent } from '@blueprintjs/core';
+import { InputGroup, FormGroup, Card, TextArea, Button, Intent, HTMLSelect } from '@blueprintjs/core';
 import { getApiURI } from '../../../common/server';
 
 interface IProjectProps {
@@ -90,7 +90,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                 <Card className="csci-form">
                     {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
                     <FormGroup label="Semester" labelFor="projectSemester">
-                        <select
+                        <HTMLSelect
                             id="editUserType"
                             value={this.state.projectSemester}
                             onChange={this.handleChange('projectSemester')}
@@ -98,7 +98,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                             <option value="SUMMER18">Summer 2018</option>
                             <option value="FALL18">Fall 2018</option>
                             <option value="SPRING19">Spring 2019</option>
-                        </select>
+                        </HTMLSelect>
                     </FormGroup>
                     {this.renderFormGroup('projectSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}

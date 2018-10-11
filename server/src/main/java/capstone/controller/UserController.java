@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,6 +78,17 @@ public class UserController
 	{
 		System.out.println(email);
 		return userService.findUserByEmail(email);
+	}
+	
+	@DeleteMapping("/{email:.+}")
+	public Boolean deleteUser(@PathVariable("email") String email)
+	{
+		User user = userService.findUserByEmail(email);
+		if (user != null) {
+			userService.deleteUser(user);
+			return true;
+		}
+		return false;
 	}
 	
 	@GetMapping("/stakeholders")
@@ -170,6 +182,7 @@ public class UserController
 			s.setPhone(phone);
 			s.setPassword(encryptedPassword);
 			s.setUserType(Constants.STUDENT);
+			s.setSemester("FALL2018");
 			userService.saveUser(s);
 			System.out.println("New student created");
 			return ResponseEntity.ok();

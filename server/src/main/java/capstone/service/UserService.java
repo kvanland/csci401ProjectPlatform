@@ -92,6 +92,16 @@ public class UserService {
 		}
 	}
 	
+	public void deleteUser(User user) {
+		if (user.getClass() == Stakeholder.class) {
+			stakeholderRepo.delete(user.getId());
+		} else if (user.getClass() == Student.class) {
+			studentRepo.delete(user.getId());
+		} else if (user.getClass() == Admin.class) {
+			adminRepo.delete(user.getId());
+		}
+	}
+	
 	public String getUserType(User user) {
 		if (user.getClass() == Stakeholder.class) {
 			return Constants.STAKEHOLDER;

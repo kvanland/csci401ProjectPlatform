@@ -2,10 +2,8 @@ import * as React from 'react';
 import { DragSource } from 'react-dnd';
 import ItemTypes from './ItemTypes';
 import autobind from 'autobind-decorator';
-import {
-    StudentInfo,
-} from './index';
 import { Popover } from '@blueprintjs/core';
+import { IStudent } from '../../../common/interfaces';
 
 const style = {
     cursor: 'move',
@@ -16,7 +14,7 @@ const style = {
 };
 
 interface IStudentCardProps {
-    student: StudentInfo;
+    student: IStudent;
     key: number;
     connectDragSource?: any;
     isDragging?: any;
@@ -76,16 +74,17 @@ class StudentCard extends React.Component<IStudentCardProps, IStudentCardState> 
         );
 
         return connectDragSource(
-            <div style={{ width: '100%' }}>
+            <tr style={{ cursor: 'move' }}>
                 <Popover
                     interactionKind="hover"
                     content={popoverContent}
                     targetTagName="div"
+                    wrapperTagName="td"
+                    disabled={isDragging}
                 >
                     <div
                         key={key}
                         style={{
-                            ...style,
                             opacity: isDragging ? 0.5 : 1,
                         }}
                         id={'target-' + key}
@@ -95,7 +94,7 @@ class StudentCard extends React.Component<IStudentCardProps, IStudentCardState> 
                         {student.firstName + ' ' + student.lastName}
                     </div>
                 </Popover>
-            </div>
+            </tr>
         );
     }
 }

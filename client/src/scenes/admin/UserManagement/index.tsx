@@ -1,10 +1,14 @@
 import * as React from 'react';
 import StudentRegistrationForm from './StudentRegistrationForm';
-import { getApiURI } from '../../../common/server';
+import { fetchServer } from '../../../common/server';
 import autobind from 'autobind-decorator';
-import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Dialog, Tabs, Tab, TabId, Icon } from '@blueprintjs/core';
+import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Dialog, Tabs, Tab, TabId, Icon, HTMLSelect, Toaster, Position } from '@blueprintjs/core';
 import { InputType } from 'reactstrap/lib/Input';
 import { Loading } from '../../../components/Loading';
+
+const FormToast = Toaster.create({
+    position: Position.TOP,
+});
 
 interface IUserListProps {
 }
@@ -60,25 +64,19 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
     };
 
     async componentDidMount() {
+        this.fetchUsers();
+    }
+
+    @autobind
+    async fetchUsers() {
         this.setState({ isLoading: true });
 
-        try {
-            const response = await fetch(getApiURI('/users'), {
-                method: 'get',
-                headers: new Headers({
-                    'Authorization': 'Bearer ' + sessionStorage.getItem('jwt')
-                })
-            });
-            const data = await response.json();
-
-            this.setState({
-                allUsers: data,
-                isLoading: false,
-            });
-        } catch (e) {
-            console.error(e);
-        }
-
+        const response = await fetchServer('/users', 'GET');
+        const data = await response.json();
+        this.setState({
+            allUsers: data,
+            isLoading: false,
+        });
     }
 
     cancelEdit = () => {
@@ -88,25 +86,28 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
     @autobind
     async submitEdit() {
         try {
-            await fetch(getApiURI('/users/update-info'), {
-                method: 'POST',
-                credentials: 'include',
-                headers: new Headers({
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'Cache-Control': 'no-cache',
-                }),
-                body: JSON.stringify({
-                    firstName: this.state.editFirstName,
-                    lastName: this.state.editLastName,
-                    userType: this.state.editUserType,
-                    semester: this.state.editSemester,
-                    email: this.state.editEmail,
-                    originalEmail: this.state.originalEmail
-                }),
+            await fetchServer('/users/update-info', 'POST', {
+                firstName: this.state.editFirstName,
+                lastName: this.state.editLastName,
+                userType: this.state.editUserType,
+                semester: this.state.editSemester,
+                email: this.state.editEmail,
+                originalEmail: this.state.originalEmail
             });
-            alert('User has been updated succesfully!');
+
+            this.cancelEdit();
+
+            FormToast.show({
+                intent: Intent.SUCCESS,
+                message: 'User has been updated successfully!',
+            });
         } catch (e) {
-            console.error(e);
+            FormToast.show({
+                intent: Intent.SUCCESS,
+                message: 'An error occurred: could not update user.',
+            });
+        } finally {
+            this.fetchUsers();
         }
     }
 
@@ -136,11 +137,12 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         });
     }
 
-    deleteUser(user: IUser) {
+    async deleteUser(user: IUser) {
         const name = user.firstName;
-        var submit = confirm('Are you sure you want to delete ' + name + '?');
-        if (submit) {
-            this.setState({ userToDelete: user });
+        var confirmed = confirm('Are you sure you want to delete ' + name + '?');
+        if (confirmed) {
+            await fetchServer('/users/' + user.email, 'DELETE');
+            this.fetchUsers();
         }
     }
 
@@ -327,7 +329,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                     {this.renderFormGroup('editLastName', 'text', 'Last Name', 'Trojan')}
                     {this.renderFormGroup('editEmail', 'email', 'Email', 'ttrojan@usc.edu')}
                     <FormGroup label="User Type" labelFor="editUserType">
-                        <select
+                        <HTMLSelect
                             id="editUserType"
                             value={this.state.editUserType}
                             onChange={this.handleChange('editUserType')}
@@ -335,10 +337,10 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                             <option value="Student">Student</option>
                             <option value="Admin">Admin</option>
                             <option value="Stakeholder">Stakeholder</option>
-                        </select>
+                        </HTMLSelect>
                     </FormGroup>
                     <FormGroup label="Semester" labelFor="editSemester">
-                        <select
+                        <HTMLSelect
                             id="editSemester"
                             value={this.state.editSemester}
                             onChange={this.handleChange('editSemester')}
@@ -346,7 +348,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                             <option value="SUMMER18">Summer 2018</option>
                             <option value="FALL18">Fall 2018</option>
                             <option value="SPRING19">Spring 2019</option>
-                        </select>
+                        </HTMLSelect>
                     </FormGroup>
 
                     <div>

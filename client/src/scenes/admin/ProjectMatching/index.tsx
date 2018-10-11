@@ -1,34 +1,19 @@
 import * as React from 'react';
 import ProjectsList from './ProjectsList';
 import { getApiURI } from '../../../common/server';
-import { FormGroup, InputGroup, Button, Intent, Card, NonIdealState, Spinner } from '@blueprintjs/core';
+import { InputGroup, Button, Intent, NonIdealState, Tabs } from '@blueprintjs/core';
 import { Loading } from '../../../components/Loading';
 import autobind from 'autobind-decorator';
+import { IProject } from 'common/interfaces';
 
 interface IProjectMatchingProps {
 }
 
 interface IProjectMatchingState {
-  projects: Array<Project>;
+  projects: Array<IProject>;
   isLoading: boolean;
   isLaunched: boolean;
 }
-
-export type StudentInfo = {
-  userId: number;
-  firstName: string;
-  lastName: string;
-  rankings: Array<{}>;
-  orderedRankings: Array<{}>;
-};
-
-export type Project = {
-  projectId: number;
-  projectName: string;
-  minSize: number;
-  maxSize: number;
-  members: Array<StudentInfo>;
-};
 
 class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMatchingState> {
 
@@ -102,7 +87,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
 
     return (
       <div className="csci-container">
-        <div className="csci-side">
+        {/* <div className="csci-side">
           <Card>
             <FormGroup>
               <InputGroup
@@ -122,17 +107,38 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
             </FormGroup>
             <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" />
           </Card>
-        </div>
+        </div> */}
         <div className="csci-main">
+          <div style={{ margin: 20 }}>
+            <Tabs id="project-match-tabs">
+              <InputGroup
+                type="text"
+                placeholder="Enter number of ranked projects to consider"
+                rightElement={(
+                  <Button
+                    minimal={true}
+                    rightIcon="arrow-right"
+                    intent={Intent.PRIMARY}
+                    onClick={this.launch}
+                    text="Generate"
+                  />
+                )}
+                large={true}
+                onKeyDown={this.handleKeyDownProjectRanker}
+              />
+              <Tabs.Expander />
+              <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" large={true} />
+            </Tabs>
+          </div>
           {isLaunched ? (
-            <Card>
+            <div>
               {projects.length > 0 ? (
                 <ProjectsList projects={this.state.projects} />
               ) : (
                   <Loading />
                 )
               }
-            </Card>
+            </div>
           ) : (
               <NonIdealState
                 icon="search-around"

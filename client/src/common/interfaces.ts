@@ -9,11 +9,29 @@ export interface IUser {
     semester?: string;
 }
 
+export interface IStudent extends IUser {
+    orderedRankings: string[];
+    rankings: { [key: string]: number };
+}
+
 export interface IProject {
     projectId: number;
     projectName: string;
-    minSize: string;
-    technologies: string;
-    background: string;
-    description: string;
+    minSize?: string | number;
+    maxSize?: string | number;
+    technologies?: string;
+    background?: string;
+    description?: string;
+    semester?: string;
+
+    adminComments?: string;
+    c?: number;
+    n?: number;
+    sum_p?: number;
+    popularity?: number;
+    projSatScore?: number;
+    stakeholderId?: number;
+    statusId?: number;
+
+    members: IStudent[];
 }

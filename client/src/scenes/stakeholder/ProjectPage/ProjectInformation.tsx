@@ -29,22 +29,19 @@ interface IStudentInfo {
     email: string;
 }
 
+@autobind
 class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
-    constructor(props: IProjectProps) {
-        super(props);
-        this.state = {
-            students: [],
-            projectId: 0,
-            projectName: '',
-            minSize: '',
-            technologies: '',
-            background: '',
-            description: '',
-            isLoading: true
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-    }
+    public state: IProjectState = {
+        students: [],
+        projectId: 0,
+        projectName: '',
+        minSize: '',
+        technologies: '',
+        background: '',
+        description: '',
+        isLoading: true,
+        members: [],
+    };
 
     async componentDidMount() {
         try {
@@ -119,7 +116,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                     id="projectSize"
                                     placeholder="Number of Students"
                                     onChange={this.handleChange('minSize')}
-                                    value={this.state.minSize}
+                                    value={String(this.state.minSize || '')}
                                 />
                             </FormGroup>
 

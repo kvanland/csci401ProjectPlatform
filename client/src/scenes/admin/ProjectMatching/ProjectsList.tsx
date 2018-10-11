@@ -3,25 +3,16 @@ import ProjectCard from './ProjectCard';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import autobind from 'autobind-decorator';
-import {
-    StudentInfo,
-    Project,
-} from './index';
-import { HTMLTable } from '@blueprintjs/core';
-
-const style = {
-    width: 1000,
-    float: 'none',
-    margin: 'auto',
-};
+import { IProject } from 'common/interfaces';
+import { IStudent } from '../../../common/interfaces';
 
 interface IProjectsListProps {
-    projects: Array<Project>;
+    projects: Array<IProject>;
 }
 
 interface IProjectsListState {
-    projects: Array<Project>;
-    students: Array<StudentInfo>;
+    projects: Array<IProject>;
+    students: Array<IStudent>;
 }
 
 @DragDropContext(HTML5Backend)
@@ -29,7 +20,7 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
     constructor(props: IProjectsListProps) {
         super(props);
 
-        let students: StudentInfo[] = [];
+        let students: IStudent[] = [];
         props.projects.forEach(project => {
             project.members.forEach(student => {
                 students.push(student);
@@ -65,8 +56,8 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
             // semester: projectCard.semester,
             minSize: projectCard.minSize,
             maxSize: projectCard.maxSize,
-            members: projectCard.members.filter((s: StudentInfo) =>
-                s.userId !== studentInfo.userId
+            members: projectCard.members.filter((s: IStudent) =>
+                s.id! !== studentInfo.id
             )
         };
         let newProjects = projects;
@@ -89,7 +80,7 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
         return {
             projectCard,
             index: projects.indexOf(projectCard),
-            studentInfo: students.filter(student => student.userId === studentId)[0],
+            studentInfo: students.filter(student => student.id === studentId)[0],
             error
         };
     }
@@ -101,7 +92,7 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
         let error = 1;
         projects.forEach(project => {
             project.members.forEach(member => {
-                if (member.userId === studentId) {
+                if (member.id === studentId) {
                     projectCard = project;
                     error = 0;
                 }
@@ -128,27 +119,16 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
     render() {
         const { projects } = this.state;
         return (
-            <HTMLTable bordered={true} striped={true} style={{ width: '100%' }}>
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>Semester</th>
-                        <th>Min Size</th>
-                        <th>Max Size</th>
-                        <th>Members</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {projects.map((project: Project) =>
-                        <ProjectCard
-                            project={project}
-                            key={project.projectId}
-                            id={project.projectId}
-                            moveCard={this.moveCard}
-                        />
-                    )}
-                </tbody>
-            </HTMLTable>
+            <div style={{ display: 'flex', flexDirection: 'row', maxWidth: '100%', flexWrap: 'wrap', padding: 10 }}>
+                {projects.map((project: IProject) =>
+                    <ProjectCard
+                        project={project}
+                        key={project.projectId}
+                        id={project.projectId}
+                        moveCard={this.moveCard}
+                    />
+                )}
+            </div>
         );
     }
 }
