@@ -80,7 +80,7 @@ public class UserController
 		return userService.findUserByEmail(email);
 	}
 	
-	@DeleteMapping("/{email:.+}")
+	@PostMapping("/{email:.+}/delete")
 	public Boolean deleteUser(@PathVariable("email") String email)
 	{
 		User user = userService.findUserByEmail(email);
@@ -185,7 +185,7 @@ public class UserController
 			s.setSemester("FALL2018");
 			userService.saveUser(s);
 			System.out.println("New student created");
-			return ResponseEntity.ok();
+			return ResponseEntity.accepted();
 		}
 		return ResponseEntity.badRequest();
 	}
@@ -213,7 +213,7 @@ public class UserController
 			s.setUserType(Constants.STAKEHOLDER);
 			userService.saveUser(s);
 			System.out.println("New stakeholder created");
-			return ResponseEntity.ok();
+			return ResponseEntity.accepted();
 		}
 		return ResponseEntity.badRequest();
 	}
