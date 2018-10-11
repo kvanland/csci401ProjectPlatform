@@ -18,11 +18,13 @@ class ProjectPage extends React.Component<RouteComponentProps<any>> {
 
     render() {
         return (
-            <div style={style as any}>
-                <h2>Project</h2>
-                <ProjectInformation projectId={this.props.match.params.projectId} />
-                <DeliverableList projectId={this.props.match.params.projectId} />
-            </div>
+                <div className="csci-container">
+                    <div className="csci-main">
+                        <ProjectInformation projectId={this.props.match.params.projectId} />
+                        {/* <DeliverableList projectId={this.props.match.params.projectId} /> */}
+                    </div>
+                </div>
+        
         );
     }
 }

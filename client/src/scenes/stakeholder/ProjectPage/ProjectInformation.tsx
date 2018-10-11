@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { IProject } from '../../../common/interfaces';
 import {
-    Form,
     FormGroup,
-    Col,
-    Input,
+    InputGroup,
+    TextArea,
     Button,
     Label,
     Card,
-    Table,
-    InputProps
-} from 'reactstrap';
+    HTMLTable
+} from '@blueprintjs/core';
+
 import { getApiURI } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardBody from 'reactstrap/lib/CardBody';
@@ -58,143 +57,118 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         } catch (e) {
             console.log(e);
         }
-    }
-
-    public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ [id]: e.currentTarget.value } as any);
-    }
-
-    async render() {
-
         try {
             const response = await fetch(getApiURI('/projects/') + this.state.projectId + '/students');
             const data = await response.json();
-
             this.setState({
                 students: data
             });
         } catch (e) {
             console.error(e);
         }
+    }
 
+    public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ [id]: e.currentTarget.value } as any);
+    }
+
+    render() {
         return (
-            <Card>
-                <CardHeader>Project Information</CardHeader>
-                <CardBody>
-                    <Form horizontal={true} >
-                        <FormGroup>
-                            <Col componentClass={Label} sm={2}>
-                                <b>Project Name</b>
-                            </Col>
-                            <Col sm={10}>
-                                <Input
+            <div className="csci-form-container">
+                <div className="csci-main">
+                <h1 style={{ margin: 0, textAlign: 'center' }}>Project Information</h1>
+                    <Card>
+                        <CardBody>
+                            <FormGroup label="Project Name">
+
+                                <InputGroup
                                     type="text"
                                     id="projectName"
                                     value={this.state.projectName}
                                     onChange={this.handleChange('projectName')}
                                     placeholder="Project Name"
                                 />
-                            </Col>
-                        </FormGroup>
+                            </FormGroup>
 
-                        <FormGroup>
-                            <Col componentClass={Label} sm={2}>
-                                <b>Number of Students</b>
-                            </Col>
-                            <Col sm={10}>
-                                <Input
+                            <FormGroup label="Number of Students">
+
+                                <InputGroup
                                     type="text"
                                     id="projectSize"
                                     placeholder="Number of Students"
                                     onChange={this.handleChange('minSize')}
                                     value={this.state.minSize}
                                 />
-                            </Col>
-                        </FormGroup>
+                            </FormGroup>
 
-                        <FormGroup>
-                            <Col componentClass={Label} sm={2}>
-                                <b>Technologies Expected</b>
-                            </Col>
-                            <Col sm={10}>
-                                <Input
+                            <FormGroup label="Technologies Expected">
+                                <InputGroup
                                     type="text"
                                     id="technologies"
                                     value={this.state.technologies}
                                     placeholder="Technologies expected"
                                     onChange={this.handleChange('technologies')}
                                 />
-                            </Col>
-                        </FormGroup>
+                            </FormGroup>
 
-                        <FormGroup>
-                            <Col componentClass={Label} sm={2}>
-                                <b>Background Requested</b>
-                            </Col>
-                            <Col sm={10}>
-                                <Input
+                            <FormGroup label="Background Requested">
+
+                                <InputGroup
                                     type="text"
                                     id="backgroundRequested"
                                     value={this.state.background}
                                     placeholder="Background requested"
                                     onChange={this.handleChange('background')}
                                 />
-                            </Col>
-                        </FormGroup>
+                            </FormGroup>
 
-                        <FormGroup>
-                            <Col componentClass={Label} sm={2}>
-                                <b>Description</b>
-                            </Col>
-                            <Col sm={10}>
-                                <Input
-                                    componentClass="textarea"
+                            <FormGroup label="Description">
+
+                                <InputGroup
+                                    // componentClass="textarea"
                                     type="text"
                                     id="description"
                                     value={this.state.description}
                                     placeholder="Description"
                                     onChange={this.handleChange('description')}
                                 />
-                            </Col>
-                        </FormGroup>
+                            </FormGroup>
 
-                        <FormGroup>
-                            <Col smOffset={2} sm={10}>
+                            <FormGroup>
                                 <Button type="submit">Edit/Save</Button>
-                            </Col>
-                        </FormGroup>
-                    </Form>
-                </CardBody>
-                <Card>
-                    <CardHeader>
-                        Team Contact Information
+                            </FormGroup>
+                        </CardBody>
+                        <Card>
+                            <CardHeader>
+                                Team Contact Information
                     </CardHeader>
-                    <CardBody>
-                        <div>
-                            <Table bordered={true}>
-                                <thead>
-                                    <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Email</th>
+                            <CardBody>
+                                <div>
+                                    <HTMLTable bordered={true}>
+                                        <thead>
+                                            <tr>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Email</th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.state.students.map((student: IStudentInfo) =>
-                                        <tr key={student.userId}>
-                                            <td> {student.firstName} </td>
-                                            <td> {student.lastName} </td>
-                                            <td> {student.email} </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </Table>
-                        </div>
-                    </CardBody>
-                </Card>
-            </Card>
-
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.state.students.map((student: IStudentInfo) =>
+                                                <tr key={student.userId}>
+                                                    <td> {student.firstName} </td>
+                                                    <td> {student.lastName} </td>
+                                                    <td> {student.email} </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </HTMLTable>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </Card>
+                </div>
+            </div>
         );
 
     }
