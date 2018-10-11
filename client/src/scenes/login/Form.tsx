@@ -97,14 +97,12 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
             }
         } catch (e) {
             console.error(e);
-            await this.setState({ hasError: true });
+            await this.setState({ hasError: true, isLoading: false });
             LoginToast.show({
                 intent: Intent.DANGER,
                 icon: 'error',
                 message: 'Email or password does not match our records.',
             });
-        } finally {
-            this.setState({ isLoading: false });
         }
     }
 

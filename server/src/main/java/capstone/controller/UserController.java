@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -80,7 +81,7 @@ public class UserController
 		return userService.findUserByEmail(email);
 	}
 	
-	@DeleteMapping("/{email:.+}")
+	@PostMapping("/{email:.+}/delete")
 	public Boolean deleteUser(@PathVariable("email") String email)
 	{
 		System.out.println("deleted");
@@ -159,7 +160,7 @@ public class UserController
 	
 	// Student registration
 	@PostMapping("/student-registration")
-	public @ResponseBody BodyBuilder studentRegistrationAttempt(@RequestBody Map<String, String> info) {
+	public @ResponseBody ResponseEntity studentRegistrationAttempt(@RequestBody Map<String, String> info) {
 		String email = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);
 		String lastName = info.get(Constants.LAST_NAME);
@@ -186,14 +187,14 @@ public class UserController
 			s.setSemester("FALL2018");
 			userService.saveUser(s);
 			System.out.println("New student created");
-			return ResponseEntity.ok();
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
 		}
-		return ResponseEntity.badRequest();
+		return ResponseEntity.badRequest().body(null);
 	}
 	
-	// Stakeholder registration
+	// Stake holder registration
 	@PostMapping("/stakeholder-registration")
-	public @ResponseBody BodyBuilder stakeholderRegistrationAttempt(@RequestBody Map<String, String> info) {
+	public @ResponseBody ResponseEntity stakeholderRegistrationAttempt(@RequestBody Map<String, String> info) {
 		System.out.println("Start reg");
 		String email = info.get(Constants.EMAIL);
 		String name = info.get(Constants.FIRST_NAME);
@@ -214,9 +215,9 @@ public class UserController
 			s.setUserType(Constants.STAKEHOLDER);
 			userService.saveUser(s);
 			System.out.println("New stakeholder created");
-			return ResponseEntity.ok();
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
 		}
-		return ResponseEntity.badRequest();
+		return ResponseEntity.badRequest().body(null);
 	}
 	
 	// Admin can register student emails and send an invitation to the platform

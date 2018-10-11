@@ -22,6 +22,8 @@ interface IStudentRegistrationState {
     isLoading: boolean;
     hasError: boolean;
 }
+
+@autobind
 class StudentRegistrationForm extends React.Component<IStudentRegistrationProps, IStudentRegistrationState> {
     public state: IStudentRegistrationState = {
         firstName: '',
@@ -35,7 +37,6 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         hasError: false,
     };
 
-    @autobind
     async submitClicked() {
         if (this.state.isLoading) {
             return;
@@ -63,22 +64,25 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
             if (!response.ok) {
                 throw Error(response.statusText);
             }
+            await this.setState({ isLoading: false });
+            RegisterToast.show({
+                intent: Intent.SUCCESS,
+                icon: 'tick',
+                message: 'User created, please log in.',
+            });
 
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
-            await this.setState({ hasError: true });
+            await this.setState({ hasError: true, isLoading: false });
             RegisterToast.show({
                 intent: Intent.DANGER,
                 icon: 'error',
                 message: 'Could not create an account because a problem occurred.',
             });
-        } finally {
-            this.setState({ isLoading: false });
         }
     }
 
-    @autobind
     cancelClicked() {
         this.props.history.push('/');
     }
@@ -87,7 +91,6 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    @autobind
     formGroup(type: InputType, id: keyof IStudentRegistrationState, label: string, placeholder: string, icon?: IconName) {
         return (
             <div style={{ flex: 1, marginRight: 5 }}>
