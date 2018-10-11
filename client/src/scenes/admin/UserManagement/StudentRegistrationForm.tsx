@@ -26,6 +26,7 @@ const FormToast = Toaster.create({
     position: Position.TOP,
 });
 
+@autobind
 class StudentRegistrationForm extends React.Component<IStudentRegistrationProps, IStudentRegistrationState> {
     constructor(props: IStudentRegistrationProps) {
         super(props);
@@ -38,7 +39,6 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         };
     }
 
-    @autobind
     async confirmEmails() {
         await this.setState({
             isLoading: true,
@@ -54,7 +54,6 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         });
     }
 
-    @autobind
     async sendInvites() {
         await this.setState({
             isLoading: true,
@@ -81,21 +80,18 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         }
     }
 
-    @autobind
     handleChangeEmails(e: React.FormEvent<HTMLTextAreaElement>) {
         this.setState({
             emailsRaw: e.currentTarget.value,
         });
     }
 
-    @autobind
     handleChangeUserType(e: React.FormEvent<HTMLSelectElement>) {
         this.setState({
             userType: e.currentTarget.value as UserType,
         });
     }
 
-    @autobind
     renderForm() {
         return (
             <div>
@@ -126,7 +122,6 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         );
     }
 
-    @autobind
     renderConfirm() {
         return (
             <div>
@@ -170,7 +165,6 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         );
     }
 
-    @autobind
     renderSuccessful() {
         return (
             <NonIdealState
