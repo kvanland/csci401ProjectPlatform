@@ -41,6 +41,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         description: '',
         isLoading: true,
         members: [],
+        semester: '',
     };
 
     async componentDidMount() {
@@ -106,6 +107,17 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                     value={this.state.projectName}
                                     onChange={this.handleChange('projectName')}
                                     placeholder="Project Name"
+                                />
+                            </FormGroup>
+
+                             <FormGroup label="Project Name">
+
+                                <InputGroup
+                                    type="text"
+                                    id="semester"
+                                    value={this.state.semester}
+                                    onChange={this.handleChange('semester')}
+                                    placeholder="Project Semester"
                                 />
                             </FormGroup>
 
