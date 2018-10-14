@@ -5,6 +5,7 @@ import { InputGroup, Button, Intent, NonIdealState, Tabs } from '@blueprintjs/co
 import { Loading } from '../../../components/Loading';
 import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
+import { MdLaunch } from 'react-icons/md';
 
 interface IProjectMatchingProps {
 }
@@ -30,8 +31,22 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     this.assignProjects = this.assignProjects.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({ isLoading: false });
+
+    try {
+      const response = await fetch(getApiURI('/projects/getassignment'));
+      const data = await response.json();
+
+      this.setState({
+        projects: data
+      });
+
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+    }
+    
   }
 
   async launch() {
@@ -59,7 +74,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
   assignProjects() {
     var request = new XMLHttpRequest();
     request.withCredentials = true;
-    request.open('POST', 'http://localhost:8080/projects/assign-to-students');
+    request.open('POST', 'http://localhost:8080/projects/save-assignments');
     var data = JSON.stringify(
       this.state.projects
     );

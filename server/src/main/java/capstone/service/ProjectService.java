@@ -232,6 +232,30 @@ public class ProjectService {
 		}
 		System.out.println(ac.getAssignment());
 		return ac.getAssignment();*/
-		return savedProjects;
+		
+		List<Project> existingProjects = repository.findAll();
+		List<Student> students = (List<Student>) userService.getStudents();
+		for(Student s : students) {
+			int assignedIndex = existingProjects.indexOf(s.getProject());
+			if(assignedIndex > -1) {
+				existingProjects.get(assignedIndex).members.add(s);
+			}
+			
+		}
+		return existingProjects;
+	}
+	
+	public boolean assignmentExistance() {
+		boolean exists = false;
+		List<Project> existingProjects = repository.findAll();
+		List<Student> students = (List<Student>) userService.getStudents();
+		for(Student s : students) {
+			int assignedIndex = existingProjects.indexOf(s.getProject());
+			if(assignedIndex > -1) {
+				exists = true;
+			}
+			
+		}
+		return exists;
 	}
 }

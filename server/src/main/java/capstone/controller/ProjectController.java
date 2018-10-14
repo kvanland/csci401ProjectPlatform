@@ -120,15 +120,18 @@ public class ProjectController
 	@GetMapping("/assignment")
 	public List<Project> projectAssignment()
 	{
-		System.out.println("running assignment");
-		// Return an existing matching if students have already been assigned to projects
-		List<Project> existing = projectService.getExistingAssignments();
-		if (existing != null && existing.size() > 0) {
-			System.out.println("Returning existing assignment");
-			return existing;
-		}
 		return projectService.runAlgorithm();
 	}
+	
+	@GetMapping("/getassignment")
+	public List<Project> getProjectAssignment() {
+		List<Project> projects = new ArrayList<Project>();
+		if(projectService.assignmentExistance()) {
+			projects = projectService.getExistingAssignments();
+		}
+		return projects;
+	}
+	
 	
 	@GetMapping("/assignment/exists")
 	public String assignmentExists() {
@@ -148,11 +151,11 @@ public class ProjectController
 			if (proj.getProjectId() > 0) {
 				Project project = projectService.findByProjectId(proj.getProjectId());
 				
-//				List<Long> projectMembers = new ArrayList<Long>();
+//				List<Student> projectMembers = new ArrayList<Student>();
 //				for(Student s : proj.getMembers()) {
-//					projectMembers.add(s.getUserId());
+//					projectMembers.add(userService.findByUserId(s.getUserId()));
 //				}
-//				project.setMemberIDs(projectMembers);
+//				project.setMembers(projectMembers);
 				updatedProjects.add(project);
 				
 				// Determine stakeholder for project
