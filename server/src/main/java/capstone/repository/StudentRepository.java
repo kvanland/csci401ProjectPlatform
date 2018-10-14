@@ -11,4 +11,5 @@ import capstone.model.users.User;
 @Transactional
 public interface StudentRepository extends UserBaseRepository<Student> {
 
-	List<User> findAllByProject(Project project); /* ... */ }
+	List<User> findAllByProject(Project project); /* ... */ 
+}

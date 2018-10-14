@@ -84,6 +84,7 @@ public class UserController
 	@PostMapping("/{email:.+}/delete")
 	public Boolean deleteUser(@PathVariable("email") String email)
 	{
+		System.out.println("deleted");
 		User user = userService.findUserByEmail(email);
 		if (user != null) {
 			userService.deleteUser(user);
@@ -103,7 +104,7 @@ public class UserController
 	}
 	
 	@PostMapping("/update-info")
-	public void updateUserInfo(@RequestBody Map<String, String> info) {
+	public void updateUserInfo(@RequestBody Map<String, String> info) {		
 		String originalEmail = info.get(Constants.ORIGINAL_EMAIL);
 		String newEmail = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);

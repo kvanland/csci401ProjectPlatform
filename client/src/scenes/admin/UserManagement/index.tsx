@@ -138,8 +138,9 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
     }
 
     async deleteUser(user: IUser) {
-        const name = user.firstName;
-        var confirmed = confirm('Are you sure you want to delete ' + name + '?');
+        const firstName = user.firstName;
+        const lastName = user.lastName;
+        var confirmed = confirm('Are you sure you want to delete ' + firstName + ' ' + lastName + '?');
         if (confirmed) {
             await fetchServer(`/users/${user.email}/delete`, 'POST');
             this.fetchUsers();
