@@ -14,20 +14,24 @@ interface IProjectProps {
 interface IProjectState {
     projectName: string;
     projectSemester: string;
-    projectSize: number;
+    minSize: number;
+    maxSize: number;
     technologies: string;
     background: string;
     description: string;
+    studentNumber: Array<number>;
 }
 
 class ProposalForm extends React.Component<IProjectProps, IProjectState> {
     public state: IProjectState = {
         projectName: '',
-        projectSemester: '',
-        projectSize: 0,
+        projectSemester: 'SUMMER18',
+        minSize: 0,
+        maxSize: 0,
         technologies: '',
         background: '',
-        description: ''
+        description: '',
+        studentNumber: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     };
 
     @autobind
@@ -43,8 +47,8 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                 body: JSON.stringify({
                     projectName: this.state.projectName,
                     semester: this.state.projectSemester,
-                    minSize: this.state.projectSize,
-                    maxSize: this.state.projectSize,
+                    minSize: this.state.minSize,
+                    maxSize: this.state.maxSize,
                     technologies: this.state.technologies,
                     background: this.state.background,
                     description: this.state.description,
@@ -91,16 +95,33 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                     {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
                     <FormGroup label="Semester" labelFor="projectSemester">
                         <HTMLSelect
-                            id="editUserType"
+                            id="editSemesterType"
                             value={this.state.projectSemester}
                             onChange={this.handleChange('projectSemester')}
                         >
-                            <option value="SUMMER18">Summer 2018</option>
+                            <option defaultValue="SUMMER18">Summer 2018</option>
                             <option value="FALL18">Fall 2018</option>
                             <option value="SPRING19">Spring 2019</option>
                         </HTMLSelect>
                     </FormGroup>
-                    {this.renderFormGroup('projectSize', 'text', 'Number of Students', 'Number of Students')}
+
+                    <FormGroup label="Minimum Size" labelFor="projectSemester">
+                        <HTMLSelect
+                            id="editMinSize"
+                            value={this.state.minSize}
+                            onChange={this.handleChange('minSize')}
+                            options={this.state.studentNumber}
+                        />
+                    </FormGroup>
+
+                    <FormGroup label="Maximum size" labelFor="minSize">
+                        <HTMLSelect
+                            id="editMaxSize"
+                            value={this.state.maxSize}
+                            onChange={this.handleChange('maxSize')}
+                            options={this.state.studentNumber}
+                        />
+                    </FormGroup>
                     {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
                     {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}
                     <FormGroup label="Description" labelFor="description">
