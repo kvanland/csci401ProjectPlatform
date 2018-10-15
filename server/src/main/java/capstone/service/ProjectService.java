@@ -2,7 +2,10 @@ package capstone.service;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +21,7 @@ import capstone.model.users.Student;
 import capstone.repository.AdminConfigurationRepository;
 import capstone.repository.ProjectsRepository;
 import capstone.repository.RankingRepository;
+import capstone.util.Constants;
 import capstone.util.EncryptPassword;
 import capstone.util.ProjectAssignment;
 
@@ -101,6 +105,8 @@ public class ProjectService {
 		Vector<Project> projects = new Vector<>();
 		Vector<Student> students = new Vector<>();
 		String line = null;
+		String currentYear = new SimpleDateFormat("yy").format(Calendar.getInstance().getTime());
+
         try {
             BufferedReader projectsBR = new BufferedReader(new FileReader(folder_name + "/projects.txt"));
 
@@ -112,7 +118,7 @@ public class ProjectService {
                 newProject.setProjectId(projects.size()); // TODO: MAKE THIS DYNAMIC WITH AUTOINCREMENT
                 newProject.setMinSize(Integer.parseInt(elements[1]));
                 newProject.setMaxSize(Integer.parseInt(elements[2]));
-                newProject.setSemester("FALL18");
+                newProject.setSemester(returnSemester()+currentYear);
                 newProject.setStakeholderId(newProject.getProjectId());
                 projects.addElement(newProject);
                 
@@ -139,7 +145,7 @@ public class ProjectService {
                 newStudent.setLastName(last);
                 newStudent.setEmail(elements[0] + "@usc.edu");
                 newStudent.setPassword(EncryptPassword.encryptPassword("student"));
-                newStudent.setSemester("FALL18");
+                newStudent.setSemester(returnSemester()+currentYear);
                 
                 //newStudent.setStudentId(students.size());
                 //newStudent.setUserId(students.size());
@@ -257,5 +263,31 @@ public class ProjectService {
 			
 		}
 		return exists;
+	}
+	
+	public String returnSemester() throws ParseException {
+		String semester;
+		
+		String currentDateString = new SimpleDateFormat("MM-dd").format(Calendar.getInstance().getTime());
+		
+		SimpleDateFormat format = new SimpleDateFormat("MM-dd");
+		
+		java.util.Date currentDate = format.parse(currentDateString);
+		java.util.Date fallDate = format.parse(Constants.FALLSTART);
+		java.util.Date yearEnd = format.parse(Constants.YEAREND);
+		java.util.Date yearStart = format.parse(Constants.YEARSTART);
+		java.util.Date summerDate = format.parse(Constants.SUMMERSTART);
+		
+		if(currentDate.compareTo(fallDate) >= 0 && currentDate.compareTo(yearEnd) <= 0){
+			semester = Constants.FALL;
+		}
+		else if(currentDate.compareTo(yearStart) >= 0 && currentDate.compareTo(summerDate) <= 0){
+			semester = Constants.SPRING;
+		}
+		else{
+			semester = Constants.SUMMER;
+		}	
+		
+		return semester;
 	}
 }

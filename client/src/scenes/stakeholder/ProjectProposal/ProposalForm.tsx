@@ -36,6 +36,11 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
 
     @autobind
     async submitClicked() {
+        if (this.state.minSize > this.state.maxSize) {
+            alert('Please select a maximum size greater or equal to the minimum size');
+            throw Error;
+        } 
+
         try {
             const response = await fetch(getApiURI('/projects/save/' + sessionStorage.getItem('email')), {
                 method: 'POST',

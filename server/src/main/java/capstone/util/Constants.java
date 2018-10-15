@@ -30,4 +30,13 @@ public class Constants {
 	public static String PROJECTS = "projects";
 	public static String PROJECT_NAME = "projectName";
 	public static String PROJECT_ID = "projectId";
+	
+	/* Semesters */
+	public static String FALL = "FALL";
+	public static String SPRING = "SPRING";
+	public static String SUMMER = "SUMMER";
+	public static String FALLSTART = "08-20";
+	public static String YEAREND = "12-31";
+	public static String YEARSTART = "01-01";
+	public static String SUMMERSTART = "05-15";
 }
