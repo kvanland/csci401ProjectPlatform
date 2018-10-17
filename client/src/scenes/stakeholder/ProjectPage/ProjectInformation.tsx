@@ -7,7 +7,9 @@ import {
     Button,
     Label,
     Card,
-    HTMLTable
+    HTMLTable,
+    HTMLSelect,
+    Intent
 } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { getApiURI } from '../../../common/server';
@@ -20,6 +22,7 @@ interface IProjectProps {
 interface IProjectState extends IProject {
     students: Array<IStudentInfo>;
     isLoading: Boolean;
+    studentNumber: Array<number>;
 }
 
 interface IStudentInfo {
@@ -42,6 +45,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         isLoading: true,
         members: [],
         semester: '',
+        studentNumber: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     };
 
     async componentDidMount() {
@@ -67,7 +71,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         }
     }
 
-    public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<any>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
@@ -110,25 +114,33 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                 />
                             </FormGroup>
 
-                             <FormGroup label="Project Name">
-
-                                <InputGroup
-                                    type="text"
-                                    id="semester"
+                            <FormGroup label="Project Semester">
+                                <HTMLSelect
+                                    id="editUserType"
                                     value={this.state.semester}
                                     onChange={this.handleChange('semester')}
-                                    placeholder="Project Semester"
+                                >
+                                    <option defaultValue="SUMMER18">Summer 2018</option>
+                                    <option value="FALL18">Fall 2018</option>
+                                    <option value="SPRING19">Spring 2019</option>
+                                </HTMLSelect>
+                            </FormGroup>
+
+                             <FormGroup label="Minimum Size" labelFor="projectSemester">
+                                <HTMLSelect
+                                    id="editMinSize"
+                                    value={this.state.minSize}
+                                    onChange={this.handleChange('minSize')}
+                                    options={this.state.studentNumber}
                                 />
                             </FormGroup>
 
-                            <FormGroup label="Number of Students">
-
-                                <InputGroup
-                                    type="text"
-                                    id="projectSize"
-                                    placeholder="Number of Students"
-                                    onChange={this.handleChange('minSize')}
-                                    value={String(this.state.minSize || '')}
+                            <FormGroup label="Maximum size" labelFor="minSize">
+                                <HTMLSelect
+                                    id="editMaxSize"
+                                    value={this.state.maxSize}
+                                    onChange={this.handleChange('maxSize')}
+                                    options={this.state.studentNumber}
                                 />
                             </FormGroup>
 

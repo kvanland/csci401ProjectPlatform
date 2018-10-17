@@ -12,6 +12,7 @@ interface IProject {
     projectName: string;
     statusId: number;
     semester: string;
+    minSize: number;
 }
 
 interface IHomeState {
