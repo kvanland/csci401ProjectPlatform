@@ -234,15 +234,20 @@ public class ProjectService {
 		return ac.getAssignment();*/
 		
 		List<Project> existingProjects = repository.findAll();
+		List<Project> projectsToBeReturned = new ArrayList<Project>();
+		for(Project p : existingProjects) {
+			projectsToBeReturned.add(new Project(p));
+		}
 		List<Student> students = (List<Student>) userService.getStudents();
 		for(Student s : students) {
 			int assignedIndex = existingProjects.indexOf(s.getProject());
 			if(assignedIndex > -1) {
-				existingProjects.get(assignedIndex).members.add(s);
+				projectsToBeReturned.get(assignedIndex).members.add(s);
 			}
-			
 		}
-		return existingProjects;
+		
+		System.out.println(projectsToBeReturned.get(0).getMembers());
+		return projectsToBeReturned;
 	}
 	
 	public boolean assignmentExistance() {

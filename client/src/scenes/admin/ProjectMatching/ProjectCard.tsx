@@ -47,7 +47,7 @@ function collect(connect: DropTargetConnector, monitor: DropTargetMonitor) {
 class ProjectCard extends React.Component<IProjectCardProps, IProjectCardState> {
     render() {
         const { project, key, connectDropTarget, isOver } = this.props;
-        console.log(project);
+        // console.log(project);
         if (connectDropTarget === undefined) {
             return undefined;
         }

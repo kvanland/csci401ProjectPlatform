@@ -41,7 +41,9 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
       this.setState({
         projects: data
       });
-
+      if (data.length > 0) {
+        this.setState({ isLaunched: true });
+      }
       console.log(data);
     } catch (e) {
       console.error(e);
