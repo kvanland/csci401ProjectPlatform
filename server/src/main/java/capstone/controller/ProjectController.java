@@ -125,12 +125,7 @@ public class ProjectController
 	
 	@GetMapping("/getassignment")
 	public List<Project> getProjectAssignment() {
-		List<Project> projects = new ArrayList<Project>();
-		if(projectService.assignmentExistance()) {
-			System.out.println("Assignment exists!");
-			projects = projectService.getExistingAssignments();
-		}
-		return projects;
+		return projectService.getSavedProjects();
 	}
 	
 	

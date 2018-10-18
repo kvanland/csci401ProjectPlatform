@@ -97,8 +97,8 @@ public class ProjectService {
 		System.out.println("maxScore: " + maxScore + ". maxIteration: " + maxIteration);
 		
 		System.out.println(maxAlgorithm.JSONOutputWeb());
-		savedProjects = maxAlgorithm.assignedProjects();
-		return savedProjects;
+		setSavedProjects(maxAlgorithm.assignedProjects());
+		return getSavedProjects();
 	}
 	
 	public void initTables() {
@@ -228,7 +228,7 @@ public class ProjectService {
 		}
 		ac.setAssignment(finalProjects);
 		configRepo.save(ac);*/
-		savedProjects = projects;
+		setSavedProjects(projects);
 	}
 
 	public List<Project> getExistingAssignments() {
@@ -294,5 +294,13 @@ public class ProjectService {
 		}	
 		
 		return semester;
+	}
+
+	public List<Project> getSavedProjects() {
+		return savedProjects;
+	}
+
+	public void setSavedProjects(List<Project> savedProjects) {
+		this.savedProjects = savedProjects;
 	}
 }

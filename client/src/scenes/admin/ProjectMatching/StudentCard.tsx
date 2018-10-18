@@ -65,7 +65,7 @@ class StudentCard extends React.Component<IStudentCardProps, IStudentCardState> 
                 <HTMLTable striped={true} condensed={true}>
                     <tbody>
                         {student.orderedRankings.slice(0, 5).map((projectName: string, i: number) => (
-                            <tr>
+                            <tr key={`${student.id}-${projectName}`}>
                                 <td style={{ color: 'white' }}>{i}</td>
                                 <td style={{ color: 'white' }}>{projectName}</td>
                             </tr>

@@ -6,6 +6,7 @@ import { Loading } from '../../../components/Loading';
 import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
 import { MdLaunch } from 'react-icons/md';
+import { fetchServer } from 'common/server';
 
 interface IProjectMatchingProps {
 }
@@ -36,7 +37,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     this.setState({ isLoading: false });
 
     try {
-      const response = await fetch(getApiURI('/projects/getassignment'));
+      const response = await fetchServer('/projects/getassignment');
       const data = await response.json();
 
       this.setState({
@@ -45,7 +46,6 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
       if (data.length > 0) {
         this.setState({ isLaunched: true });
       }
-      console.log(data);
     } catch (e) {
       console.error(e);
     }
@@ -55,7 +55,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
   async launch() {
     this.setState({ isLaunched: true });
     try {
-      const response = await fetch(getApiURI('/projects/assignment'));
+      const response = await fetchServer('/projects/assignment');
       const data = await response.json();
 
       this.setState({
@@ -74,36 +74,21 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     return 'Let the games begin.';
   }
 
-  assignProjects() {
-    var request = new XMLHttpRequest();
-    request.withCredentials = true;
-    request.open('POST', 'http://localhost:8080/projects/assign-to-students');
-    var data = JSON.stringify(
-      this.state.projects
-    );
-    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    request.setRequestHeader('Cache-Control', 'no-cache');
-    request.send(data);
-    alert('Projects Assigned');
+  async assignProjects() {
+    const response = await fetchServer('/projects/assign-to-students', 'POST', this.state.projects);
+    if (response.ok) {
+      alert('Projects assignments were successfully emailed to students.');
+    } else {
+      alert('Could not assign projects.');
+    }
   }
 
-  saveProjects() {
-    var request = new XMLHttpRequest();
-    request.withCredentials = true;
-    request.open('POST', 'http://localhost:8080/projects/save-assignments');
-    var data = JSON.stringify(
-      this.state.projects
-    );
-    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    request.setRequestHeader('Cache-Control', 'no-cache');
-    request.send(data);
-    alert('Assignments Saved');
-  }
-
-  @autobind
-  handleKeyDownProjectRanker(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.keyCode === 13) {
-      this.launch();
+  async saveProjects() {
+    const response = await fetchServer('/projects/save-assignments', 'POST', this.state.projects);
+    if (response.ok) {
+      alert('Projects assignments were successfully saved to server.');
+    } else {
+      alert('Could not save project assignments.');
     }
   }
 
