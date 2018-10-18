@@ -1,6 +1,6 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import { Button, TextArea, HTMLSelect, HTMLTable, NonIdealState, Intent, FormGroup, Toaster, Position } from '@blueprintjs/core';
+import { Button, TextArea, HTMLSelect, HTMLTable, NonIdealState, Intent, FormGroup, Toaster, Position, Classes } from '@blueprintjs/core';
 import { fetchServer } from 'common/server';
 
 interface IStudentRegistrationProps {
@@ -94,74 +94,86 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
 
     renderForm() {
         return (
-            <div>
-                <FormGroup label="Type of User">
-                    <HTMLSelect value={this.state.userType} onChange={this.handleChangeUserType} disabled={this.state.isLoading}>
-                        <option value={UserType.Student}>Students</option>
-                        <option value={UserType.Admin} disabled={true}>Admins</option>
-                    </HTMLSelect>
-                </FormGroup>
-                <FormGroup label="List of email addresses">
-                    <TextArea
-                        fill={true}
-                        disabled={this.state.isLoading}
-                        placeholder="email@usc.edu, ..."
-                        value={this.state.emailsRaw}
-                        onChange={this.handleChangeEmails}
-                        style={{ minHeight: 150 }}
-                    />
-                </FormGroup>
-                <Button
-                    text="Next"
-                    rightIcon="arrow-right"
-                    intent={Intent.PRIMARY}
-                    onClick={this.confirmEmails}
-                    loading={this.state.isLoading}
-                />
-            </div>
+            <React.Fragment>
+                <div className={Classes.DIALOG_BODY}>
+                    <FormGroup label="Type of User">
+                        <HTMLSelect value={this.state.userType} onChange={this.handleChangeUserType} disabled={this.state.isLoading}>
+                            <option value={UserType.Student}>Students</option>
+                            <option value={UserType.Admin} disabled={true}>Admins</option>
+                        </HTMLSelect>
+                    </FormGroup>
+                    <FormGroup label="List of email addresses">
+                        <TextArea
+                            fill={true}
+                            disabled={this.state.isLoading}
+                            placeholder="email@usc.edu, ..."
+                            value={this.state.emailsRaw}
+                            onChange={this.handleChangeEmails}
+                            style={{ minHeight: 150 }}
+                        />
+                    </FormGroup>
+                </div>
+                <div className={Classes.DIALOG_FOOTER}>
+                    <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                        <Button
+                            text="Next"
+                            rightIcon="arrow-right"
+                            intent={Intent.PRIMARY}
+                            onClick={this.confirmEmails}
+                            loading={this.state.isLoading}
+                        />
+                    </div>
+                </div>
+            </React.Fragment>
         );
     }
 
     renderConfirm() {
         return (
-            <div>
-                <Button
-                    text="Go Back"
-                    icon="arrow-left"
-                    minimal={true}
-                    onClick={() => this.setState({ inviteState: InviteState.Initial })}
-                />
-                {this.state.emailsParsed.length === 0 ? (
-                    <div style={{ marginTop: 20, marginBottom: 20 }}>
-                        <NonIdealState icon="error" title="Could Not Parse Emails" />
-                    </div>
-                ) : (
-                        <div style={{ backgroundColor: 'white', marginTop: 20, marginBottom: 20, maxHeight: 350, overflow: 'auto' }}>
-                            <HTMLTable condensed={true} striped={true} style={{ width: '100%' }}>
-                                <thead>
-                                    <tr>
-                                        <td>Emails</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.state.emailsParsed.map((email) => (
-                                        <tr key={email}>
-                                            <td>{email}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </HTMLTable>
+            <React.Fragment>
+                <div className={Classes.DIALOG_BODY}>
+                    <Button
+                        text="Go Back"
+                        icon="arrow-left"
+                        minimal={true}
+                        onClick={() => this.setState({ inviteState: InviteState.Initial })}
+                    />
+                    {this.state.emailsParsed.length === 0 ? (
+                        <div style={{ marginTop: 20, marginBottom: 20 }}>
+                            <NonIdealState icon="error" title="Could Not Parse Emails" />
                         </div>
-                    )}
-                <Button
-                    text="Send Invites"
-                    icon="tick"
-                    intent={Intent.PRIMARY}
-                    onClick={this.sendInvites}
-                    loading={this.state.isLoading}
-                    disabled={this.state.emailsParsed.length === 0}
-                />
-            </div>
+                    ) : (
+                            <div style={{ backgroundColor: 'white', marginTop: 20, marginBottom: 20, maxHeight: 350, overflow: 'auto' }}>
+                                <HTMLTable condensed={true} striped={true} style={{ width: '100%' }}>
+                                    <thead>
+                                        <tr>
+                                            <td>Emails</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.emailsParsed.map((email) => (
+                                            <tr key={email}>
+                                                <td>{email}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </HTMLTable>
+                            </div>
+                        )}
+                </div>
+                <div className={Classes.DIALOG_FOOTER}>
+                    <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                        <Button
+                            text="Send Invites"
+                            icon="envelope"
+                            intent={Intent.PRIMARY}
+                            onClick={this.sendInvites}
+                            loading={this.state.isLoading}
+                            disabled={this.state.emailsParsed.length === 0}
+                        />
+                    </div>
+                </div>
+            </React.Fragment>
         );
     }
 
