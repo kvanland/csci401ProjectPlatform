@@ -34,14 +34,15 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
   }
 
   async componentDidMount() {
-    this.setState({ isLoading: false });
+    this.setState({ isLoading: true });
 
     try {
       const response = await fetchServer('/projects/getassignment');
       const data = await response.json();
       console.log(data);
       this.setState({
-        projects: data
+        projects: data,
+        isLoading: false,
       });
       if (data.length > 0) {
         this.setState({ isLaunched: true });
@@ -116,9 +117,10 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
               <Tabs.Expander />
               <Button
                 onClick={this.assignProjects}
-                intent={Intent.SUCCESS}
+                intent={Intent.NONE}
                 disabled={projects.length === 0}
                 text="Assign Projects"
+                icon="envelope"
                 large={true}
               />
               <Button
@@ -126,6 +128,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
                 intent={Intent.SUCCESS}
                 disabled={projects.length === 0}
                 text="Save Assignments"
+                icon="floppy-disk"
                 large={true}
               />
             </Tabs>
