@@ -43,6 +43,36 @@ public class ProjectService {
 	public static Map<Double, Integer> iterations = new HashMap<>();
 	private List<Project> savedProjects = new ArrayList<Project>();
 	
+	public List<Student> applyRankingsToStudents(List<Student> students, List<Project> projects) {
+		List<Ranking> rankings = rankRepo.findAll();
+		for (Ranking rank : rankings) {
+			Student student = null;
+			for (Student s : students) {
+				if (s.getUserId() == rank.getStudentId()) {
+					student = s;
+				}
+			}
+			
+			Project project = null;
+			for (Project p : projects) {
+				if (p.getProjectId() == rank.getProjectId()) {
+					project = p;
+				}
+			}
+			
+			if (project != null && student != null) {
+				String projectName = project.getProjectName();
+	            student.rankings.put(projectName, rank.getRank());
+	            student.orderedRankings.add(projectName);
+				
+				Integer p = ProjectAssignment.getStudentSatScore(rank.getRank());
+	            project.incSum_p(p);
+	            project.incN();
+			}	
+		}
+		return students;
+	}
+	
 	public List<Project> runAlgorithm() {
 		
 		for (int iteration = 0; iteration < 30; iteration++) {
@@ -56,32 +86,7 @@ public class ProjectService {
 				students.add(new Student(s));
 			}
 			
-			List<Ranking> rankings = rankRepo.findAll();
-			for (Ranking rank : rankings) {
-				Student student = null;
-				for (Student s : students) {
-					if (s.getUserId() == rank.getStudentId()) {
-						student = s;
-					}
-				}
-				
-				Project project = null;
-				for (Project p : projects) {
-					if (p.getProjectId() == rank.getProjectId()) {
-						project = p;
-					}
-				}
-				
-				if (project != null && student != null) {
-					String projectName = project.getProjectName();
-		            student.rankings.put(projectName, rank.getRank());
-		            student.orderedRankings.add(projectName);
-					
-					Integer p = ProjectAssignment.getStudentSatScore(rank.getRank());
-		            project.incSum_p(p);
-		            project.incN();
-				}	
-			}
+			students = (ArrayList<Student>) applyRankingsToStudents(students, projects);
 			
 			ProjectAssignment algorithm = new ProjectAssignment(projects, students);
 			algorithm.run(iteration, NUM_RANKED, folder_name);
@@ -245,6 +250,7 @@ public class ProjectService {
 			projectsToBeReturned.add(new Project(p));
 		}
 		List<Student> students = (List<Student>) userService.getStudents();
+		students = (ArrayList<Student>) applyRankingsToStudents(students, existingProjects);
 		for(Student s : students) {
 			int assignedIndex = existingProjects.indexOf(s.getProject());
 			if(assignedIndex > -1) {
