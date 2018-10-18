@@ -29,6 +29,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     this.launch = this.launch.bind(this);
     this.buttonTitle = this.buttonTitle.bind(this);
     this.assignProjects = this.assignProjects.bind(this);
+    this.saveProjects = this.saveProjects.bind(this);
   }
 
   async componentDidMount() {
@@ -48,7 +49,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     } catch (e) {
       console.error(e);
     }
-    
+
   }
 
   async launch() {
@@ -76,7 +77,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
   assignProjects() {
     var request = new XMLHttpRequest();
     request.withCredentials = true;
-    request.open('POST', 'http://localhost:8080/projects/save-assignments');
+    request.open('POST', 'http://localhost:8080/projects/assign-to-students');
     var data = JSON.stringify(
       this.state.projects
     );
@@ -84,6 +85,19 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     request.setRequestHeader('Cache-Control', 'no-cache');
     request.send(data);
     alert('Projects Assigned');
+  }
+
+  saveProjects() {
+    var request = new XMLHttpRequest();
+    request.withCredentials = true;
+    request.open('POST', 'http://localhost:8080/projects/save-assignments');
+    var data = JSON.stringify(
+      this.state.projects
+    );
+    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    request.setRequestHeader('Cache-Control', 'no-cache');
+    request.send(data);
+    alert('Assignments Saved');
   }
 
   @autobind
@@ -145,6 +159,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
               />
               <Tabs.Expander />
               <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" large={true} />
+              <Button onClick={this.saveProjects} intent={Intent.SUCCESS} disabled={projects.length === 0}    text="Save Assignments" large={true}/>
             </Tabs>
           </div>
           {isLaunched ? (
