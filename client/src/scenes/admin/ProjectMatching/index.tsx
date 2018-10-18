@@ -15,6 +15,7 @@ interface IProjectMatchingState {
   projects: Array<IProject>;
   isLoading: boolean;
   isLaunched: boolean;
+  isSendingEmails: boolean;
 }
 
 class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMatchingState> {
@@ -25,7 +26,8 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     this.state = {
       projects: [],
       isLoading: false,
-      isLaunched: false
+      isLaunched: false,
+      isSendingEmails: false,
     };
     this.launch = this.launch.bind(this);
     this.buttonTitle = this.buttonTitle.bind(this);
@@ -76,12 +78,14 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
   }
 
   async assignProjects() {
+    await this.setState({ isSendingEmails: true });
     const response = await fetchServer('/projects/assign-to-students', 'POST', this.state.projects);
     if (response.ok) {
       alert('Projects assignments were successfully emailed to students.');
     } else {
       alert('Could not assign projects.');
     }
+    await this.setState({ isSendingEmails: false });
   }
 
   async saveProjects() {
@@ -122,6 +126,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
                 text="Assign Projects"
                 icon="envelope"
                 large={true}
+                loading={this.state.isSendingEmails}
               />
               <Button
                 onClick={this.saveProjects}
