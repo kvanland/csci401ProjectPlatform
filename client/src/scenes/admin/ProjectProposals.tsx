@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { getApiURI } from '../../../common/server';
+import { getApiURI } from '../../common/server';
 import { InputGroup, FormGroup, HTMLTable, Button, Intent, Card, Dialog, TextArea, ButtonGroup, HTMLSelect } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 import autobind from 'autobind-decorator';

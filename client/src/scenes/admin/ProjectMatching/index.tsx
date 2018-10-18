@@ -118,66 +118,47 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
 
     return (
       <div className="csci-container">
-        {/* <div className="csci-side">
-          <Card>
-            <FormGroup>
-              <InputGroup
-                type="text"
-                placeholder="Enter number of ranked projects to consider"
-                rightElement={(
-                  <Button
-                    minimal={true}
-                    rightIcon="arrow-right"
-                    intent={Intent.PRIMARY}
-                    onClick={this.launch}
-                    text="Generate"
-                  />
-                )}
-                onKeyDown={this.handleKeyDownProjectRanker}
-              />
-            </FormGroup>
-            <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" />
-          </Card>
-        </div> */}
-        <div className="csci-main">
+        <div className="csci-main" style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ margin: 20 }}>
             <Tabs id="project-match-tabs">
-              <InputGroup
-                type="text"
-                placeholder="Enter number of ranked projects to consider"
-                rightElement={(
-                  <Button
-                    minimal={true}
-                    rightIcon="arrow-right"
-                    intent={Intent.PRIMARY}
-                    onClick={this.launch}
-                    text="Generate"
-                  />
-                )}
+              <Button
+                rightIcon="arrow-right"
+                intent={Intent.PRIMARY}
+                onClick={this.launch}
+                text="Generate Matches"
                 large={true}
-                onKeyDown={this.handleKeyDownProjectRanker}
               />
               <Tabs.Expander />
-              <Button onClick={this.assignProjects} intent={Intent.SUCCESS} disabled={projects.length === 0} text="Assign Projects" large={true} />
-              <Button onClick={this.saveProjects} intent={Intent.SUCCESS} disabled={projects.length === 0}    text="Save Assignments" large={true}/>
+              <Button
+                onClick={this.assignProjects}
+                intent={Intent.SUCCESS}
+                disabled={projects.length === 0}
+                text="Assign Projects"
+                large={true}
+              />
+              <Button
+                onClick={this.saveProjects}
+                intent={Intent.SUCCESS}
+                disabled={projects.length === 0}
+                text="Save Assignments"
+                large={true}
+              />
             </Tabs>
           </div>
-          {isLaunched ? (
-            <div>
-              {projects.length > 0 ? (
+          <div style={{ flex: 1 }}>
+            {isLaunched && (projects.length > 0 ? (
+              <div style={{ marginTop: -20 }}>
                 <ProjectsList projects={this.state.projects} />
-              ) : (
-                  <Loading />
-                )
-              }
-            </div>
-          ) : (
+              </div>
+            ) : <Loading />)}
+            {!isLaunched && (
               <NonIdealState
                 icon="search-around"
                 title="Match Students With Projects"
-                description="Enter number of ranked projects to consider on the left side panel."
+                description="Click 'Generate Matches' to match students to their preferred projects."
               />
             )}
+          </div>
         </div>
 
       </div>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DragSource } from 'react-dnd';
 import ItemTypes from './ItemTypes';
 import autobind from 'autobind-decorator';
-import { Popover } from '@blueprintjs/core';
+import { Tooltip, HTMLTable, Position } from '@blueprintjs/core';
 import { IStudent } from '../../../common/interfaces';
 
 const style = {
@@ -61,39 +61,43 @@ class StudentCard extends React.Component<IStudentCardProps, IStudentCardState> 
         const { student, key, connectDragSource, isDragging } = this.props;
 
         const popoverContent = (
-            <div style={{ padding: 20 }}>
-                <h2>Rankings</h2>
-                <ol>
-                    <li>{student.orderedRankings[0]}</li>
-                    <li>{student.orderedRankings[1]}</li>
-                    <li>{student.orderedRankings[2]}</li>
-                    <li>{student.orderedRankings[3]}</li>
-                    <li>{student.orderedRankings[4]}</li>
-                </ol>
+            <div style={{ margin: '-10px -12px' }}>
+                <HTMLTable striped={true} condensed={true}>
+                    <tbody>
+                        {student.orderedRankings.slice(0, 5).map((projectName: string, i: number) => (
+                            <tr>
+                                <td style={{ color: 'white' }}>{i}</td>
+                                <td style={{ color: 'white' }}>{projectName}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </HTMLTable>
             </div>
         );
 
         return connectDragSource(
             <tr style={{ cursor: 'move' }}>
-                <Popover
-                    interactionKind="hover"
+                <Tooltip
                     content={popoverContent}
                     targetTagName="div"
                     wrapperTagName="td"
                     disabled={isDragging}
+                    hoverOpenDelay={0}
+                    hoverCloseDelay={0}
+                    position={Position.LEFT}
                 >
                     <div
                         key={key}
                         style={{
                             opacity: isDragging ? 0.5 : 1,
+                            margin: -11,
+                            padding: 11
                         }}
                         id={'target-' + key}
-                        onMouseOver={this.showPopover}
-                        onMouseOut={this.hidePopover}
                     >
                         {student.firstName + ' ' + student.lastName}
                     </div>
-                </Popover>
+                </Tooltip>
             </tr>
         );
     }

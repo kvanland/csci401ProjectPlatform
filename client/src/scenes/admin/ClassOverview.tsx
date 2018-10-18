@@ -8,8 +8,7 @@ import {
     FormGroup,
     Input,
 } from 'reactstrap';
-import { Button, Intent } from '@blueprintjs/core';
-const viewIcon = require('../../../svg/viewIcon.svg');
+import { Button, Intent, Icon } from '@blueprintjs/core';
 
 class ClassOverview extends React.Component {
     render() {
@@ -49,7 +48,7 @@ class ClassOverview extends React.Component {
                                     <td>2/5/18</td>
                                     <td>2/7/18</td>
                                     <td>Student: Ingrid Wang</td>
-                                    <td><img src={viewIcon} /></td>
+                                    <td><Icon icon="eye-open" /></td>
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" />&nbsp;</td>
@@ -59,7 +58,7 @@ class ClassOverview extends React.Component {
                                     <td>2/8/18</td>
                                     <td>2/8/18</td>
                                     <td />
-                                    <td><img src={viewIcon} /></td>
+                                    <td><Icon icon="eye-open" /></td>
                                 </tr>
                             </tbody>
                         </Table>

@@ -119,7 +119,7 @@ class ProjectsList extends React.Component<IProjectsListProps, IProjectsListStat
     render() {
         const { projects } = this.state;
         return (
-            <div style={{ display: 'flex', flexDirection: 'row', maxWidth: '100%', flexWrap: 'wrap', padding: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'row', maxWidth: '100%', flexWrap: 'wrap', margin: 10 }}>
                 {projects.map((project: IProject) =>
                     <ProjectCard
                         project={project}
