@@ -39,7 +39,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     try {
       const response = await fetchServer('/projects/getassignment');
       const data = await response.json();
-
+      console.log(data);
       this.setState({
         projects: data
       });

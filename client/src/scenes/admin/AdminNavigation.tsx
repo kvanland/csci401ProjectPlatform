@@ -13,7 +13,7 @@ import {
 } from '@blueprintjs/core';
 import UserManagement from './UserManagement';
 import ProjectProposals from './ProjectProposals';
-import ClassOverview from './ClassOverview';
+import ClassOverview from './ClassOverview/ClassOverview';
 import ProjectMatching from './ProjectMatching';
 import {
   RouteComponentProps,

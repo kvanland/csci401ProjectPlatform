@@ -120,12 +120,18 @@ public class ProjectController
 	@GetMapping("/assignment")
 	public List<Project> projectAssignment()
 	{
+		System.out.println("RUN ALGORITHM");
 		return projectService.runAlgorithm();
 	}
 	
 	@GetMapping("/getassignment")
 	public List<Project> getProjectAssignment() {
-		return projectService.getSavedProjects();
+		List<Project> projects = new ArrayList<Project>();
+		if(projectService.assignmentExistance()) {
+			System.out.println("Assignment exists!");
+			projects = projectService.getExistingAssignments();
+		}
+		return projects;
 	}
 	
 	
