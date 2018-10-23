@@ -5,6 +5,7 @@ import autobind from 'autobind-decorator';
 import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Dialog, Tabs, Tab, TabId, Icon, HTMLSelect, Toaster, Position, Classes } from '@blueprintjs/core';
 import { InputType } from 'reactstrap/lib/Input';
 import { Loading } from '../../../components/Loading';
+import YearPicker from 'react-year-picker';
 
 const FormToast = Toaster.create({
     position: Position.TOP,
@@ -24,6 +25,7 @@ interface IUserListState {
     editLastName: string;
     editUserType: string;
     editSemester: string;
+    editYear: string;
     editEmail: string;
     originalEmail: string;
 
@@ -38,6 +40,7 @@ interface IUser {
     userType: string;
     email: string;
     semester: string;
+    year: string;
 }
 
 @autobind
@@ -53,6 +56,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         editLastName: '',
         editUserType: '',
         editSemester: '',
+        editYear: '',
         editEmail: '',
 
         originalEmail: '',
@@ -86,6 +90,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                 lastName: this.state.editLastName,
                 userType: this.state.editUserType,
                 semester: this.state.editSemester,
+                year: this.state.editYear,
                 email: this.state.editEmail,
                 originalEmail: this.state.originalEmail
             });
@@ -120,6 +125,10 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         } as any);
     }
 
+    handleYearChange (date: any) {
+        this.state.editYear = date!;
+    }
+
     editUser = (userId: number) => () => {
         const user = this.getUser(userId);
         if (user === undefined) {
@@ -134,6 +143,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
             editEmail: user.email,
             originalEmail: user.email,
             editSemester: user.semester,
+            editYear: user.year,
         });
     }
 
@@ -233,7 +243,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                             <tr key={user.userId}>
                                 <td>{user.firstName} {user.lastName}</td>
                                 <td>{user.email}</td>
-                                <td>{user.semester}</td>
+                                <td>{user.semester + user.year}</td>
                                 <td style={{ textAlign: 'right' }}>
                                     <Button onClick={this.editUser(user.userId)} text="Edit" icon="edit" />
                                 </td>
@@ -334,11 +344,12 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                             value={this.state.editSemester}
                             onChange={this.handleChange('editSemester')}
                         >
-                            <option value="SUMMER18">Summer 2018</option>
-                            <option value="FALL18">Fall 2018</option>
-                            <option value="SPRING19">Spring 2019</option>
+                            <option value="SUMMER">SUMMER</option>
+                            <option value="FALL">FALL</option>
+                            <option value="SPRING">SPRING</option>
                         </HTMLSelect>
                     </FormGroup>
+                    <YearPicker onChange={this.handleYearChange}/>
                 </div>
                 <div className={Classes.DIALOG_FOOTER}>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>

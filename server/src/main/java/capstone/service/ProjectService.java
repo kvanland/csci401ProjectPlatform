@@ -110,7 +110,7 @@ public class ProjectService {
 		Vector<Project> projects = new Vector<>();
 		Vector<Student> students = new Vector<>();
 		String line = null;
-		String currentYear = new SimpleDateFormat("yy").format(Calendar.getInstance().getTime());
+		String currentYear = new SimpleDateFormat("yyyy").format(Calendar.getInstance().getTime());
 
         try {
             BufferedReader projectsBR = new BufferedReader(new FileReader(folder_name + "/projects.txt"));
@@ -150,7 +150,8 @@ public class ProjectService {
                 newStudent.setLastName(last);
                 newStudent.setEmail(elements[0] + "@usc.edu");
                 newStudent.setPassword(EncryptPassword.encryptPassword("student"));
-                newStudent.setSemester(returnSemester()+currentYear);
+                newStudent.setSemester(returnSemester());
+                newStudent.setYear(currentYear);
                 
                 //newStudent.setStudentId(students.size());
                 //newStudent.setUserId(students.size());

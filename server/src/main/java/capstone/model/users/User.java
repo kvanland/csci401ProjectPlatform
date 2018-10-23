@@ -24,6 +24,7 @@ public class User
 	private String phone;
 	private String userType;
 	private String semester;
+	private String year;
 	
 	public Long getUserId() {
 		return userId;
@@ -102,5 +103,11 @@ public class User
 	public void setSemester(String semester)
 	{
 		this.semester = semester;
+	}
+	public String getYear() {
+		return year;
+	}
+	public void setYear(String year) {
+		this.year = year;
 	}
 }

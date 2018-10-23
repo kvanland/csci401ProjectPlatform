@@ -22,6 +22,7 @@ public class Constants {
 	public static String USER_TYPE = "userType";
 	public static String ORIGINAL_EMAIL = "originalEmail";
 	public static String SEMESTER = "semester";
+	public static String YEAR= "year";
 
 	/* Email */
 	public static String CSCI401_EMAIL = "csci401server";

@@ -112,6 +112,7 @@ public class UserController
 		String userType = info.get(Constants.USER_TYPE);
 		String phone = info.get(Constants.PHONE);
 		String semester = info.get(Constants.SEMESTER);
+		String year = info.get(Constants.YEAR);
 		
 		User user = findUser(originalEmail);
 		user.setFirstName(firstName);
@@ -120,6 +121,7 @@ public class UserController
 		user.setUserType(userType);
 		user.setPhone(phone);
 		user.setSemester(semester);
+		user.setYear(year);
 		userService.saveUser(user);
 	}
 	
