@@ -7,6 +7,7 @@ import {
 import autobind from 'autobind-decorator';
 import { InputGroup, FormGroup, Card, TextArea, Button, Intent, HTMLSelect } from '@blueprintjs/core';
 import { getApiURI } from '../../../common/server';
+import YearPicker from 'react-year-picker';
 
 interface IProjectProps {
 }
@@ -14,6 +15,7 @@ interface IProjectProps {
 interface IProjectState {
     projectName: string;
     projectSemester: string;
+    projectYear: string;
     minSize: number;
     maxSize: number;
     technologies: string;
@@ -25,7 +27,8 @@ interface IProjectState {
 class ProposalForm extends React.Component<IProjectProps, IProjectState> {
     public state: IProjectState = {
         projectName: '',
-        projectSemester: 'SUMMER18',
+        projectSemester: 'SUMMER',
+        projectYear: '',
         minSize: 0,
         maxSize: 0,
         technologies: '',
@@ -52,6 +55,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                 body: JSON.stringify({
                     projectName: this.state.projectName,
                     semester: this.state.projectSemester,
+                    year: this.state.projectYear,
                     minSize: this.state.minSize,
                     maxSize: this.state.maxSize,
                     technologies: this.state.technologies,
@@ -73,6 +77,10 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
 
     public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<any>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
+    }
+
+    public handleYearChange = (date: any) => {
+        this.state.projectYear = date!;
     }
 
     @autobind
@@ -98,18 +106,19 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                 </div>
                 <Card className="csci-form">
                     {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                    <FormGroup label="Semester" labelFor="projectSemester">
+                    <FormGroup>
                         <HTMLSelect
                             id="editSemesterType"
                             value={this.state.projectSemester}
                             onChange={this.handleChange('projectSemester')}
                         >
-                            <option defaultValue="SUMMER18">Summer 2018</option>
-                            <option value="FALL18">Fall 2018</option>
-                            <option value="SPRING19">Spring 2019</option>
+                            <option defaultValue="SUMMER">SUMMER</option>
+                            <option value="FALL">FALL</option>
+                            <option value="SPRING">SPRING</option>
                         </HTMLSelect>
                     </FormGroup>
-
+                    <YearPicker onChange={this.handleYearChange}/>
+                    
                     <FormGroup label="Minimum Size" labelFor="projectSemester">
                         <HTMLSelect
                             id="editMinSize"

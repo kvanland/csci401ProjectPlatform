@@ -38,6 +38,7 @@ public class Project implements Comparable<Object> {
 		String projectName;
 		int statusId;
 		String semester;
+		String year;
 		
 		public List<Student> getMembers() {
 			return members;
@@ -168,6 +169,14 @@ public class Project implements Comparable<Object> {
 
 		public void setSemester(String semester) {
 			this.semester = semester;
+		}
+		
+		public String getYear() {
+			return year;
+		}
+		
+		public void setYear(String year) {
+			this.year = year;
 		}
 
 		public int getMaxSize() {
