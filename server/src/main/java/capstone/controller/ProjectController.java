@@ -281,6 +281,7 @@ public class ProjectController
 		project.setStatusId(4);
 
 		project.setSemester(updated_project.getSemester());
+		project.setYear(updated_project.getYear());
 		project.setTechnologies(updated_project.getTechnologies());
 		project.setProjectName(updated_project.getProjectName());
 		project.setDescription(updated_project.getDescription());

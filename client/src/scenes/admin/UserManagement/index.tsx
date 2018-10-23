@@ -243,7 +243,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                             <tr key={user.userId}>
                                 <td>{user.firstName} {user.lastName}</td>
                                 <td>{user.email}</td>
-                                <td>{user.semester + user.year}</td>
+                                <td>{user.semester}{user.year}</td>
                                 <td style={{ textAlign: 'right' }}>
                                     <Button onClick={this.editUser(user.userId)} text="Edit" icon="edit" />
                                 </td>

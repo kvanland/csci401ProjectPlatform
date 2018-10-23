@@ -123,7 +123,8 @@ public class ProjectService {
                 newProject.setProjectId(projects.size()); // TODO: MAKE THIS DYNAMIC WITH AUTOINCREMENT
                 newProject.setMinSize(Integer.parseInt(elements[1]));
                 newProject.setMaxSize(Integer.parseInt(elements[2]));
-                newProject.setSemester(returnSemester()+currentYear);
+                newProject.setSemester(returnSemester());
+                newProject.setYear(currentYear);
                 newProject.setStakeholderId(newProject.getProjectId());
                 projects.addElement(newProject);
                 

@@ -15,6 +15,7 @@ import autobind from 'autobind-decorator';
 import { getApiURI } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardBody from 'reactstrap/lib/CardBody';
+import YearPicker from 'react-year-picker';
 
 interface IProjectProps {
     projectId: string;
@@ -45,6 +46,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         isLoading: true,
         members: [],
         semester: '',
+        year: '',
         studentNumber: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     };
 
@@ -73,6 +75,10 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
 
     public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<any>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
+    }
+
+    handleYearChange (date: any) {
+        this.state.year = date!;
     }
 
     @autobind
@@ -120,11 +126,12 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                     value={this.state.semester}
                                     onChange={this.handleChange('semester')}
                                 >
-                                    <option defaultValue="SUMMER18">Summer 2018</option>
-                                    <option value="FALL18">Fall 2018</option>
-                                    <option value="SPRING19">Spring 2019</option>
+                                    <option defaultValue="SUMMER">SUMMER</option>
+                                    <option value="FALL">FALL</option>
+                                    <option value="SPRING">SPRING</option>
                                 </HTMLSelect>
                             </FormGroup>
+                            <YearPicker onChange={this.handleYearChange}/>
 
                              <FormGroup label="Minimum Size" labelFor="projectSemester">
                                 <HTMLSelect
