@@ -44,7 +44,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
         this.state = {
             projectName: '',
             projectSemester: 'SUMMER',
-            projectYear: '',
+            projectYear: years[0],
             minSize: 0,
             maxSize: 0,
             technologies: '',

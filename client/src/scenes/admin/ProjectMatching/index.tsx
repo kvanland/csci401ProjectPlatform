@@ -39,7 +39,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
       isLoading: false,
       isLaunched: false,
       isSendingEmails: false,
-      editYear: '2018',
+      editYear: years[0],
       editSemester: 'FALL',
       listOfYears: years,
     };

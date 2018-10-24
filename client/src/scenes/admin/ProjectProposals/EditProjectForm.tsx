@@ -3,7 +3,6 @@ import { FormGroup, HTMLSelect, Button, Intent, InputGroup, Toaster, Position, C
 import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
 import { fetchServer } from 'common/server';
-import YearPicker from 'react-year-picker';
 import { MainToast } from '../../../components/MainToast';
 
 interface IEditProjectFormProps {
@@ -12,13 +11,26 @@ interface IEditProjectFormProps {
 }
 
 interface IEditProjectFormState extends IProject {
+    listOfYears: string[];
 }
 
 @autobind
 export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, IEditProjectFormState> {
-    public state: IEditProjectFormState = {
-        ...this.props.project,
-    };
+    constructor(props: IEditProjectFormProps) {
+        super(props);
+
+        const years: string[] = [];
+        const currYear = (new Date()).getFullYear();
+    
+        for (var j = 0; j < 5; j++) {
+          years.push((currYear - 2 + j).toString());
+        }
+
+        this.state = {
+            ...this.props.project,
+            listOfYears: years,
+        };
+    }
 
     async submitProjectEdit() {
 
@@ -52,10 +64,6 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
         this.setState({
             [id]: e.currentTarget.value,
         } as any);
-    }
-
-    handleYearChange(date: any) {
-        this.state.year = date!;
     }
 
     renderFormGroup(id: keyof IProject, type: string, label: string, placeholder: string) {
@@ -96,7 +104,14 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
                                         <option value="SPRING">SPRING</option>
                                     </HTMLSelect>
                                 </td>
-                                <td><YearPicker onChange={this.handleYearChange}/></td>
+                                <td>
+                                    <HTMLSelect
+                                        id="editYear"
+                                        value={this.state.year}
+                                        onChange={this.handleChange('year')}
+                                        options={this.state.listOfYears}
+                                    />
+                                </td>
                             </tr>
                         </table>
                     </FormGroup>

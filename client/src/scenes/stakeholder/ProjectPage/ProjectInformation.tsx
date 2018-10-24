@@ -70,7 +70,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
             isLoading: true,
             members: [],
             semester: '',
-            year: '2018',
+            year: years[0],
             studentNumber: numbers,
             listOfYears: years,
         };
@@ -78,7 +78,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
 
     async componentDidMount() {
         try {
-            const response = await fetch(getApiURI('/projects/') + sessionStorage.getItem('email') + '/' + this.state.projectId);
+            const response = await fetch(getApiURI('/projects/') + sessionStorage.getItem('email') + '/' + this.props.projectId);
             const data = await response.json();
 
             this.setState({
@@ -225,6 +225,14 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                                 <option value="FALL">FALL</option>
                                                 <option value="SPRING">SPRING</option>
                                             </HTMLSelect>
+                                        </td>
+                                        <td>
+                                            <HTMLSelect
+                                                id="editYear"
+                                                value={this.state.year}
+                                                onChange={this.handleChange('year')}
+                                                options={this.state.listOfYears}
+                                            />
                                         </td>
                                     </tr>
                                 </table>

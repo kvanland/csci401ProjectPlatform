@@ -1,4 +1,4 @@
-export const requestEndpointBase = '//localhost:9000';
+export const requestEndpointBase = '//localhost:8080';
 
 export function getApiURI(endpoint: string) {
     return requestEndpointBase + endpoint;
