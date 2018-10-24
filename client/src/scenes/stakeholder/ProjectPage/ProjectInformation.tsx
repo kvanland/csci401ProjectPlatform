@@ -9,21 +9,29 @@ import {
     Card,
     HTMLTable,
     HTMLSelect,
-    Intent
+    Intent,
+    Toaster,
+    Position,
 } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { getApiURI } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardBody from 'reactstrap/lib/CardBody';
-import YearPicker from 'react-year-picker';
+import { fetchServer } from 'common/server';
+
+const FormToast = Toaster.create({
+    position: Position.TOP,
+});
 
 interface IProjectProps {
     projectId: string;
 }
+
 interface IProjectState extends IProject {
     students: Array<IStudentInfo>;
     isLoading: Boolean;
-    studentNumber: Array<number>;
+    studentNumber: number[];
+    listOfYears: string[];
 }
 
 interface IStudentInfo {
@@ -35,24 +43,42 @@ interface IStudentInfo {
 
 @autobind
 class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
-    public state: IProjectState = {
-        students: [],
-        projectId: 0,
-        projectName: '',
-        minSize: '',
-        technologies: '',
-        background: '',
-        description: '',
-        isLoading: true,
-        members: [],
-        semester: '',
-        year: '',
-        studentNumber: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-    };
+    constructor(props: IProjectProps) {
+        super(props);
+
+        const numbers: number[] = [];
+
+        for (var i = 0; i < 21; i++) {
+            numbers.push(i);
+        }
+
+        const years: string[] = [];
+        const currYear = (new Date()).getFullYear();
+    
+        for (var j = 0; j < 5; j++) {
+          years.push((currYear - 2 + j).toString());
+        }
+
+        this.state = {
+            students: [],
+            projectId: 0,
+            projectName: '',
+            minSize: '',
+            technologies: '',
+            background: '',
+            description: '',
+            isLoading: true,
+            members: [],
+            semester: '',
+            year: '2018',
+            studentNumber: numbers,
+            listOfYears: years,
+        };
+    }
 
     async componentDidMount() {
         try {
-            const response = await fetch(getApiURI('/projects/') + sessionStorage.getItem('email') + '/' + this.props.projectId);
+            const response = await fetch(getApiURI('/projects/') + sessionStorage.getItem('email') + '/' + this.state.projectId);
             const data = await response.json();
 
             this.setState({
@@ -77,11 +103,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    handleYearChange (date: any) {
-        this.state.year = date!;
-    }
-
-    @autobind
+/*     @autobind
     async submitProjectEdit() {
         var request = new XMLHttpRequest();
         request.withCredentials = true;
@@ -100,6 +122,25 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                 }
             }
         };
+    } */
+
+    async submitProjectEdit() {
+
+        const response = await fetchServer(`/projects/edit/${this.state.projectId}`, 'POST', this.state);
+
+        if (response.ok) {
+            FormToast.show({
+                intent: Intent.SUCCESS,
+                icon: 'tick',
+                message: 'Project has been updated successfully!',
+            });
+        } else {
+            FormToast.show({
+                intent: Intent.SUCCESS,
+                icon: 'error',
+                message: 'Change could not be made at this time',
+            });
+        }
     }
 
     render() {
@@ -119,19 +160,6 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                     placeholder="Project Name"
                                 />
                             </FormGroup>
-
-                            <FormGroup label="Project Semester">
-                                <HTMLSelect
-                                    id="editUserType"
-                                    value={this.state.semester}
-                                    onChange={this.handleChange('semester')}
-                                >
-                                    <option defaultValue="SUMMER">SUMMER</option>
-                                    <option value="FALL">FALL</option>
-                                    <option value="SPRING">SPRING</option>
-                                </HTMLSelect>
-                            </FormGroup>
-                            <YearPicker onChange={this.handleYearChange}/>
 
                              <FormGroup label="Minimum Size" labelFor="projectSemester">
                                 <HTMLSelect
@@ -182,6 +210,24 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                     placeholder="Description"
                                     onChange={this.handleChange('description')}
                                 />
+                            </FormGroup>
+
+                             <FormGroup label="Project Semester">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <HTMLSelect
+                                                id="editSemester"
+                                                value={this.state.semester}
+                                                onChange={this.handleChange('semester')}
+                                            >
+                                                <option value="SUMMER">SUMMER</option>
+                                                <option value="FALL">FALL</option>
+                                                <option value="SPRING">SPRING</option>
+                                            </HTMLSelect>
+                                        </td>
+                                    </tr>
+                                </table>
                             </FormGroup>
 
                             <FormGroup>

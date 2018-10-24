@@ -80,23 +80,29 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
             <React.Fragment>
                 <div className={Classes.DIALOG_BODY}>
                     {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                    <FormGroup label="Semester" labelFor="semester">
-                        <HTMLSelect
-                            id="semester"
-                            value={this.state.semester}
-                            onChange={this.handleChange('semester')}
-                        >
-                            <option value="SUMMER">SUMMER</option>
-                            <option value="FALL">FALL</option>
-                            <option value="SPRING">SPRING</option>
-                        </HTMLSelect>
-                    </FormGroup>
-                    <YearPicker onChange={this.handleYearChange}/>
                     {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
                     {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}
                     {this.renderFormGroup('description', 'text', 'Project Description', 'Project Description')}
+                    <FormGroup label="Semester" labelFor="semester">
+                    <table>
+                            <tr>
+                                <td>
+                                    <HTMLSelect
+                                        id="editSemester"
+                                        value={this.state.semester}
+                                        onChange={this.handleChange('semester')}
+                                    >
+                                        <option value="SUMMER">SUMMER</option>
+                                        <option value="FALL">FALL</option>
+                                        <option value="SPRING">SPRING</option>
+                                    </HTMLSelect>
+                                </td>
+                                <td><YearPicker onChange={this.handleYearChange}/></td>
+                            </tr>
+                        </table>
+                    </FormGroup>
                     {/* <FormGroup label="Description" labelFor="description">
                         <TextArea
                             placeholder="Description"

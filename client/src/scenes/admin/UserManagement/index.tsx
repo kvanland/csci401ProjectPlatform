@@ -339,17 +339,23 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                         </HTMLSelect>
                     </FormGroup>
                     <FormGroup label="Semester" labelFor="editSemester">
-                        <HTMLSelect
-                            id="editSemester"
-                            value={this.state.editSemester}
-                            onChange={this.handleChange('editSemester')}
-                        >
-                            <option value="SUMMER">SUMMER</option>
-                            <option value="FALL">FALL</option>
-                            <option value="SPRING">SPRING</option>
-                        </HTMLSelect>
+                        <table>
+                            <tr>
+                                <td>
+                                    <HTMLSelect
+                                        id="editSemester"
+                                        value={this.state.editSemester}
+                                        onChange={this.handleChange('editSemester')}
+                                    >
+                                        <option value="SUMMER">SUMMER</option>
+                                        <option value="FALL">FALL</option>
+                                        <option value="SPRING">SPRING</option>
+                                    </HTMLSelect>
+                                </td>
+                                <td><YearPicker onChange={this.handleYearChange}/></td>
+                            </tr>
+                        </table>
                     </FormGroup>
-                    <YearPicker onChange={this.handleYearChange}/>
                 </div>
                 <div className={Classes.DIALOG_FOOTER}>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>
