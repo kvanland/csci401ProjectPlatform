@@ -46,9 +46,18 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
     };
   }
 
-  async componentDidMount() {
-    this.setState({ isLoading: true });
+  componentDidMount() {
+    this.fetchAssignments();
+  }
 
+  async componentDidUpdate(oldProps: IProjectMatchingProps, oldState: IProjectMatchingState) {
+    if (oldState.editSemester !== this.state.editSemester || oldState.editYear !== this.state.editYear) {
+      this.fetchAssignments();
+    }
+  }
+
+  async fetchAssignments() {
+    this.setState({ isLoading: true });
     try {
       const response = await fetchServer(`/projects/getassignment?semester=${this.state.editSemester}&year=${this.state.editYear}`);
       const data = await response.json();
@@ -59,11 +68,12 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
       });
       if (data.length > 0) {
         this.setState({ isLaunched: true });
+      } else {
+        this.setState({ isLoading: false });
       }
     } catch (e) {
       console.error(e);
     }
-
   }
 
   handleChange = (id: keyof IProjectMatchingState) => (e: React.FormEvent<any>) => {
@@ -145,16 +155,17 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
                   <option value="FALL">FALL</option>
                   <option value="SPRING">SPRING</option>
                 </HTMLSelect>
+
+                <HTMLSelect
+                  id="editYear"
+                  value={this.state.editYear}
+                  onChange={this.handleChange('editYear')}
+                >
+                  {this.state.listOfYears.map((year: string) => (
+                    <option value={year} key={year}>{year}</option>
+                  ))}
+                </HTMLSelect>
               </FormGroup>
-              <HTMLSelect
-                id="editYear"
-                value={this.state.editYear}
-                onChange={this.handleChange('editYear')}
-              >
-                {this.state.listOfYears.map((year: string) => (
-                  <option value={year} key={year}>{year}</option>
-                ))}
-              </HTMLSelect>
               <Tabs.Expander />
               <Button
                 onClick={this.assignProjects}

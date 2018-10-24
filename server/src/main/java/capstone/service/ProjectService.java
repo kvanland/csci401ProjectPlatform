@@ -245,7 +245,7 @@ public class ProjectService {
 		}
 		System.out.println(ac.getAssignment());
 		return ac.getAssignment();*/
-		
+		System.out.println(semester + " " + year);
 		List<Project> existingProjects = repository.findAll();
 		List<Project> projectsToBeReturned = new ArrayList<Project>();
 		for(Project p : existingProjects) {
