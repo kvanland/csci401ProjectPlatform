@@ -7,6 +7,8 @@ import ItemTypes from './ItemTypes';
 import { getApiURI } from '../../../common/server';
 import { Button, Intent, NonIdealState, Spinner, Card, Tooltip } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
+import { fetchServer } from 'common/server';
+import { MainToast } from 'components/MainToast';
 
 const cardTarget = {
     drop() {
@@ -58,30 +60,18 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
         };
     }
 
-    submitClicked() {
+    async submitClicked() {
         var submit = confirm('Are you sure you want to submit rankings?');
         if (submit) {
-            var request = new XMLHttpRequest();
-            request.withCredentials = true;
-            request.open('POST', 'http://localhost:8080/projects/' + sessionStorage.getItem('email') + '/submit-ranking');
-            request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-            /*var data = JSON.stringify({
-            project1: this.state.projectCards[0].projectName,
-            project2: this.state.projectCards[1].projectName,
-            project3: this.state.projectCards[2].projectName,
-            project4: this.state.projectCards[3].projectName,
-            project5: this.state.projectCards[4].projectName
-            });*/
-
-            this.state.projectCards.map((project: IProject) => (
-                this.state.rankingData.push(project.projectId)
-            ));
-            var data = JSON.stringify(
-                this.state.rankingData
-            );
-            request.setRequestHeader('Cache-Control', 'no-cache');
-            request.send(data);
-            alert('Project rankings have been submitted!');
+            const email = sessionStorage.getItem('email');
+            const response = await fetchServer(`/projects/${email}/submit-ranking`, 'POST', this.state.rankingData);
+            if (response.ok) {
+                MainToast.show({
+                    message: 'Project rankings have been submitted!',
+                    icon: 'tick',
+                    intent: Intent.SUCCESS,
+                });
+            }
             this.setState({ submitted: true });
         }
     }
@@ -90,7 +80,7 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
         this.setState({ isLoading: true });
 
         try {
-            const response = await fetch(getApiURI('/projects/projects/' + sessionStorage.getItem('email') ));
+            const response = await fetch(getApiURI('/projects/projects/' + sessionStorage.getItem('email')));
             const data = await response.json();
 
             this.setState({

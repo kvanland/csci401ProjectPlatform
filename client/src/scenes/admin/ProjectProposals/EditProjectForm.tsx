@@ -4,10 +4,7 @@ import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
 import { fetchServer } from 'common/server';
 import YearPicker from 'react-year-picker';
-
-const FormToast = Toaster.create({
-    position: Position.TOP,
-});
+import { MainToast } from '../../../components/MainToast';
 
 interface IEditProjectFormProps {
     project: IProject;
@@ -28,14 +25,14 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
         const response = await fetchServer(`/projects/edit/${this.state.projectId}`, 'POST', this.state);
 
         if (response.ok) {
-            FormToast.show({
+            MainToast.show({
                 intent: Intent.SUCCESS,
                 icon: 'tick',
                 message: 'Project has been updated successfully!',
             });
             this.props.editProjectSuccess();
         } else {
-            FormToast.show({
+            MainToast.show({
                 intent: Intent.SUCCESS,
                 icon: 'error',
                 message: 'Change could not be made at this time',
@@ -57,7 +54,7 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
         } as any);
     }
 
-    handleYearChange (date: any) {
+    handleYearChange(date: any) {
         this.state.year = date!;
     }
 
@@ -91,7 +88,7 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
                             <option value="SPRING">SPRING</option>
                         </HTMLSelect>
                     </FormGroup>
-                    <YearPicker onChange={this.handleYearChange}/>
+                    <YearPicker onChange={this.handleYearChange} />
                     {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}

@@ -13,10 +13,7 @@ import {
 import autobind from 'autobind-decorator';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { getApiURI } from '../../common/server';
-
-const LoginToast = Toaster.create({
-    position: Position.TOP,
-});
+import { MainToast } from '../../components/MainToast';
 
 interface ILoginProps extends RouteComponentProps<any> {
 }
@@ -98,7 +95,7 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
         } catch (e) {
             console.error(e);
             await this.setState({ hasError: true, isLoading: false });
-            LoginToast.show({
+            MainToast.show({
                 intent: Intent.DANGER,
                 icon: 'error',
                 message: 'Email or password does not match our records.',

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import { FormGroup, Intent, Button, InputGroup, TextArea, Card } from '@blueprintjs/core';
+import { fetchServer } from 'common/server';
+import { MainToast } from '../../components/MainToast';
 
 interface IPeerReviewProps {
 }
@@ -24,13 +26,8 @@ class PeerReviewForm extends React.Component<IPeerReviewProps, IPeerReviewState>
     };
 
     @autobind
-    submitClicked() {
-
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080/peerReviewForm/');
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
+    async submitClicked() {
+        const response = await fetchServer('/peerReviewForm', 'POST', {
             uscusername: this.state.uscusername,
             uscidnumber: this.state.uscidnumber,
             teammateaddress: this.state.teammateaddress,
@@ -38,15 +35,14 @@ class PeerReviewForm extends React.Component<IPeerReviewProps, IPeerReviewState>
             positivefeedback: this.state.positivefeedback,
             negativefeedback: this.state.negativefeedback
         });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
-        alert(request.responseText + 'Your request has been submitted!');
-        request.onreadystatechange = function () {
-            if (request.readyState === 4) {
-                alert('Peer Review submission SUCCESSFUL!');
-            }
-        };
 
+        if (response.ok) {
+            MainToast.show({
+                message: 'Peer Review submitted successfully',
+                icon: 'tick',
+                intent: Intent.SUCCESS,
+            });
+        }
     }
 
     handleChangeInput = (id: keyof IPeerReviewState) => (e: React.ChangeEvent<HTMLInputElement>) => {

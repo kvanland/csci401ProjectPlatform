@@ -4,10 +4,7 @@ import { getApiURI } from '../../common/server';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
 import { Card, FormGroup, InputGroup, Button, Intent, Callout, IconName, Toaster, Position } from '@blueprintjs/core';
-
-const RegisterToast = Toaster.create({
-    position: Position.TOP,
-});
+import { MainToast } from 'components/MainToast';
 
 interface IStudentRegistrationProps extends RouteComponentProps<any> {
 }
@@ -65,7 +62,7 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
                 throw Error(response.statusText);
             }
             await this.setState({ isLoading: false });
-            RegisterToast.show({
+            MainToast.show({
                 intent: Intent.SUCCESS,
                 icon: 'tick',
                 message: 'User created, please log in.',
@@ -75,7 +72,7 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         } catch (e) {
             console.error(e);
             await this.setState({ hasError: true, isLoading: false });
-            RegisterToast.show({
+            MainToast.show({
                 intent: Intent.DANGER,
                 icon: 'error',
                 message: 'Could not create an account because a problem occurred.',

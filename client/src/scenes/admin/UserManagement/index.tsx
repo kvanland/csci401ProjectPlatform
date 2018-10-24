@@ -6,10 +6,7 @@ import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Di
 import { InputType } from 'reactstrap/lib/Input';
 import { Loading } from '../../../components/Loading';
 import YearPicker from 'react-year-picker';
-
-const FormToast = Toaster.create({
-    position: Position.TOP,
-});
+import { MainToast } from 'components/MainToast';
 
 interface IUserListProps {
 }
@@ -97,13 +94,13 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
 
             this.cancelEdit();
 
-            FormToast.show({
+            MainToast.show({
                 intent: Intent.SUCCESS,
                 icon: 'tick',
                 message: 'User has been updated successfully!',
             });
         } catch (e) {
-            FormToast.show({
+            MainToast.show({
                 intent: Intent.SUCCESS,
                 icon: 'error',
                 message: 'An error occurred: could not update user.',
@@ -125,7 +122,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         } as any);
     }
 
-    handleYearChange (date: any) {
+    handleYearChange(date: any) {
         this.state.editYear = date!;
     }
 
@@ -349,7 +346,7 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                             <option value="SPRING">SPRING</option>
                         </HTMLSelect>
                     </FormGroup>
-                    <YearPicker onChange={this.handleYearChange}/>
+                    <YearPicker onChange={this.handleYearChange} />
                 </div>
                 <div className={Classes.DIALOG_FOOTER}>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>

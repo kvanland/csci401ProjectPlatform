@@ -16,6 +16,8 @@ import { getApiURI } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardBody from 'reactstrap/lib/CardBody';
 import YearPicker from 'react-year-picker';
+import { fetchServer } from 'common/server';
+import { MainToast } from '../../../components/MainToast';
 
 interface IProjectProps {
     projectId: string;
@@ -77,29 +79,26 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    handleYearChange (date: any) {
+    handleYearChange(date: any) {
         this.state.year = date!;
     }
 
     @autobind
     async submitProjectEdit() {
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-
-        request.open('POST', 'http://localhost:8080/projects/editMinor/' + this.state.projectId);
-
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(JSON.stringify(this.state));
-        request.onreadystatechange = function () {
-            if (this.readyState === this.DONE) {
-                if (request.status === 200) {
-                    alert('Change made successfully');
-                } else {
-                    alert('Change could not be made at this time');
-                }
-            }
-        };
+        const response = await fetchServer('/projects/editMinor' + this.state.projectId, 'POST', this.state);
+        if (response.ok && response.status === 200) {
+            MainToast.show({
+                message: 'Change made successfully!',
+                icon: 'tick',
+                intent: Intent.SUCCESS,
+            });
+        } else {
+            MainToast.show({
+                message: 'Change made successfully!',
+                icon: 'error',
+                intent: Intent.DANGER,
+            });
+        }
     }
 
     render() {
@@ -131,9 +130,9 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                     <option value="SPRING">SPRING</option>
                                 </HTMLSelect>
                             </FormGroup>
-                            <YearPicker onChange={this.handleYearChange}/>
+                            <YearPicker onChange={this.handleYearChange} />
 
-                             <FormGroup label="Minimum Size" labelFor="projectSemester">
+                            <FormGroup label="Minimum Size" labelFor="projectSemester">
                                 <HTMLSelect
                                     id="editMinSize"
                                     value={this.state.minSize}
