@@ -3,6 +3,7 @@ import { FormGroup, HTMLSelect, Button, Intent, InputGroup, Toaster, Position, C
 import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
 import { fetchServer } from 'common/server';
+import YearPicker from 'react-year-picker';
 
 const FormToast = Toaster.create({
     position: Position.TOP,
@@ -56,6 +57,10 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
         } as any);
     }
 
+    handleYearChange (date: any) {
+        this.state.year = date!;
+    }
+
     renderFormGroup(id: keyof IProject, type: string, label: string, placeholder: string) {
         return (
             <FormGroup label={label} labelFor={id}>
@@ -81,11 +86,12 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
                             value={this.state.semester}
                             onChange={this.handleChange('semester')}
                         >
-                            <option value="SUMMER18">Summer 2018</option>
-                            <option value="FALL18">Fall 2018</option>
-                            <option value="SPRING19">Spring 2019</option>
+                            <option value="SUMMER">SUMMER</option>
+                            <option value="FALL">FALL</option>
+                            <option value="SPRING">SPRING</option>
                         </HTMLSelect>
                     </FormGroup>
+                    <YearPicker onChange={this.handleYearChange}/>
                     {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}

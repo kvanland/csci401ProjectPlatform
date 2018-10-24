@@ -169,7 +169,7 @@ class ProjectProposalApprovalForm extends React.Component<IProjectListProps, IPr
                     <b>{project.projectName}</b>
                     <p>{project.description}</p>
                 </td>
-                <td>{project.semester}</td>
+                <td>{project.semester}{project.year}</td>
                 <td>{this.getStatus(project.statusId)}</td>
                 <td>{project.minSize}–{project.maxSize}</td>
                 <td style={{ textAlign: 'right' }}>

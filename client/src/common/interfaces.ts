@@ -7,6 +7,7 @@ export interface IUser {
     organization?: string;
     userType?: string;
     semester?: string;
+    year?: string;
 }
 
 export interface IStudent extends IUser {
@@ -23,6 +24,7 @@ export interface IProject {
     background?: string;
     description?: string;
     semester?: string;
+    year?: string;
 
     adminComments?: string;
     c?: number;

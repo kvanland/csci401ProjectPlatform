@@ -136,8 +136,8 @@ public class ProjectController
 	
 	
 	@GetMapping("/assignment/exists")
-	public String assignmentExists() {
-		List<Project> existing = projectService.getExistingAssignments();
+	public  @ResponseBody String assignmentExists(@RequestBody String semester, String year) {
+		List<Project> existing = projectService.getExistingAssignments(semester, year);
 		if (existing != null && existing.size() > 0) {
 			return "true";
 		}
@@ -281,6 +281,7 @@ public class ProjectController
 		project.setStatusId(4);
 
 		project.setSemester(updated_project.getSemester());
+		project.setYear(updated_project.getYear());
 		project.setTechnologies(updated_project.getTechnologies());
 		project.setProjectName(updated_project.getProjectName());
 		project.setDescription(updated_project.getDescription());
