@@ -1,12 +1,13 @@
 import * as React from 'react';
 import ProjectsList from './ProjectsList';
 import { getApiURI } from '../../../common/server';
-import { InputGroup, Button, Intent, NonIdealState, Tabs } from '@blueprintjs/core';
+import { InputGroup, Button, Intent, NonIdealState, Tabs, HTMLSelect, FormGroup } from '@blueprintjs/core';
 import { Loading } from '../../../components/Loading';
 import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
 import { MdLaunch } from 'react-icons/md';
 import { fetchServer } from 'common/server';
+import YearPicker from 'react-year-picker';
 
 interface IProjectMatchingProps {
 }
@@ -16,30 +17,40 @@ interface IProjectMatchingState {
   isLoading: boolean;
   isLaunched: boolean;
   isSendingEmails: boolean;
+  editYear: string;
+  editSemester: string;
+  listOfYears: string[];
 }
 
+@autobind
 class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMatchingState> {
 
   constructor(props: IProjectMatchingProps) {
     super(props);
+
+    const years: string[] = [];
+    const currYear = (new Date()).getFullYear();
+
+    for (var i = 0; i < 5; i++) {
+      years.push((currYear - 2 + i).toString());
+    }
 
     this.state = {
       projects: [],
       isLoading: false,
       isLaunched: false,
       isSendingEmails: false,
+      editYear: '2018',
+      editSemester: 'FALL',
+      listOfYears: years,
     };
-    this.launch = this.launch.bind(this);
-    this.buttonTitle = this.buttonTitle.bind(this);
-    this.assignProjects = this.assignProjects.bind(this);
-    this.saveProjects = this.saveProjects.bind(this);
   }
 
   async componentDidMount() {
     this.setState({ isLoading: true });
 
     try {
-      const response = await fetchServer('/projects/getassignment');
+      const response = await fetchServer(`/projects/getassignment?semester=${this.state.editSemester}&year=${this.state.editYear}`);
       const data = await response.json();
       console.log(data);
       this.setState({
@@ -53,6 +64,12 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
       console.error(e);
     }
 
+  }
+
+  handleChange = (id: keyof IProjectMatchingState) => (e: React.FormEvent<any>) => {
+    this.setState({
+      [id]: e.currentTarget.value,
+    } as any);
   }
 
   async launch() {
@@ -118,6 +135,26 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
                 text="Generate Matches"
                 large={true}
               />
+              <FormGroup label="Semester" labelFor="editSemester">
+                <HTMLSelect
+                  id="editSemester"
+                  value={this.state.editSemester}
+                  onChange={this.handleChange('editSemester')}
+                >
+                  <option value="SUMMER">SUMMER</option>
+                  <option value="FALL">FALL</option>
+                  <option value="SPRING">SPRING</option>
+                </HTMLSelect>
+              </FormGroup>
+              <HTMLSelect
+                id="editYear"
+                value={this.state.editYear}
+                onChange={this.handleChange('editYear')}
+              >
+                {this.state.listOfYears.map((year: string) => (
+                  <option value={year} key={year}>{year}</option>
+                ))}
+              </HTMLSelect>
               <Tabs.Expander />
               <Button
                 onClick={this.assignProjects}

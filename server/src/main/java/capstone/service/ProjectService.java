@@ -238,7 +238,7 @@ public class ProjectService {
 		setSavedProjects(projects);
 	}
 
-	public List<Project> getExistingAssignments() {
+	public List<Project> getExistingAssignments(String semester, String year) {
 		/*AdminConfiguration ac = configRepo.findById(Long.valueOf(1));
 		if (ac == null) {
 			return null;
@@ -249,18 +249,23 @@ public class ProjectService {
 		List<Project> existingProjects = repository.findAll();
 		List<Project> projectsToBeReturned = new ArrayList<Project>();
 		for(Project p : existingProjects) {
-			projectsToBeReturned.add(new Project(p));
+			if(p.getSemester().equals(semester) && p.getYear().equals(year))
+			{
+				projectsToBeReturned.add(new Project(p));
+			}
+			
 		}
 		List<Student> students = (List<Student>) userService.getStudents();
 		students = (ArrayList<Student>) applyRankingsToStudents(students, existingProjects);
 		for(Student s : students) {
-			int assignedIndex = existingProjects.indexOf(s.getProject());
-			if(assignedIndex > -1) {
-				projectsToBeReturned.get(assignedIndex).members.add(s);
+			if(s.getSemester().equals(semester) && s.getYear().equals(year)) {
+				int assignedIndex = existingProjects.indexOf(s.getProject());
+				if(assignedIndex > -1 && assignedIndex < projectsToBeReturned.size()) {
+					projectsToBeReturned.get(assignedIndex).members.add(s);
+				}
 			}
 		}
-		
-		System.out.println(projectsToBeReturned.get(0).getMembers());
+		System.out.println(projectsToBeReturned.size());
 		return projectsToBeReturned;
 	}
 	

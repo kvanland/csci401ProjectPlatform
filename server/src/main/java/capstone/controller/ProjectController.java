@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -125,18 +126,18 @@ public class ProjectController
 	}
 	
 	@GetMapping("/getassignment")
-	public List<Project> getProjectAssignment() {
+	public @ResponseBody List<Project> getProjectAssignment(@RequestParam String semester, String year) {
 		List<Project> projects = new ArrayList<Project>();
 		if(projectService.assignmentExistance()) {
 			System.out.println("Assignment exists!");
-			projects = projectService.getExistingAssignments();
+			projects = projectService.getExistingAssignments(semester, year);
 		}
 		return projects;
 	}
 	
 	
 	@GetMapping("/assignment/exists")
-	public  @ResponseBody String assignmentExists(@RequestBody String semester, String year) {
+	public  @ResponseBody String assignmentExists(@RequestParam String semester, String year) {
 		List<Project> existing = projectService.getExistingAssignments(semester, year);
 		if (existing != null && existing.size() > 0) {
 			return "true";
