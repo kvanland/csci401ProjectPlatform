@@ -2,6 +2,8 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import { InputType } from 'reactstrap/lib/Input';
 import { Card, Button, Intent, FormGroup, InputGroup, HTMLTable, TextArea } from '@blueprintjs/core';
+import { fetchServer } from 'common/server';
+import { MainToast } from '../../../components/MainToast';
 
 interface IWeeklyReportProps {
 }
@@ -84,13 +86,9 @@ class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReport
     };
 
     @autobind
-    submitClicked() {
+    async submitClicked() {
 
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080/weeklyReportForm/');
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
+        const response = await fetchServer('/weeklyReportForm', 'POST', {
             name: this.state.name,
             uscusername: this.state.uscusername,
             project: this.state.project,
@@ -124,14 +122,15 @@ class WeeklyReportForm extends React.Component<IWeeklyReportProps, IWeeklyReport
             nextWeekTasksD6: this.state.nextWeekTasksD6,
             nextWeekTasksD7: this.state.nextWeekTasksD7
         });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
-        alert(request.responseText + 'Your request has been submitted!');
-        request.onreadystatechange = function () {
-            if (request.readyState === 4) {
-                alert('Weekly Report submission SUCCESSFUL!');
-            }
-        };
+
+        if (response.ok) {
+            alert('Weekly Report submission SUCCESSFUL!');
+            MainToast.show({
+                message: 'Weekly report submitted successfully!',
+                intent: Intent.SUCCESS,
+                icon: 'tick',
+            });
+        }
 
     }
 

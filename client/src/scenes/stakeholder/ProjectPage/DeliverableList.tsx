@@ -9,6 +9,7 @@ import CardHeader from 'reactstrap/lib/CardHeader';
 import CardTitle from 'reactstrap/lib/CardTitle';
 import CardBody from 'reactstrap/lib/CardBody';
 import { Loading } from 'components/Loading';
+import { fetchServer } from 'common/server';
 
 interface IDeliverable {
     id: number;
@@ -38,27 +39,13 @@ class DeliverableList extends React.Component<IDeliverableProps, IDeliverableSta
     }
 
     approveDeliverable(deliverableNumber: number) {
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080/deliverables/' + this.props.projectId + '/' + deliverableNumber + '/approve');
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
-            status: 'Approved'
-        });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
+        const { projectId } = this.props;
+        fetchServer(`/deliverables/${projectId}/${deliverableNumber}/approve`, 'POST', { status: 'Approved' });
     }
 
     rejectDeliverable(deliverableNumber: number) {
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open('POST', 'http://localhost:8080/deliverables/' + this.props.projectId + '/' + deliverableNumber + '/reject');
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        var data = JSON.stringify({
-            status: 'Rejected'
-        });
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(data);
+        const { projectId } = this.props;
+        fetchServer(`/deliverables/${projectId}/${deliverableNumber}/reject`, 'POST', { status: 'Rejected' });
     }
 
     async componentDidMount() {

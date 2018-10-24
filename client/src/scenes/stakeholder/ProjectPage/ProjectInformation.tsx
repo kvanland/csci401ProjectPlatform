@@ -161,7 +161,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                 />
                             </FormGroup>
 
-                             <FormGroup label="Minimum Size" labelFor="projectSemester">
+                             <FormGroup label="Minimum Size" labelFor="minSize">
                                 <HTMLSelect
                                     id="editMinSize"
                                     value={this.state.minSize}
@@ -170,7 +170,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                 />
                             </FormGroup>
 
-                            <FormGroup label="Maximum size" labelFor="minSize">
+                            <FormGroup label="Maximum size" labelFor="maxSize">
                                 <HTMLSelect
                                     id="editMaxSize"
                                     value={this.state.maxSize}

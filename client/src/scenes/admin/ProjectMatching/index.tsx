@@ -6,10 +6,7 @@ import { Loading } from '../../../components/Loading';
 import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
 import { fetchServer } from 'common/server';
-
-const FormToast = Toaster.create({
-  position: Position.TOP,
-});
+import { MainToast } from '../../../components/MainToast';
 
 interface IProjectMatchingProps {
 }
@@ -91,7 +88,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
       const response = await fetchServer(`/projects/assignment?semester=${this.state.editSemester}&year=${this.state.editYear}`);
       const data = await response.json();
       if (data.length === 0) {
-        FormToast.show({
+        MainToast.show({
           intent: Intent.DANGER,
           icon: 'tick',
           message: 'No possible assignments.',

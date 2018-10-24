@@ -2,6 +2,7 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import { Button, TextArea, HTMLSelect, HTMLTable, NonIdealState, Intent, FormGroup, Toaster, Position, Classes } from '@blueprintjs/core';
 import { fetchServer } from 'common/server';
+import { MainToast } from 'components/MainToast';
 
 interface IStudentRegistrationProps {
 }
@@ -21,10 +22,6 @@ enum UserType {
     Student = 'student',
     Admin = 'admin',
 }
-
-const FormToast = Toaster.create({
-    position: Position.TOP,
-});
 
 @autobind
 class StudentRegistrationForm extends React.Component<IStudentRegistrationProps, IStudentRegistrationState> {
@@ -68,7 +65,7 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
             });
         } catch (e) {
             console.error(e);
-            FormToast.show({
+            MainToast.show({
                 intent: Intent.DANGER,
                 icon: 'error',
                 message: 'Could not send invites to email addresses.',

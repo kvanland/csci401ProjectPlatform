@@ -3,11 +3,8 @@ import { IUser } from '../../../common/interfaces';
 import { getApiURI, fetchServer } from '../../../common/server';
 import { FormGroup, InputGroup, Card, Button, Intent, IconName, Toaster, Position } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
-import { Loading } from '../../../components/Loading';
-
-const FormToast = Toaster.create({
-    position: Position.TOP,
-});
+import { Loading } from 'components/Loading';
+import { MainToast } from '../../../components/MainToast';
 
 interface IProfileProps {
 }
@@ -47,7 +44,7 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                 originalEmail: data.email,
             });
         } catch (e) {
-            FormToast.show({
+            MainToast.show({
                 message: 'An error occurred: could not retrieve stakeholder profile.',
                 intent: Intent.DANGER,
                 icon: 'error',
@@ -71,14 +68,14 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
                 semester,
             });
             await this.fetchProfileData();
+            this.setState({ isLoading: false });
         } catch (e) {
-            FormToast.show({
+            this.setState({ isLoading: false });
+            MainToast.show({
                 message: 'An error occurred: could not update profile.',
                 intent: Intent.DANGER,
                 icon: 'error',
             });
-        } finally {
-            this.setState({ isLoading: false });
         }
     }
 
