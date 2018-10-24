@@ -1,13 +1,15 @@
 import * as React from 'react';
 import ProjectsList from './ProjectsList';
 import { getApiURI } from '../../../common/server';
-import { InputGroup, Button, Intent, NonIdealState, Tabs, HTMLSelect, FormGroup } from '@blueprintjs/core';
+import { InputGroup, Button, Intent, NonIdealState, Tabs, HTMLSelect, FormGroup, Toast, Toaster, Position } from '@blueprintjs/core';
 import { Loading } from '../../../components/Loading';
 import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
-import { MdLaunch } from 'react-icons/md';
 import { fetchServer } from 'common/server';
-import YearPicker from 'react-year-picker';
+
+const FormToast = Toaster.create({
+  position: Position.TOP,
+});
 
 interface IProjectMatchingProps {
 }
@@ -70,7 +72,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
         this.setState({ isLaunched: true });
       } else {
         this.setState({ isLoading: false });
-        this.setState({isLaunched: false});
+        this.setState({ isLaunched: false });
       }
     } catch (e) {
       console.error(e);
@@ -86,12 +88,24 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
   async launch() {
     this.setState({ isLaunched: true });
     try {
-      const response = await fetchServer('/projects/assignment');
+      const response = await fetchServer(`/projects/assignment?semester=${this.state.editSemester}&year=${this.state.editYear}`);
       const data = await response.json();
+      if (data.length === 0) {
+        FormToast.show({
+          intent: Intent.DANGER,
+          icon: 'tick',
+          message: 'No possible assignments.',
+        });
+        this.setState({
+          isLaunched: false,
+          isLoading: false
+        });
+      } else {
+        this.setState({
+          projects: data
+        });
+      }
 
-      this.setState({
-        projects: data
-      });
     } catch (e) {
       console.error(e);
     }

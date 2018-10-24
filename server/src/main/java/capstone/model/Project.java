@@ -244,6 +244,8 @@ public class Project implements Comparable<Object> {
 			n = 0;
 			c = 10;
 			popularity = 0;
+			statusType = "Pending Approval";
+			statusId = 1;
 		}
 		
 		public Project()

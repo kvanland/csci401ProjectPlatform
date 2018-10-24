@@ -73,19 +73,22 @@ public class ProjectService {
 		return students;
 	}
 	
-	public List<Project> runAlgorithm() {
+	public List<Project> runAlgorithm(String semester, String year) {
 		
 		for (int iteration = 0; iteration < 30; iteration++) {
 			ArrayList<Project> projects = new ArrayList<>();
 			ArrayList<Student> students = new ArrayList<>();
 			
 			for (Project p : findAll()) {
+				
+				if(p.getSemester().equals(semester) && p.getYear().equals(year)) //&& p.getStatusId() == 2)
 				projects.add(new Project(p));
 			}
 			for (Student s : userService.getStudents()) {
+				if(s.getSemester().equals(semester) && s.getYear().equals(year))
 				students.add(new Student(s));
 			}
-			
+			if(projects.size() == 0 || students.size() == 0) continue;
 			students = (ArrayList<Student>) applyRankingsToStudents(students, projects);
 			
 			ProjectAssignment algorithm = new ProjectAssignment(projects, students);
@@ -94,8 +97,12 @@ public class ProjectService {
 			algorithms.put(groupSatScore, algorithm);
 			iterations.put(groupSatScore, iteration);
 		}
-
-		Double maxScore = Collections.max(algorithms.keySet());
+		Double maxScore;
+		if(algorithms.size() == 0) {
+			maxScore = 0.0;
+		} else {
+			maxScore = Collections.max(algorithms.keySet());
+		}
 		
 		maxAlgorithm = algorithms.get(maxScore);
 		Integer maxIteration = iterations.get(maxScore);

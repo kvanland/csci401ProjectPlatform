@@ -119,10 +119,11 @@ public class ProjectController
 	/* Project Matching */
 
 	@GetMapping("/assignment")
-	public List<Project> projectAssignment()
+	public @ResponseBody List<Project> projectAssignment(@RequestParam String semester, String year)
 	{
 		System.out.println("RUN ALGORITHM");
-		return projectService.runAlgorithm();
+		List<Project> assignments =  projectService.runAlgorithm(semester, year);
+		return assignments;
 	}
 	
 	@GetMapping("/getassignment")
