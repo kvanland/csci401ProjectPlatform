@@ -70,6 +70,7 @@ class ProjectMatching extends React.Component<IProjectMatchingProps, IProjectMat
         this.setState({ isLaunched: true });
       } else {
         this.setState({ isLoading: false });
+        this.setState({isLaunched: false});
       }
     } catch (e) {
       console.error(e);
