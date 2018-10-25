@@ -6,7 +6,9 @@ import {
 } from 'reactstrap';
 import autobind from 'autobind-decorator';
 import { InputGroup, FormGroup, Card, TextArea, Button, Intent, HTMLSelect } from '@blueprintjs/core';
-import { getApiURI } from '../../../common/server';
+import { getApiURI, getUserEmail } from '../../../common/server';
+import { fetchServer } from 'common/server';
+import { MainToast } from 'components/MainToast';
 
 interface IProjectProps {
 }
@@ -22,6 +24,7 @@ interface IProjectState {
     description: string;
     studentNumber: number[];
     listOfYears: string[];
+    isSubmitting: boolean;
 }
 
 class ProposalForm extends React.Component<IProjectProps, IProjectState> {
@@ -36,9 +39,9 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
 
         const years: string[] = [];
         const currYear = (new Date()).getFullYear();
-    
+
         for (var j = 0; j < 5; j++) {
-          years.push((currYear - 2 + j).toString());
+            years.push((currYear - 2 + j).toString());
         }
 
         this.state = {
@@ -52,45 +55,49 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
             description: '',
             studentNumber: numbers,
             listOfYears: years,
+            isSubmitting: false,
         };
     }
 
     @autobind
     async submitClicked() {
         if (this.state.minSize > this.state.maxSize) {
-            alert('Please select a maximum size greater or equal to the minimum size');
-            throw Error;
-        } 
-
-        try {
-            const response = await fetch(getApiURI('/projects/save/' + sessionStorage.getItem('email')), {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'Cache-Control': 'no-cache',
-                },
-                body: JSON.stringify({
-                    projectName: this.state.projectName,
-                    semester: this.state.projectSemester,
-                    year: this.state.projectYear,
-                    minSize: this.state.minSize,
-                    maxSize: this.state.maxSize,
-                    technologies: this.state.technologies,
-                    background: this.state.background,
-                    description: this.state.description,
-                }),
+            MainToast.show({
+                message: 'Please select a maximum size greater or equal to the minimum size',
+                intent: Intent.DANGER,
+                icon: 'error',
             });
-
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-
-            alert('Proposal has been submitted succesfully!');
-
-        } catch (e) {
-            console.error(e);
+            return;
         }
+
+        this.setState({ isSubmitting: true });
+
+        const response = await fetchServer('/projects/save/' + getUserEmail(), 'POST', {
+            projectName: this.state.projectName,
+            semester: this.state.projectSemester,
+            year: this.state.projectYear,
+            minSize: this.state.minSize,
+            maxSize: this.state.maxSize,
+            technologies: this.state.technologies,
+            background: this.state.background,
+            description: this.state.description,
+        });
+
+        if (response.ok) {
+            MainToast.show({
+                message: 'Project proposal submitted successfull',
+                intent: Intent.SUCCESS,
+                icon: 'tick',
+            });
+        } else {
+            MainToast.show({
+                message: 'Could not process project proposal.',
+                intent: Intent.DANGER,
+                icon: 'error',
+            });
+        }
+
+        this.setState({ isSubmitting: false });
     }
 
     public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<any>) => {
@@ -120,7 +127,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                 </div>
                 <Card className="csci-form">
                     {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                    
+
                     <FormGroup label="Minimum Size" labelFor="minSize">
                         <HTMLSelect
                             id="editMinSize"
@@ -149,8 +156,8 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                         />
                     </FormGroup>
 
-                     <FormGroup label="Semester">
-                     <table>
+                    <FormGroup label="Semester">
+                        <table>
                             <tr>
                                 <td>
                                     <HTMLSelect
@@ -176,7 +183,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                     </FormGroup>
                 </Card>
                 <div className="csci-form-actions">
-                    <Button intent={Intent.PRIMARY} text="Submit Proposal" onClick={this.submitClicked} large={true} />
+                    <Button intent={Intent.PRIMARY} text="Submit Proposal" onClick={this.submitClicked} large={true} loading={this.state.isSubmitting} />
                 </div>
             </div>
         );

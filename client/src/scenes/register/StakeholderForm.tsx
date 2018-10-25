@@ -5,6 +5,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
 import { Card, FormGroup, Button, Intent, InputGroup, Callout, IconName, Toaster, Position } from '@blueprintjs/core';
 import { MainToast } from 'components/MainToast';
+import { fetchServer } from 'common/server';
 
 interface IStakeholderRegistrationProps extends RouteComponentProps<any> {
 }
@@ -42,40 +43,24 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
 
         this.setState({ isLoading: true });
 
-        try {
-            const response = await fetch(getApiURI('/users/register/stakeholder'), {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'Cache-Control': 'no-cache',
-                },
-                body: JSON.stringify({
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    email: this.state.email,
-                    phone: this.state.phone,
-                    company: this.state.company,
-                    password: this.state.password
-                }),
-            });
+        const response = await fetchServer('/users/register/stakeholder', 'POST', {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            email: this.state.email,
+            phone: this.state.phone,
+            company: this.state.company,
+            password: this.state.password
+        });
 
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-
-            this.props.history.push('/');
-        } catch (e) {
-            console.error(e);
-            await this.setState({ hasError: true });
+        if (!response.ok) {
+            this.setState({ hasError: true, isLoading: false });
             MainToast.show({
                 intent: Intent.DANGER,
                 icon: 'error',
                 message: 'Could not create an account because a problem occurred.',
             });
-
-        } finally {
-            this.setState({ isLoading: false });
+        } else {
+            this.props.history.push('/');
         }
     }
 

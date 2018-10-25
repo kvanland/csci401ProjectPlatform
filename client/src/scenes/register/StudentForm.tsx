@@ -5,6 +5,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { InputType } from 'reactstrap/lib/Input';
 import { Card, FormGroup, InputGroup, Button, Intent, Callout, IconName, Toaster, Position } from '@blueprintjs/core';
 import { MainToast } from 'components/MainToast';
+import { fetchServer } from 'common/server';
 
 interface IStudentRegistrationProps extends RouteComponentProps<any> {
 }
@@ -41,26 +42,22 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
 
         this.setState({ isLoading: true });
 
-        try {
-            const response = await fetch(getApiURI('/users/register/student'), {
-                method: 'POST',
-                body: JSON.stringify({
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    email: this.state.email,
-                    phone: this.state.phone,
-                    password: this.state.password
-                }),
-                headers: {
-                    'Cache-Control': 'no-cache',
-                    'Content-Type': 'application/json; charset=utf-8'
-                },
-                credentials: 'include'
-            });
+        const response = await fetchServer('/users/register/student', 'POST', {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            email: this.state.email,
+            phone: this.state.phone,
+            password: this.state.password
+        });
 
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
+        if (!response.ok) {
+            this.setState({ hasError: true, isLoading: false });
+            MainToast.show({
+                intent: Intent.DANGER,
+                icon: 'error',
+                message: 'Could not create an account because a problem occurred.',
+            });
+        } else {
             await this.setState({ isLoading: false });
             MainToast.show({
                 intent: Intent.SUCCESS,
@@ -69,14 +66,6 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
             });
 
             this.props.history.push('/');
-        } catch (e) {
-            console.error(e);
-            await this.setState({ hasError: true, isLoading: false });
-            MainToast.show({
-                intent: Intent.DANGER,
-                icon: 'error',
-                message: 'Could not create an account because a problem occurred.',
-            });
         }
     }
 

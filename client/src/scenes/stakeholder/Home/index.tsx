@@ -2,11 +2,12 @@ import * as React from 'react';
 import {
     LinkContainer
 } from 'react-router-bootstrap';
-import { getApiURI } from '../../../common/server';
+import { getApiURI, getUserEmail } from '../../../common/server';
 import { HTMLTable, Button, Card, NonIdealState, Intent } from '@blueprintjs/core';
 import { RouteComponentProps } from 'react-router';
 import { Loading } from 'components/Loading';
 import autobind from 'autobind-decorator';
+import { fetchServer } from 'common/server';
 interface IProject {
     projectId: number;
     projectName: string;
@@ -36,16 +37,15 @@ class StakeholderHome extends React.Component<IHomeProps, IHomeState> {
     async componentDidMount() {
         this.setState({ isLoading: true });
 
-        try {
-            const response = await fetch(getApiURI('/projects/' + sessionStorage.getItem('email')));
+        const response = await fetchServer(`/projects/stakeholder/${getUserEmail()}`, 'GET');
+
+        if (response.ok) {
             const data = await response.json();
 
             this.setState({
                 projects: data,
                 isLoading: false
             });
-        } catch (e) {
-            console.error(e);
         }
     }
 

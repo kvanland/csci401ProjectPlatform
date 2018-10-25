@@ -51,17 +51,13 @@ class DeliverableList extends React.Component<IDeliverableProps, IDeliverableSta
     async componentDidMount() {
         this.setState({ isLoading: true });
 
-        try {
-            const response = await fetch(getApiURI('/deliverables/' + this.props.projectId));
-            const data = await response.json();
+        const response = await fetchServer('/deliverables/' + this.props.projectId);
+        const data = await response.json();
 
-            this.setState({
-                deliverables: data,
-                isLoading: false
-            });
-        } catch (e) {
-            console.error(e);
-        }
+        this.setState({
+            deliverables: data,
+            isLoading: false
+        });
 
     }
 

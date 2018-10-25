@@ -4,7 +4,7 @@ import { DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import ProjectCard from './ProjectCard';
 import ItemTypes from './ItemTypes';
-import { getApiURI } from '../../../common/server';
+import { getApiURI, getUserEmail } from '../../../common/server';
 import { Button, Intent, NonIdealState, Spinner, Card, Tooltip } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 import { fetchServer } from 'common/server';
@@ -79,18 +79,13 @@ class ProjectRankingContainer extends React.Component<IProjectRankingContainerPr
     async componentDidMount() {
         this.setState({ isLoading: true });
 
-        try {
-            const response = await fetch(getApiURI('/projects/projects/' + sessionStorage.getItem('email')));
-            const data = await response.json();
+        const response = await fetchServer(`/projects/student/${getUserEmail()}`);
+        const data = await response.json();
 
-            this.setState({
-                projectCards: data,
-                isLoading: false
-            });
-        } catch (e) {
-            console.error(e);
-        }
-
+        this.setState({
+            projectCards: data,
+            isLoading: false
+        });
     }
 
     moveCard(id: number, atIndex: number) {

@@ -14,7 +14,7 @@ import {
     Position,
 } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
-import { getApiURI } from '../../../common/server';
+import { getApiURI, getUserEmail } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardBody from 'reactstrap/lib/CardBody';
 import { fetchServer } from 'common/server';
@@ -54,9 +54,9 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
 
         const years: string[] = [];
         const currYear = (new Date()).getFullYear();
-    
+
         for (var j = 0; j < 5; j++) {
-          years.push((currYear - 2 + j).toString());
+            years.push((currYear - 2 + j).toString());
         }
 
         this.state = {
@@ -77,52 +77,56 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
     }
 
     async componentDidMount() {
-        try {
-            const response = await fetch(getApiURI('/projects/') + sessionStorage.getItem('email') + '/' + this.props.projectId);
-            const data = await response.json();
+        this.setState({ isLoading: true });
 
-            this.setState({
-                ...data,
-                isLoading: false
-            });
-        } catch (e) {
-            console.log(e);
-        }
-        try {
-            const response = await fetch(getApiURI('/projects/') + this.state.projectId + '/students');
-            const data = await response.json();
-            this.setState({
-                students: data
-            });
-        } catch (e) {
-            console.error(e);
-        }
+        await this.fetchStakeholderProject();
+        await this.fetchStudentsAssignments();
+
+        this.setState({ isLoading: false });
+    }
+
+    async fetchStakeholderProject() {
+        const response = await fetchServer(`/projects/stakeholder/${getUserEmail()}/${this.props.projectId}`);
+        const data = await response.json();
+
+        await this.setState({
+            ...data,
+        });
+    }
+
+    async fetchStudentsAssignments() {
+        const response = await fetchServer(`/projects/${this.props.projectId}/students`);
+        const data = await response.json();
+
+        await this.setState({
+            students: data,
+        });
     }
 
     public handleChange = (id: keyof IProjectState) => (e: React.ChangeEvent<any>) => {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-/*     @autobind
-    async submitProjectEdit() {
-        var request = new XMLHttpRequest();
-        request.withCredentials = true;
-
-        request.open('POST', 'http://localhost:8080/projects/editMinor/' + this.state.projectId);
-
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        request.setRequestHeader('Cache-Control', 'no-cache');
-        request.send(JSON.stringify(this.state));
-        request.onreadystatechange = function () {
-            if (this.readyState === this.DONE) {
-                if (request.status === 200) {
-                    alert('Change made successfully');
-                } else {
-                    alert('Change could not be made at this time');
+    /*     @autobind
+        async submitProjectEdit() {
+            var request = new XMLHttpRequest();
+            request.withCredentials = true;
+    
+            request.open('POST', 'http://localhost:8080/projects/editMinor/' + this.state.projectId);
+    
+            request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            request.setRequestHeader('Cache-Control', 'no-cache');
+            request.send(JSON.stringify(this.state));
+            request.onreadystatechange = function () {
+                if (this.readyState === this.DONE) {
+                    if (request.status === 200) {
+                        alert('Change made successfully');
+                    } else {
+                        alert('Change could not be made at this time');
+                    }
                 }
-            }
-        };
-    } */
+            };
+        } */
 
     async submitProjectEdit() {
 
@@ -161,7 +165,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                 />
                             </FormGroup>
 
-                             <FormGroup label="Minimum Size" labelFor="minSize">
+                            <FormGroup label="Minimum Size" labelFor="minSize">
                                 <HTMLSelect
                                     id="editMinSize"
                                     value={this.state.minSize}
@@ -212,7 +216,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                 />
                             </FormGroup>
 
-                             <FormGroup label="Project Semester">
+                            <FormGroup label="Project Semester">
                                 <table>
                                     <tr>
                                         <td>

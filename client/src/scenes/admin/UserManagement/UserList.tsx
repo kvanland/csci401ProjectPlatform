@@ -2,6 +2,7 @@ import * as React from 'react';
 import { IUser } from '../../../common/interfaces';
 import { getApiURI } from '../../../common/server';
 import { Loading } from 'components/Loading';
+import { fetchServer } from 'common/server';
 
 interface IUserListProps {
 }
@@ -24,18 +25,14 @@ class UserList extends React.Component<IUserListProps, IUserListState> {
   async componentDidMount() {
     this.setState({ isLoading: true });
 
-    try {
-      const response = await fetch(getApiURI('/users'));
+    const response = await fetchServer('/users');
+    if (response.ok) {
       const data = await response.json();
-
       this.setState({
         users: data,
         isLoading: false,
       });
-    } catch (e) {
-      console.error(e);
     }
-
   }
 
   /*

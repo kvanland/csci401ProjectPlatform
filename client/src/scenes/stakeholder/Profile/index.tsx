@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IUser } from '../../../common/interfaces';
-import { getApiURI, fetchServer } from '../../../common/server';
+import { getApiURI, fetchServer, getUserEmail } from '../../../common/server';
 import { FormGroup, InputGroup, Card, Button, Intent, IconName, Toaster, Position } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { Loading } from 'components/Loading';
@@ -35,15 +35,14 @@ class StakeholderProfile extends React.Component<IProfileProps, IProfileState> {
     @autobind
     async fetchProfileData() {
 
-        try {
-            const response = await fetch(getApiURI('/users/' + sessionStorage.getItem('email')));
+        const response = await fetchServer('/users/' + getUserEmail());
+        if (response.ok) {
             const data = await response.json();
-
             this.setState({
                 ...data,
                 originalEmail: data.email,
             });
-        } catch (e) {
+        } else {
             MainToast.show({
                 message: 'An error occurred: could not retrieve stakeholder profile.',
                 intent: Intent.DANGER,

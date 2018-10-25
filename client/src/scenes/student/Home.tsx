@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { getApiURI } from '../../common/server';
+import { getApiURI, getUserEmail } from '../../common/server';
 import { Card, HTMLTable, Button, ButtonGroup, Dialog } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { IUser } from 'common/interfaces';
 import EditProfileForm from './EditProfileForm';
 import autobind from 'autobind-decorator';
+import { fetchServer } from 'common/server';
 
 interface IStudentHomeProps extends RouteComponentProps {
 }
@@ -51,91 +52,51 @@ class StudentHome extends React.Component<IStudentHomeProps, IStudentHomeState> 
     editProfileFormOpen: false,
   };
 
+  async fetchUserProfile() {
+    const response = await fetchServer(`/users/${getUserEmail()}`);
+    const data = await response.json();
+
+    await this.setState({
+      userProfile: data,
+    });
+  }
+
+  async fetchUserProject() {
+    const response = await fetchServer(`/projects/student/${getUserEmail()}`);
+    const data = await response.json();
+
+    await this.setState({
+      project: data,
+    });
+  }
+
+  async fetchProjectStudents(projectId: number) {
+    const response = await fetchServer(`/projects/${projectId}/students`);
+    const data = await response.json();
+
+    await this.setState({
+      students: data,
+    });
+  }
+
+  async fetchProjectStakeholder(projectId: number) {
+    const response = await fetchServer(`/projects/${projectId}/stakeholder`);
+    const data = await response.json();
+
+    await this.setState({
+      stakeholder: data,
+    });
+  }
+
   async componentDidMount() {
     this.setState({ isLoading: true });
 
-    try {
-      const response = await fetch(getApiURI('/users/') + sessionStorage.getItem('email'));
-      const data = await response.json();
+    await this.fetchUserProfile();
+    await this.fetchUserProject();
+    await this.fetchProjectStudents(this.state.project.projectId);
+    await this.fetchProjectStakeholder(this.state.project.projectId);
 
-      this.setState({
-        userProfile: data,
-        isLoading: false
-      });
-    } catch (e) {
-      console.error(e);
-    }
-
-    try {
-      const response = await fetch(getApiURI('/projects/student/') + sessionStorage.getItem('email'));
-
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-
-      const data = await response.json();
-
-      this.setState({
-        project: data,
-        isLoading: false
-      });
-    } catch (e) {
-      console.error(e);
-    }
-
-    try {
-      const response = await fetch(getApiURI('/projects/') + this.state.project.projectId + '/students');
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      const data = await response.json();
-
-      console.log('/projects/:projectId/students', data);
-
-      this.setState({
-        students: data
-      });
-    } catch (e) {
-      console.error(e);
-    }
-
-    try {
-      const response = await fetch(getApiURI('/projects/') + this.state.project.projectId + '/stakeholder');
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      const data = await response.json();
-
-      this.setState({
-        stakeholder: data
-      });
-    } catch (e) {
-      console.error(e);
-    }
-
-    /*
-            var request = new XMLHttpRequest();
-            request.withCredentials = true;
-            request.open('POST', 'http://localhost:8080/getProjectByUser/');
-            request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-            var data = 'getproject';
-            request.setRequestHeader('Cache-Control', 'no-cache');
-            request.send(data);
-    
-            var that = this;
-            request.onreadystatechange = function() {
-                if (request.readyState === 4) {
-                    var response = request.responseText;
-                    if (response != null) {
-                        var jsonResponse = JSON.parse(response);
-                        var stakeholderNameLiteral = 'stakeholderName';
-                        that.setState({
-                            stakeholder: jsonResponse[stakeholderNameLiteral], 
-                            isLoading: false
-                        });
-                    }
-                }
-            }; */
+    this.setState({ isLoading: false });
   }
 
   @autobind

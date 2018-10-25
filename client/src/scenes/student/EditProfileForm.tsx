@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IUser } from 'common/interfaces';
 import autobind from 'autobind-decorator';
-import { getApiURI } from 'common/server';
+import { getApiURI, fetchServer, getUserEmail } from 'common/server';
 import { FormGroup, InputGroup, Spinner, NonIdealState, Button, Intent } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 
@@ -24,18 +24,13 @@ class EditProfileForm extends React.Component<IProfileProps, IProfileState> {
     async componentDidMount() {
         this.setState({ isLoading: true });
 
-        try {
-            const response = await fetch(getApiURI('/users/') + sessionStorage.getItem('email'));
-            const data = await response.json();
+        const response = await fetchServer(`/users/${getUserEmail()}`);
+        const data = await response.json();
 
-            this.setState({
-                ...data,
-                isLoading: false
-            });
-        } catch (e) {
-            console.error(e);
-        }
-
+        this.setState({
+            ...data,
+            isLoading: false
+        });
     }
 
     @autobind
