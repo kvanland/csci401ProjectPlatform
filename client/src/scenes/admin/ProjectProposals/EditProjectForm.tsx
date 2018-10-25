@@ -3,7 +3,6 @@ import { FormGroup, HTMLSelect, Button, Intent, InputGroup, Toaster, Position, C
 import autobind from 'autobind-decorator';
 import { IProject } from 'common/interfaces';
 import { fetchServer } from 'common/server';
-import YearPicker from 'react-year-picker';
 import { MainToast } from '../../../components/MainToast';
 
 interface IEditProjectFormProps {
@@ -12,13 +11,26 @@ interface IEditProjectFormProps {
 }
 
 interface IEditProjectFormState extends IProject {
+    listOfYears: string[];
 }
 
 @autobind
 export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, IEditProjectFormState> {
-    public state: IEditProjectFormState = {
-        ...this.props.project,
-    };
+    constructor(props: IEditProjectFormProps) {
+        super(props);
+
+        const years: string[] = [];
+        const currYear = (new Date()).getFullYear();
+    
+        for (var j = 0; j < 5; j++) {
+          years.push((currYear - 2 + j).toString());
+        }
+
+        this.state = {
+            ...this.props.project,
+            listOfYears: years,
+        };
+    }
 
     async submitProjectEdit() {
 
@@ -54,10 +66,6 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
         } as any);
     }
 
-    handleYearChange(date: any) {
-        this.state.year = date!;
-    }
-
     renderFormGroup(id: keyof IProject, type: string, label: string, placeholder: string) {
         return (
             <FormGroup label={label} labelFor={id}>
@@ -77,35 +85,36 @@ export class EditProjectForm extends React.PureComponent<IEditProjectFormProps, 
             <React.Fragment>
                 <div className={Classes.DIALOG_BODY}>
                     {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                    <FormGroup label="Semester" labelFor="semester">
-                        <HTMLSelect
-                            id="semester"
-                            value={this.state.semester}
-                            onChange={this.handleChange('semester')}
-                        >
-                            <option value="SUMMER">SUMMER</option>
-                            <option value="FALL">FALL</option>
-                            <option value="SPRING">SPRING</option>
-                        </HTMLSelect>
-                    </FormGroup>
-                    <YearPicker onChange={this.handleYearChange} />
                     {this.renderFormGroup('minSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('maxSize', 'text', 'Number of Students', 'Number of Students')}
                     {this.renderFormGroup('technologies', 'text', 'Technologies Expected', 'Technologies Expected')}
                     {this.renderFormGroup('background', 'text', 'Background Requested', 'Background Requested')}
                     {this.renderFormGroup('description', 'text', 'Project Description', 'Project Description')}
-                    {/* <FormGroup label="Description" labelFor="description">
-                        <TextArea
-                            placeholder="Description"
-                            id="description"
-                            value={this.state.description}
-                            onChange={this.handleChange('description')}
-                        />
-                    </FormGroup> */}
-
-                    {/* <FormGroup>
-                        <Button intent={Intent.PRIMARY} text="Submit Proposal" onClick={this.submitClicked} />
-                    </FormGroup> */}
+                    <FormGroup label="Semester" labelFor="semester">
+                    <table>
+                            <tr>
+                                <td>
+                                    <HTMLSelect
+                                        id="editSemester"
+                                        value={this.state.semester}
+                                        onChange={this.handleChange('semester')}
+                                    >
+                                        <option value="SUMMER">SUMMER</option>
+                                        <option value="FALL">FALL</option>
+                                        <option value="SPRING">SPRING</option>
+                                    </HTMLSelect>
+                                </td>
+                                <td>
+                                    <HTMLSelect
+                                        id="editYear"
+                                        value={this.state.year}
+                                        onChange={this.handleChange('year')}
+                                        options={this.state.listOfYears}
+                                    />
+                                </td>
+                            </tr>
+                        </table>
+                    </FormGroup>
                 </div>
                 <div className={Classes.DIALOG_FOOTER}>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>

@@ -7,7 +7,6 @@ import {
 import autobind from 'autobind-decorator';
 import { InputGroup, FormGroup, Card, TextArea, Button, Intent, HTMLSelect } from '@blueprintjs/core';
 import { getApiURI } from '../../../common/server';
-import YearPicker from 'react-year-picker';
 
 interface IProjectProps {
 }
@@ -21,21 +20,40 @@ interface IProjectState {
     technologies: string;
     background: string;
     description: string;
-    studentNumber: Array<number>;
+    studentNumber: number[];
+    listOfYears: string[];
 }
 
 class ProposalForm extends React.Component<IProjectProps, IProjectState> {
-    public state: IProjectState = {
-        projectName: '',
-        projectSemester: 'SUMMER',
-        projectYear: '',
-        minSize: 0,
-        maxSize: 0,
-        technologies: '',
-        background: '',
-        description: '',
-        studentNumber: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-    };
+    constructor(props: IProjectState) {
+        super(props);
+
+        const numbers: number[] = [];
+
+        for (var i = 0; i < 21; i++) {
+            numbers.push(i);
+        }
+
+        const years: string[] = [];
+        const currYear = (new Date()).getFullYear();
+    
+        for (var j = 0; j < 5; j++) {
+          years.push((currYear - 2 + j).toString());
+        }
+
+        this.state = {
+            projectName: '',
+            projectSemester: 'SUMMER',
+            projectYear: years[0],
+            minSize: 0,
+            maxSize: 0,
+            technologies: '',
+            background: '',
+            description: '',
+            studentNumber: numbers,
+            listOfYears: years,
+        };
+    }
 
     @autobind
     async submitClicked() {
@@ -79,10 +97,6 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    public handleYearChange = (date: any) => {
-        this.state.projectYear = date!;
-    }
-
     @autobind
     renderFormGroup(id: keyof IProjectState, type: string, label: string, placeholder: string) {
         return (
@@ -106,20 +120,8 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                 </div>
                 <Card className="csci-form">
                     {this.renderFormGroup('projectName', 'text', 'Project Name', 'Project Name')}
-                    <FormGroup>
-                        <HTMLSelect
-                            id="editSemesterType"
-                            value={this.state.projectSemester}
-                            onChange={this.handleChange('projectSemester')}
-                        >
-                            <option defaultValue="SUMMER">SUMMER</option>
-                            <option value="FALL">FALL</option>
-                            <option value="SPRING">SPRING</option>
-                        </HTMLSelect>
-                    </FormGroup>
-                    <YearPicker onChange={this.handleYearChange}/>
                     
-                    <FormGroup label="Minimum Size" labelFor="projectSemester">
+                    <FormGroup label="Minimum Size" labelFor="minSize">
                         <HTMLSelect
                             id="editMinSize"
                             value={this.state.minSize}
@@ -128,7 +130,7 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                         />
                     </FormGroup>
 
-                    <FormGroup label="Maximum size" labelFor="minSize">
+                    <FormGroup label="Maximum size" labelFor="maxSize">
                         <HTMLSelect
                             id="editMaxSize"
                             value={this.state.maxSize}
@@ -147,6 +149,31 @@ class ProposalForm extends React.Component<IProjectProps, IProjectState> {
                         />
                     </FormGroup>
 
+                     <FormGroup label="Semester">
+                     <table>
+                            <tr>
+                                <td>
+                                    <HTMLSelect
+                                        id="editSemester"
+                                        value={this.state.projectSemester}
+                                        onChange={this.handleChange('projectSemester')}
+                                    >
+                                        <option value="SUMMER">SUMMER</option>
+                                        <option value="FALL">FALL</option>
+                                        <option value="SPRING">SPRING</option>
+                                    </HTMLSelect>
+                                </td>
+                                <td>
+                                    <HTMLSelect
+                                        id="editYear"
+                                        value={this.state.projectYear}
+                                        onChange={this.handleChange('projectYear')}
+                                        options={this.state.listOfYears}
+                                    />
+                                </td>
+                            </tr>
+                        </table>
+                    </FormGroup>
                 </Card>
                 <div className="csci-form-actions">
                     <Button intent={Intent.PRIMARY} text="Submit Proposal" onClick={this.submitClicked} large={true} />

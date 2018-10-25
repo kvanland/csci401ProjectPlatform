@@ -5,7 +5,6 @@ import autobind from 'autobind-decorator';
 import { ButtonGroup, Button, Intent, FormGroup, InputGroup, HTMLTable, Card, Dialog, Tabs, Tab, TabId, Icon, HTMLSelect, Toaster, Position, Classes } from '@blueprintjs/core';
 import { InputType } from 'reactstrap/lib/Input';
 import { Loading } from '../../../components/Loading';
-import YearPicker from 'react-year-picker';
 import { MainToast } from 'components/MainToast';
 
 interface IUserListProps {
@@ -26,6 +25,8 @@ interface IUserListState {
     editEmail: string;
     originalEmail: string;
 
+    listOfYears: string[];
+
     isLoading: boolean;
     inviteUsersIsOpen: boolean;
 }
@@ -42,24 +43,37 @@ interface IUser {
 
 @autobind
 class UserManagement extends React.Component<IUserListProps, IUserListState> {
-    state: IUserListState = {
-        allUsers: [],
-        userFilterType: 'All',
-        userIdToEdit: undefined,
+    constructor(props: IUserListState) {
+        super(props);
 
-        userTypeTab: 'students',
+        const years: string[] = [];
+        const currYear = (new Date()).getFullYear();
+    
+        for (var j = 0; j < 5; j++) {
+          years.push((currYear - 2 + j).toString());
+        }
 
-        editFirstName: '',
-        editLastName: '',
-        editUserType: '',
-        editSemester: '',
-        editYear: '',
-        editEmail: '',
+        this.state = {
+            allUsers: [],
+            userFilterType: 'All',
+            userIdToEdit: undefined,
+    
+            userTypeTab: 'students',
+    
+            editFirstName: '',
+            editLastName: '',
+            editUserType: '',
+            editSemester: '',
+            editYear: years[0],
+            editEmail: '',
 
-        originalEmail: '',
-        isLoading: false,
-        inviteUsersIsOpen: false,
-    };
+            listOfYears: years,
+    
+            originalEmail: '',
+            isLoading: false,
+            inviteUsersIsOpen: false,
+        };
+    }
 
     async componentDidMount() {
         this.fetchUsers();
@@ -120,10 +134,6 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
         this.setState({
             [id]: e.currentTarget.value,
         } as any);
-    }
-
-    handleYearChange(date: any) {
-        this.state.editYear = date!;
     }
 
     editUser = (userId: number) => () => {
@@ -336,17 +346,30 @@ class UserManagement extends React.Component<IUserListProps, IUserListState> {
                         </HTMLSelect>
                     </FormGroup>
                     <FormGroup label="Semester" labelFor="editSemester">
-                        <HTMLSelect
-                            id="editSemester"
-                            value={this.state.editSemester}
-                            onChange={this.handleChange('editSemester')}
-                        >
-                            <option value="SUMMER">SUMMER</option>
-                            <option value="FALL">FALL</option>
-                            <option value="SPRING">SPRING</option>
-                        </HTMLSelect>
+                        <table>
+                            <tr>
+                                <td>
+                                    <HTMLSelect
+                                        id="editSemester"
+                                        value={this.state.editSemester}
+                                        onChange={this.handleChange('editSemester')}
+                                    >
+                                        <option value="SUMMER">SUMMER</option>
+                                        <option value="FALL">FALL</option>
+                                        <option value="SPRING">SPRING</option>
+                                    </HTMLSelect>
+                                </td>
+                                <td>
+                                    <HTMLSelect
+                                        id="editYear"
+                                        value={this.state.editYear}
+                                        onChange={this.handleChange('editYear')}
+                                        options={this.state.listOfYears}
+                                    />
+                                </td>
+                            </tr>
+                        </table>
                     </FormGroup>
-                    <YearPicker onChange={this.handleYearChange} />
                 </div>
                 <div className={Classes.DIALOG_FOOTER}>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>

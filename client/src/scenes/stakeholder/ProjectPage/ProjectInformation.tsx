@@ -9,23 +9,29 @@ import {
     Card,
     HTMLTable,
     HTMLSelect,
-    Intent
+    Intent,
+    Toaster,
+    Position,
 } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { getApiURI } from '../../../common/server';
 import CardHeader from 'reactstrap/lib/CardHeader';
 import CardBody from 'reactstrap/lib/CardBody';
-import YearPicker from 'react-year-picker';
 import { fetchServer } from 'common/server';
-import { MainToast } from '../../../components/MainToast';
+
+const FormToast = Toaster.create({
+    position: Position.TOP,
+});
 
 interface IProjectProps {
     projectId: string;
 }
+
 interface IProjectState extends IProject {
     students: Array<IStudentInfo>;
     isLoading: Boolean;
-    studentNumber: Array<number>;
+    studentNumber: number[];
+    listOfYears: string[];
 }
 
 interface IStudentInfo {
@@ -37,20 +43,38 @@ interface IStudentInfo {
 
 @autobind
 class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
-    public state: IProjectState = {
-        students: [],
-        projectId: 0,
-        projectName: '',
-        minSize: '',
-        technologies: '',
-        background: '',
-        description: '',
-        isLoading: true,
-        members: [],
-        semester: '',
-        year: '',
-        studentNumber: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-    };
+    constructor(props: IProjectProps) {
+        super(props);
+
+        const numbers: number[] = [];
+
+        for (var i = 0; i < 21; i++) {
+            numbers.push(i);
+        }
+
+        const years: string[] = [];
+        const currYear = (new Date()).getFullYear();
+    
+        for (var j = 0; j < 5; j++) {
+          years.push((currYear - 2 + j).toString());
+        }
+
+        this.state = {
+            students: [],
+            projectId: 0,
+            projectName: '',
+            minSize: '',
+            technologies: '',
+            background: '',
+            description: '',
+            isLoading: true,
+            members: [],
+            semester: '',
+            year: years[0],
+            studentNumber: numbers,
+            listOfYears: years,
+        };
+    }
 
     async componentDidMount() {
         try {
@@ -79,24 +103,42 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
         this.setState({ [id]: e.currentTarget.value } as any);
     }
 
-    handleYearChange(date: any) {
-        this.state.year = date!;
-    }
-
-    @autobind
+/*     @autobind
     async submitProjectEdit() {
-        const response = await fetchServer('/projects/editMinor' + this.state.projectId, 'POST', this.state);
-        if (response.ok && response.status === 200) {
-            MainToast.show({
-                message: 'Change made successfully!',
-                icon: 'tick',
+        var request = new XMLHttpRequest();
+        request.withCredentials = true;
+
+        request.open('POST', 'http://localhost:8080/projects/editMinor/' + this.state.projectId);
+
+        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        request.setRequestHeader('Cache-Control', 'no-cache');
+        request.send(JSON.stringify(this.state));
+        request.onreadystatechange = function () {
+            if (this.readyState === this.DONE) {
+                if (request.status === 200) {
+                    alert('Change made successfully');
+                } else {
+                    alert('Change could not be made at this time');
+                }
+            }
+        };
+    } */
+
+    async submitProjectEdit() {
+
+        const response = await fetchServer(`/projects/edit/${this.state.projectId}`, 'POST', this.state);
+
+        if (response.ok) {
+            FormToast.show({
                 intent: Intent.SUCCESS,
+                icon: 'tick',
+                message: 'Project has been updated successfully!',
             });
         } else {
-            MainToast.show({
-                message: 'Change made successfully!',
+            FormToast.show({
+                intent: Intent.SUCCESS,
                 icon: 'error',
-                intent: Intent.DANGER,
+                message: 'Change could not be made at this time',
             });
         }
     }
@@ -119,20 +161,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                 />
                             </FormGroup>
 
-                            <FormGroup label="Project Semester">
-                                <HTMLSelect
-                                    id="editUserType"
-                                    value={this.state.semester}
-                                    onChange={this.handleChange('semester')}
-                                >
-                                    <option defaultValue="SUMMER">SUMMER</option>
-                                    <option value="FALL">FALL</option>
-                                    <option value="SPRING">SPRING</option>
-                                </HTMLSelect>
-                            </FormGroup>
-                            <YearPicker onChange={this.handleYearChange} />
-
-                            <FormGroup label="Minimum Size" labelFor="projectSemester">
+                             <FormGroup label="Minimum Size" labelFor="minSize">
                                 <HTMLSelect
                                     id="editMinSize"
                                     value={this.state.minSize}
@@ -141,7 +170,7 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                 />
                             </FormGroup>
 
-                            <FormGroup label="Maximum size" labelFor="minSize">
+                            <FormGroup label="Maximum size" labelFor="maxSize">
                                 <HTMLSelect
                                     id="editMaxSize"
                                     value={this.state.maxSize}
@@ -181,6 +210,32 @@ class ProjectInformation extends React.Component<IProjectProps, IProjectState> {
                                     placeholder="Description"
                                     onChange={this.handleChange('description')}
                                 />
+                            </FormGroup>
+
+                             <FormGroup label="Project Semester">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <HTMLSelect
+                                                id="editSemester"
+                                                value={this.state.semester}
+                                                onChange={this.handleChange('semester')}
+                                            >
+                                                <option value="SUMMER">SUMMER</option>
+                                                <option value="FALL">FALL</option>
+                                                <option value="SPRING">SPRING</option>
+                                            </HTMLSelect>
+                                        </td>
+                                        <td>
+                                            <HTMLSelect
+                                                id="editYear"
+                                                value={this.state.year}
+                                                onChange={this.handleChange('year')}
+                                                options={this.state.listOfYears}
+                                            />
+                                        </td>
+                                    </tr>
+                                </table>
                             </FormGroup>
 
                             <FormGroup>
