@@ -1,3 +1,10 @@
+export interface IJwtToken {
+    auth: string; // usertype
+    exp: number; // expiration
+    iat: number; // creation time
+    sub: string; // email
+}
+
 export interface IUser {
     id?: number;
     firstName: string;

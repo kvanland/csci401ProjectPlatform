@@ -7,13 +7,13 @@ import {
     HotkeysTarget,
     Hotkeys,
     Hotkey,
-    Toaster,
-    Position,
 } from '@blueprintjs/core';
 import autobind from 'autobind-decorator';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { getApiURI } from '../../common/server';
-import { MainToast } from '../../components/MainToast';
+import { getApiURI, fetchServer } from 'common/server';
+import { MainToast } from 'components/MainToast';
+import * as jwtDecode from 'jwt-decode';
+import { IJwtToken } from 'common/interfaces';
 
 interface ILoginProps extends RouteComponentProps<any> {
 }
@@ -49,39 +49,26 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
     @autobind
     async submit() {
         await this.setState({ isLoading: true });
-        try {
-            const response = await fetch(getApiURI('/users/login'), {
-                method: 'POST',
-                body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.password
-                }),
-                headers: {
-                    'Cache-Control': 'no-cache',
-                    'Content-Type': 'application/json; charset=utf-8'
-                },
-                credentials: 'include'
+        const { email: loginEmail, password: loginPassword } = this.state;
+        const response = await fetchServer('/users/login', 'POST', { email: loginEmail, password: loginPassword });
+
+        if (!response.ok) {
+            await this.setState({ hasError: true, isLoading: false });
+            MainToast.show({
+                intent: Intent.DANGER,
+                icon: 'error',
+                message: 'Email or password does not match our records.',
             });
+        } else {
+            const token = await response.text();
+            const jwt: IJwtToken = jwtDecode(token);
 
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-
-            if (response.body === null) {
-                throw Error('invalid server response: null');
-            }
-
-            const responseData = (await response.text()).split(',', 2);
-            if (responseData.length !== 2) {
-                throw Error(`invalid server response: ${responseData}`);
-            }
-
-            const userToken = responseData[0];
-            const userType = responseData[1];
+            const userEmail = jwt.sub;
+            const userType = jwt.auth;
 
             // set session
-            sessionStorage.setItem('email', this.state.email);
-            sessionStorage.setItem('jwt', userToken);
+            sessionStorage.setItem('jwt', token);
+            sessionStorage.setItem('email', userEmail);
             sessionStorage.setItem('userType', userType);
 
             // redirect to the correct landing page
@@ -92,14 +79,6 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
             } else if (userType === 'Stakeholder') {
                 this.props.history.push('/stakeholder');
             }
-        } catch (e) {
-            console.error(e);
-            await this.setState({ hasError: true, isLoading: false });
-            MainToast.show({
-                intent: Intent.DANGER,
-                icon: 'error',
-                message: 'Email or password does not match our records.',
-            });
         }
     }
 
@@ -113,6 +92,7 @@ class LoginForm extends React.Component<ILoginProps, ILoginState> {
         this.passwordInputRef = ref;
     }
 
+    @autobind
     renderHotkeys() {
         return (
             <Hotkeys>

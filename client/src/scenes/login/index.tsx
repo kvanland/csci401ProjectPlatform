@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, Callout } from '@blueprintjs/core';
-import LoginForm from './Form';
+import LoginForm from './LoginForm';
 import { Link } from 'react-router-dom';
 
 const style = {

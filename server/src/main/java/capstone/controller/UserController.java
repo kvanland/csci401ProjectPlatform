@@ -3,6 +3,7 @@ package capstone.controller;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 
@@ -10,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import capstone.config.JwtTokenProvider;
 import capstone.model.Project;
 import capstone.model.RegisteredStudentEmail;
 import capstone.model.users.Admin;
@@ -37,19 +42,19 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 @RequestMapping("/users")
-public class UserController 
-{
+public class UserController {
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private RegisteredStudentEmailRepository regRepo;
 	@Autowired
 	private EmailService emailService;
-	
-	public UserController()
-	{
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
+
+	public UserController() {
 	}
-	
+
 	@GetMapping("/init")
 	public String setAdmin() {
 		Admin admin = new Admin();
@@ -67,23 +72,20 @@ public class UserController
 		userService.saveUser(stakeholder);
 		return Constants.SUCCESS;
 	}
-	
+
 	@GetMapping("")
-	public Collection<User> getUsers()
-	{	
+	public Collection<User> getUsers() {
 		return userService.getUsers();
 	}
-	
+
 	@GetMapping("/{email:.+}")
-	public User getUser(@PathVariable("email") String email)
-	{
+	public User getUser(@PathVariable("email") String email) {
 		System.out.println(email);
 		return userService.findUserByEmail(email);
 	}
-	
+
 	@PostMapping("/{email:.+}/delete")
-	public Boolean deleteUser(@PathVariable("email") String email)
-	{
+	public Boolean deleteUser(@PathVariable("email") String email) {
 		System.out.println("deleted");
 		User user = userService.findUserByEmail(email);
 		if (user != null) {
@@ -92,19 +94,19 @@ public class UserController
 		}
 		return false;
 	}
-	
+
 	@GetMapping("/stakeholders")
 	public Collection<Stakeholder> getStakeholders() {
 		return userService.getStakeholders();
 	}
-	
+
 	@GetMapping("/students")
 	public Collection<Student> getStudents() {
-		return userService.getStudents(); 
+		return userService.getStudents();
 	}
-	
+
 	@PostMapping("/update-info")
-	public void updateUserInfo(@RequestBody Map<String, String> info) {		
+	public void updateUserInfo(@RequestBody Map<String, String> info) {
 		String originalEmail = info.get(Constants.ORIGINAL_EMAIL);
 		String newEmail = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);
@@ -113,7 +115,7 @@ public class UserController
 		String phone = info.get(Constants.PHONE);
 		String semester = info.get(Constants.SEMESTER);
 		String year = info.get(Constants.YEAR);
-		
+
 		User user = findUser(originalEmail);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
@@ -124,28 +126,28 @@ public class UserController
 		user.setYear(year);
 		userService.saveUser(user);
 	}
-	
+
 	public User findUser(String email) {
 		return userService.findUserByEmail(email);
 	}
+
 	public User findUserByAddr(String addr) {
 		return userService.findUserByAddr(addr);
 	}
-	
+
 	/* Registration */
-	
+
 	// Admin registration
-	@PostMapping("/admin-registration")
+	@PostMapping("/register/admin")
 	public @ResponseBody String adminRegistrationAttempt(@RequestBody Map<String, String> info) {
 		String email = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);
 		String lastName = info.get(Constants.LAST_NAME);
 		String phone = info.get(Constants.PHONE);
 		String encryptedPassword = EncryptPassword.encryptPassword(info.get(Constants.PASSWORD));
-		
+
 		// Check if email is a registered student email and not already registered
-		if (regRepo.findByEmail(email) != null && 
-				userService.findStudentByEmail(email) == null) {
+		if (regRepo.findByEmail(email) != null && userService.findStudentByEmail(email) == null) {
 			Admin admin = new Admin();
 			admin.setFirstName(firstName);
 			admin.setLastName(lastName);
@@ -159,10 +161,10 @@ public class UserController
 		}
 		return Constants.EMPTY;
 	}
-	
+
 	// Student registration
-	@PostMapping("/student-registration")
-	public @ResponseBody ResponseEntity studentRegistrationAttempt(@RequestBody Map<String, String> info) {
+	@PostMapping("/register/student")
+	public @ResponseBody ResponseEntity<?> studentRegistrationAttempt(@RequestBody Map<String, String> info) {
 		String email = info.get(Constants.EMAIL);
 		String firstName = info.get(Constants.FIRST_NAME);
 		String lastName = info.get(Constants.LAST_NAME);
@@ -175,9 +177,9 @@ public class UserController
 		System.out.println(lastName);
 		System.out.println(phone);
 		System.out.println(encryptedPassword);
-		
+
 		// Check if email is a registered student email and not already registered
-		
+
 		if (regRepo.findByEmail(email) != null && userService.findStudentByEmail(email) == null) {
 			Student s = new Student();
 			s.setFirstName(firstName);
@@ -193,10 +195,10 @@ public class UserController
 		}
 		return ResponseEntity.badRequest().body(null);
 	}
-	
+
 	// Stake holder registration
-	@PostMapping("/stakeholder-registration")
-	public @ResponseBody ResponseEntity stakeholderRegistrationAttempt(@RequestBody Map<String, String> info) {
+	@PostMapping("/register/stakeholder")
+	public @ResponseBody ResponseEntity<?> stakeholderRegistrationAttempt(@RequestBody Map<String, String> info) {
 		System.out.println("Start reg");
 		String email = info.get(Constants.EMAIL);
 		String name = info.get(Constants.FIRST_NAME);
@@ -204,7 +206,7 @@ public class UserController
 		String phone = info.get(Constants.PHONE);
 		String companyName = info.get(Constants.COMPANY);
 		String encryptedPassword = EncryptPassword.encryptPassword(info.get(Constants.PASSWORD));
-		
+
 		// Check if email has already been registered
 		if (userService.findStakeholderByEmail(email) == null) {
 			Stakeholder s = new Stakeholder();
@@ -221,57 +223,43 @@ public class UserController
 		}
 		return ResponseEntity.badRequest().body(null);
 	}
-	
+
 	// Admin can register student emails and send an invitation to the platform
-	@RequestMapping(value = "/student-emails-registration",consumes= "application/json",produces= "application/json", method = RequestMethod.POST)
-	public void studentEmailRegistrationAttempt(@RequestBody Map<String, String> emailsData)
-	{
+	@RequestMapping(value = "/invite/students", consumes = "application/json", produces = "application/json", method = RequestMethod.POST)
+	public void studentEmailRegistrationAttempt(@RequestBody Map<String, String> emailsData) {
 		System.out.println(emailsData);
 		System.out.println("Received HTTP POST");
-		
+
 		String[] emailsArray = emailsData.get(Constants.EMAILS).split("\n");
-		
-		for(String e : emailsArray)
-		{
+
+		for (String e : emailsArray) {
 			// Save the email to registered student email table
 			regRepo.save(new RegisteredStudentEmail(e));
 			// Send an email invitation
-			emailService.sendEmail("401 Platform Invite", "Congratulations! \nPlease sign up using the following link. \n \nlocalhost:3000/register/student", e);
+			emailService.sendEmail("401 Platform Invite",
+					"Congratulations! \nPlease sign up using the following link. \n \nlocalhost:3000/register/student",
+					e);
 			System.out.println("Sent invite to: " + e);
 		}
 	}
-	
+
 	/* Login */
-	
+
 	@PostMapping("/login")
-	public String login(@RequestBody User login) throws ServletException {
+	public ResponseEntity<String> login(@RequestBody User login) {
 
-	    String jwtToken = "";
+		String email = login.getEmail();
+		String password = login.getPassword();
 
-	    if (login.getEmail() == null || login.getPassword() == null) {
-	        return "";
-	    }
+		User user = userService.findUserByEmail(email);
+		boolean valid = user != null ? EncryptPassword.checkPassword(password, user.getPassword()) : false;
 
-	    String email = login.getEmail();
-	    String password = login.getPassword();
+		if (!valid) {
+			return ResponseEntity.badRequest().body(null);
+		}
 
-	    User user = userService.findUserByEmail(email);
-
-	    if (user == null) {
-	        throw new ServletException("Invalid login");
-	    }
-
-	    String pwd = user.getPassword();
-
-	    if (!EncryptPassword.checkPassword(password, pwd)) {
-	        throw new ServletException("Invalid login");
-	    }
-	    
-	    String userType = userService.getUserType(user);
-
-	    jwtToken = Jwts.builder().setSubject(email).claim("roles", "user").setIssuedAt(new Date())
-	            .signWith(SignatureAlgorithm.HS256, "secretkey").compact();
-	    // System.out.println("Jwt: " + jwtToken);
-	    return jwtToken + "," + userType;
+		String token = jwtTokenProvider.createToken(user.getEmail(), user.getUserType());
+		return ResponseEntity.ok(token);
 	}
+
 }

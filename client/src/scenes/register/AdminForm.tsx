@@ -42,7 +42,7 @@ class AdminRegistrationForm extends React.Component<IAdminRegistrationProps, IAd
     @autobind
     async submitClicked() {
         try {
-            const request = new Request(getApiURI('/users/admin-registration'));
+            const request = new Request(getApiURI('/users/register/admin'));
             await fetch(request, {
                 method: 'POST',
                 credentials: 'include',

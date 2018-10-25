@@ -43,7 +43,7 @@ class StakeholderRegistrationForm extends React.Component<IStakeholderRegistrati
         this.setState({ isLoading: true });
 
         try {
-            const response = await fetch(getApiURI('/users/stakeholder-registration'), {
+            const response = await fetch(getApiURI('/users/register/stakeholder'), {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

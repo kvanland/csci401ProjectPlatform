@@ -42,7 +42,7 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         this.setState({ isLoading: true });
 
         try {
-            const response = await fetch(getApiURI('/users/student-registration'), {
+            const response = await fetch(getApiURI('/users/register/student'), {
                 method: 'POST',
                 body: JSON.stringify({
                     firstName: this.state.firstName,

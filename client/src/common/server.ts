@@ -16,9 +16,5 @@ export async function fetchServer(endpoint: string, method: string = 'GET', body
         body: body !== undefined ? JSON.stringify(body) : undefined,
     });
 
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-
     return response;
 }
