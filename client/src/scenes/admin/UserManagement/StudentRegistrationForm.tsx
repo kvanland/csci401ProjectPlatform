@@ -12,6 +12,7 @@ interface IStudentRegistrationState {
     emailsRaw: string;
     emailsParsed: string[];
     isLoading: boolean;
+    semesterType: SemesterType;
 }
 enum InviteState {
     Initial,
@@ -21,6 +22,12 @@ enum InviteState {
 enum UserType {
     Student = 'student',
     Admin = 'admin',
+}
+
+enum SemesterType {
+    FALL = 'FALL',
+    SPRING = 'SPRING',
+    SUMMER = 'SUMMER'
 }
 
 @autobind
@@ -33,6 +40,7 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
             emailsRaw: '',
             emailsParsed: [],
             isLoading: false,
+            semesterType: SemesterType.FALL,
         };
     }
 
@@ -89,15 +97,35 @@ class StudentRegistrationForm extends React.Component<IStudentRegistrationProps,
         });
     }
 
+    handleChangeSemesterType(e: React.FormEvent<HTMLSelectElement>) {
+        this.setState({
+            semesterType: e.currentTarget.value as SemesterType,
+        });
+    }
+
     renderForm() {
         return (
             <React.Fragment>
                 <div className={Classes.DIALOG_BODY}>
                     <FormGroup label="Type of User">
-                        <HTMLSelect value={this.state.userType} onChange={this.handleChangeUserType} disabled={this.state.isLoading}>
-                            <option value={UserType.Student}>Students</option>
-                            <option value={UserType.Admin} disabled={true}>Admins</option>
-                        </HTMLSelect>
+                        <table>
+                            <tr>
+                                <td>
+                                    <HTMLSelect value={this.state.userType} onChange={this.handleChangeUserType} disabled={this.state.isLoading}>
+                                        <option value={UserType.Student}>Students</option>
+                                        <option value={UserType.Admin} disabled={true}>Admins</option>
+                                    </HTMLSelect>
+                                </td>
+                                <td>
+                                    <HTMLSelect value={this.state.semesterType} onChange={this.handleChangeSemesterType} disabled={this.state.isLoading}>
+                                        <option value={SemesterType.FALL}>FALL</option>
+                                        <option value={SemesterType.SPRING}>SPRING</option>
+                                        <option value={SemesterType.SUMMER}>SUMMER</option>
+                                    </HTMLSelect>
+                                </td>
+                            </tr>
+                        </table>
+
                     </FormGroup>
                     <FormGroup label="List of email addresses">
                         <TextArea
