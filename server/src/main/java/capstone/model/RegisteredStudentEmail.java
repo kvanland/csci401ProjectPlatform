@@ -10,12 +10,16 @@ public class RegisteredStudentEmail {
 	@GeneratedValue
 	private long id;
 	private String email;
+	private String year;
+	private String semester;
 	
 	public RegisteredStudentEmail() {
 	}
 	
-	public RegisteredStudentEmail(String email) {
+	public RegisteredStudentEmail(String email, String year, String semester) {
 		this.email = email;
+		this.year = year;
+		this.semester = semester;
 	}
 	
 	public long getId() {
@@ -32,6 +36,22 @@ public class RegisteredStudentEmail {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getYear(){
+		return year;
+	}
+
+	public void setYear(String year){
+		this.year = year;
+	}
+
+	public String getSemester(){
+		return Semester;
+	}
+
+	public void setSemester(String semseter){
+		this.semseter = semseter;
 	}
 	
 }

@@ -171,7 +171,6 @@ public class UserController {
 		String phone = info.get(Constants.PHONE);
 		String encryptedPassword = EncryptPassword.encryptPassword(info.get(Constants.PASSWORD));
 
-		System.out.println("this endpoint has been reached");
 		System.out.println(email);
 		System.out.println(firstName);
 		System.out.println(lastName);
@@ -181,6 +180,7 @@ public class UserController {
 		// Check if email is a registered student email and not already registered
 
 		if (regRepo.findByEmail(email) != null && userService.findStudentByEmail(email) == null) {
+			RegisteredStudentEmail rse = regRepo.findByEmail(email);
 			Student s = new Student();
 			s.setFirstName(firstName);
 			s.setLastName(lastName);
@@ -188,9 +188,12 @@ public class UserController {
 			s.setPhone(phone);
 			s.setPassword(encryptedPassword);
 			s.setUserType(Constants.STUDENT);
-			s.setSemester("FALL2018");
+			s.setSemester(rse.getSemester());
+			s.setYear(rse.getYear());
 			userService.saveUser(s);
 			System.out.println("New student created");
+
+			regRepo.delete()
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
 		}
 		return ResponseEntity.badRequest().body(null);
@@ -226,7 +229,7 @@ public class UserController {
 
 	// Admin can register student emails and send an invitation to the platform
 	@RequestMapping(value = "/invite/students", consumes = "application/json", produces = "application/json", method = RequestMethod.POST)
-	public void studentEmailRegistrationAttempt(@RequestBody Map<String, String> emailsData) {
+	public void studentEmailRegistrationAttempt(@RequestBody Map<String, String> emailsData, String year, String semester) {
 		System.out.println(emailsData);
 		System.out.println("Received HTTP POST");
 
@@ -234,10 +237,10 @@ public class UserController {
 
 		for (String e : emailsArray) {
 			// Save the email to registered student email table
-			regRepo.save(new RegisteredStudentEmail(e));
+			regRepo.save(new RegisteredStudentEmail(e, year, semester));
 			// Send an email invitation
 			emailService.sendEmail("401 Platform Invite",
-					"Congratulations! \nPlease sign up using the following link. \n \nlocalhost:3000/register/student",
+					"Congratulations! \nPlease sign up using the following link. \n \ncs401Projects.tk/register/student",
 					e);
 			System.out.println("Sent invite to: " + e);
 		}
